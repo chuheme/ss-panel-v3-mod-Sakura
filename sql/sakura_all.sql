@@ -1,3 +1,12 @@
+-- phpMyAdmin SQL Dump
+-- version 4.8.3
+-- https://www.phpmyadmin.net/
+--
+-- 主机： 127.0.0.1
+-- 生成日期： 2018-10-04 04:16:01
+-- 服务器版本： 10.1.35-MariaDB
+-- PHP 版本： 7.2.9
+
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
 START TRANSACTION;
@@ -10,7 +19,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `sakura_all`
+-- 数据库： `sakura_mod`
 --
 
 -- --------------------------------------------------------
@@ -94,7 +103,7 @@ CREATE TABLE `code` (
   `code` text NOT NULL,
   `type` int(11) NOT NULL,
   `number` decimal(11,2) NOT NULL,
-  `isused` int(11) NOT NULL DEFAULT 0,
+  `isused` int(11) NOT NULL DEFAULT '0',
   `userid` bigint(20) NOT NULL,
   `usedatetime` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -182,11 +191,11 @@ CREATE TABLE `link` (
   `address` text NOT NULL,
   `port` int(11) NOT NULL,
   `token` text NOT NULL,
-  `ios` int(11) NOT NULL DEFAULT 0,
+  `ios` int(11) NOT NULL DEFAULT '0',
   `userid` bigint(20) NOT NULL,
-  `isp` text DEFAULT NULL,
+  `isp` text,
   `geo` int(11) DEFAULT NULL,
-  `method` text DEFAULT NULL
+  `method` text
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -228,9 +237,9 @@ CREATE TABLE `paylist` (
   `id` bigint(20) NOT NULL,
   `userid` bigint(20) NOT NULL,
   `total` decimal(12,2) NOT NULL,
-  `status` int(11) NOT NULL DEFAULT 0,
-  `tradeno` text DEFAULT NULL,
-  `datetime` bigint(20) NOT NULL DEFAULT 0
+  `status` int(11) NOT NULL DEFAULT '0',
+  `tradeno` text,
+  `datetime` bigint(20) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -272,8 +281,8 @@ CREATE TABLE `shop` (
   `price` decimal(12,2) NOT NULL,
   `content` text NOT NULL,
   `auto_renew` int(11) NOT NULL,
-  `auto_reset_bandwidth` int(11) NOT NULL DEFAULT 0,
-  `status` int(11) NOT NULL DEFAULT 1
+  `auto_reset_bandwidth` int(11) NOT NULL DEFAULT '0',
+  `status` int(11) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -307,7 +316,7 @@ CREATE TABLE `ss_invite_code` (
   `id` int(11) NOT NULL,
   `code` varchar(128) NOT NULL,
   `user_id` int(11) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT '2016-06-01 00:00:00'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -325,31 +334,32 @@ CREATE TABLE `ss_node` (
   `method` varchar(64) NOT NULL,
   `info` varchar(128) NOT NULL,
   `status` varchar(128) NOT NULL,
+  `online_status` int(1) DEFAULT '0',
   `sort` int(3) NOT NULL,
-  `custom_method` tinyint(1) NOT NULL DEFAULT 0,
-  `traffic_rate` float NOT NULL DEFAULT 1,
-  `node_class` int(11) NOT NULL DEFAULT 0,
-  `node_speedlimit` decimal(12,2) NOT NULL DEFAULT 0.00,
-  `node_connector` int(11) NOT NULL DEFAULT 0,
-  `node_bandwidth` bigint(20) NOT NULL DEFAULT 0,
-  `node_bandwidth_limit` bigint(20) NOT NULL DEFAULT 0,
-  `bandwidthlimit_resetday` int(11) NOT NULL DEFAULT 0,
-  `node_heartbeat` bigint(20) NOT NULL DEFAULT 0,
-  `node_ip` text DEFAULT NULL,
-  `node_group` int(11) NOT NULL DEFAULT 0,
-  `custom_rss` int(11) NOT NULL DEFAULT 0,
-  `mu_only` int(11) DEFAULT 0,
-  `dns_type` int(3) NOT NULL DEFAULT 1,
-  `dns_value` text DEFAULT ''
+  `custom_method` tinyint(1) NOT NULL DEFAULT '0',
+  `traffic_rate` float NOT NULL DEFAULT '1',
+  `node_class` int(11) NOT NULL DEFAULT '0',
+  `node_speedlimit` decimal(12,2) NOT NULL DEFAULT '0.00',
+  `node_connector` int(11) NOT NULL DEFAULT '0',
+  `node_bandwidth` bigint(20) NOT NULL DEFAULT '0',
+  `node_bandwidth_limit` bigint(20) NOT NULL DEFAULT '0',
+  `bandwidthlimit_resetday` int(11) NOT NULL DEFAULT '0',
+  `node_heartbeat` bigint(20) NOT NULL DEFAULT '0',
+  `node_ip` text,
+  `node_group` int(11) NOT NULL DEFAULT '0',
+  `custom_rss` int(11) NOT NULL DEFAULT '0',
+  `mu_only` int(11) DEFAULT '0',
+  `dns_type` int(1) DEFAULT '0',
+  `dns_value` text
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- 转存表中的数据 `ss_node`
 --
 
-INSERT INTO `ss_node` (`id`, `name`, `type`, `server`, `method`, `info`, `status`, `sort`, `custom_method`, `traffic_rate`, `node_class`, `node_speedlimit`, `node_connector`, `node_bandwidth`, `node_bandwidth_limit`, `bandwidthlimit_resetday`, `node_heartbeat`, `node_ip`, `node_group`, `custom_rss`, `mu_only`, `ip_sync`) VALUES
-(1, '统一验证登陆', 0, 'zhaojin97.cn', 'radius', '统一登陆验证', '可用', 999, 0, 1, 0, '0.00', 0, 0, 0, 0, 0, '', 0, 0, 0, 0),
-(2, 'VPN 统一流量结算', 0, 'zhaojin97.cn', 'radius', 'VPN 统一流量结算', '可用', 999, 0, 1, 0, '0.00', 0, 0, 0, 0, 0, NULL, 0, 0, 0, 0);
+INSERT INTO `ss_node` (`id`, `name`, `type`, `server`, `method`, `info`, `status`, `online_status`, `sort`, `custom_method`, `traffic_rate`, `node_class`, `node_speedlimit`, `node_connector`, `node_bandwidth`, `node_bandwidth_limit`, `bandwidthlimit_resetday`, `node_heartbeat`, `node_ip`, `node_group`, `custom_rss`, `mu_only`, `dns_type`, `dns_value`) VALUES
+(1, '统一验证登陆', 0, 'zhaojin97.cn', 'radius', '统一登陆验证', '可用', 0, 999, 0, 1, 0, '0.00', 0, 0, 0, 0, 0, '', 0, 0, 0, 0, NULL),
+(2, 'VPN 统一流量结算', 0, 'zhaojin97.cn', 'radius', 'VPN 统一流量结算', '可用', 0, 999, 0, 1, 0, '0.00', 0, 0, 0, 0, 0, NULL, 0, 0, 0, 0, NULL);
 
 -- --------------------------------------------------------
 
@@ -419,7 +429,7 @@ CREATE TABLE `ticket` (
   `rootid` bigint(20) NOT NULL,
   `userid` bigint(20) NOT NULL,
   `datetime` bigint(20) NOT NULL,
-  `status` int(11) NOT NULL DEFAULT 1
+  `status` int(11) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -447,53 +457,53 @@ CREATE TABLE `user` (
   `email` varchar(32) NOT NULL,
   `pass` varchar(64) NOT NULL,
   `passwd` varchar(16) NOT NULL,
-  `t` int(11) NOT NULL DEFAULT 0,
+  `t` int(11) NOT NULL DEFAULT '0',
   `u` bigint(20) NOT NULL,
   `d` bigint(20) NOT NULL,
   `plan` varchar(2) CHARACTER SET utf8mb4 NOT NULL DEFAULT 'A',
   `transfer_enable` bigint(20) NOT NULL,
   `port` int(11) NOT NULL,
-  `switch` tinyint(4) NOT NULL DEFAULT 1,
-  `enable` tinyint(4) NOT NULL DEFAULT 1,
-  `type` tinyint(4) NOT NULL DEFAULT 1,
-  `last_get_gift_time` int(11) NOT NULL DEFAULT 0,
-  `last_check_in_time` int(11) NOT NULL DEFAULT 0,
-  `last_rest_pass_time` int(11) NOT NULL DEFAULT 0,
+  `switch` tinyint(4) NOT NULL DEFAULT '1',
+  `enable` tinyint(4) NOT NULL DEFAULT '1',
+  `type` tinyint(4) NOT NULL DEFAULT '1',
+  `last_get_gift_time` int(11) NOT NULL DEFAULT '0',
+  `last_check_in_time` int(11) NOT NULL DEFAULT '0',
+  `last_rest_pass_time` int(11) NOT NULL DEFAULT '0',
   `reg_date` datetime NOT NULL,
   `invite_num` int(8) NOT NULL,
   `money` decimal(12,2) NOT NULL,
-  `ref_by` int(11) NOT NULL DEFAULT 0,
-  `expire_time` int(11) NOT NULL DEFAULT 0,
+  `ref_by` int(11) NOT NULL DEFAULT '0',
+  `expire_time` int(11) NOT NULL DEFAULT '0',
   `method` varchar(64) NOT NULL DEFAULT 'rc4-md5',
-  `is_email_verify` tinyint(4) NOT NULL DEFAULT 0,
+  `is_email_verify` tinyint(4) NOT NULL DEFAULT '0',
   `reg_ip` varchar(128) NOT NULL DEFAULT '127.0.0.1',
-  `node_speedlimit` decimal(12,2) NOT NULL DEFAULT 0.00,
-  `node_connector` int(11) NOT NULL DEFAULT 0,
-  `is_admin` int(2) NOT NULL DEFAULT 0,
-  `im_type` int(11) DEFAULT 1,
-  `im_value` text DEFAULT NULL,
-  `last_day_t` bigint(20) NOT NULL DEFAULT 0,
-  `sendDailyMail` int(11) NOT NULL DEFAULT 1,
-  `class` int(11) NOT NULL DEFAULT 0,
+  `node_speedlimit` decimal(12,2) NOT NULL DEFAULT '0.00',
+  `node_connector` int(11) NOT NULL DEFAULT '0',
+  `is_admin` int(2) NOT NULL DEFAULT '0',
+  `im_type` int(11) DEFAULT '1',
+  `im_value` text,
+  `last_day_t` bigint(20) NOT NULL DEFAULT '0',
+  `sendDailyMail` int(11) NOT NULL DEFAULT '1',
+  `class` int(11) NOT NULL DEFAULT '0',
   `class_expire` datetime NOT NULL DEFAULT '1989-06-04 00:05:00',
   `expire_in` datetime NOT NULL DEFAULT '2099-06-04 00:05:00',
   `theme` text NOT NULL,
   `ga_token` text NOT NULL,
-  `ga_enable` int(11) NOT NULL DEFAULT 0,
-  `pac` longtext DEFAULT NULL,
-  `remark` text DEFAULT NULL,
-  `node_group` int(11) NOT NULL DEFAULT 0,
-  `auto_reset_day` int(11) NOT NULL DEFAULT 0,
-  `auto_reset_bandwidth` decimal(12,2) NOT NULL DEFAULT 0.00,
+  `ga_enable` int(11) NOT NULL DEFAULT '0',
+  `pac` longtext,
+  `remark` text,
+  `node_group` int(11) NOT NULL DEFAULT '0',
+  `auto_reset_day` int(11) NOT NULL DEFAULT '0',
+  `auto_reset_bandwidth` decimal(12,2) NOT NULL DEFAULT '0.00',
   `protocol` varchar(128) DEFAULT 'origin',
   `protocol_param` varchar(128) DEFAULT NULL,
   `obfs` varchar(128) DEFAULT 'plain',
   `obfs_param` varchar(128) DEFAULT NULL,
-  `forbidden_ip` longtext DEFAULT '',
-  `forbidden_port` longtext DEFAULT '',
-  `disconnect_ip` longtext DEFAULT '',
-  `is_hide` int(11) NOT NULL DEFAULT 0,
-  `is_multi_user` int(11) NOT NULL DEFAULT 0,
+  `forbidden_ip` longtext,
+  `forbidden_port` longtext,
+  `disconnect_ip` longtext,
+  `is_hide` int(11) NOT NULL DEFAULT '0',
+  `is_multi_user` int(11) NOT NULL DEFAULT '0',
   `telegram_id` bigint(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -529,174 +539,174 @@ CREATE TABLE `user_traffic_log` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Indexes for dumped tables
+-- 转储表的索引
 --
 
 --
--- Indexes for table `alive_ip`
+-- 表的索引 `alive_ip`
 --
 ALTER TABLE `alive_ip`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `announcement`
+-- 表的索引 `announcement`
 --
 ALTER TABLE `announcement`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `auto`
+-- 表的索引 `auto`
 --
 ALTER TABLE `auto`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `blockip`
+-- 表的索引 `blockip`
 --
 ALTER TABLE `blockip`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `bought`
+-- 表的索引 `bought`
 --
 ALTER TABLE `bought`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `code`
+-- 表的索引 `code`
 --
 ALTER TABLE `code`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `coupon`
+-- 表的索引 `coupon`
 --
 ALTER TABLE `coupon`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `detect_list`
+-- 表的索引 `detect_list`
 --
 ALTER TABLE `detect_list`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `detect_log`
+-- 表的索引 `detect_log`
 --
 ALTER TABLE `detect_log`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `disconnect_ip`
+-- 表的索引 `disconnect_ip`
 --
 ALTER TABLE `disconnect_ip`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `email_verify`
+-- 表的索引 `email_verify`
 --
 ALTER TABLE `email_verify`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `link`
+-- 表的索引 `link`
 --
 ALTER TABLE `link`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `login_ip`
+-- 表的索引 `login_ip`
 --
 ALTER TABLE `login_ip`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `payback`
+-- 表的索引 `payback`
 --
 ALTER TABLE `payback`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `paylist`
+-- 表的索引 `paylist`
 --
 ALTER TABLE `paylist`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `radius_ban`
+-- 表的索引 `radius_ban`
 --
 ALTER TABLE `radius_ban`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `relay`
+-- 表的索引 `relay`
 --
 ALTER TABLE `relay`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `shop`
+-- 表的索引 `shop`
 --
 ALTER TABLE `shop`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `speedtest`
+-- 表的索引 `speedtest`
 --
 ALTER TABLE `speedtest`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `ss_invite_code`
+-- 表的索引 `ss_invite_code`
 --
 ALTER TABLE `ss_invite_code`
   ADD PRIMARY KEY (`id`),
   ADD KEY `user_id` (`user_id`);
 
 --
--- Indexes for table `ss_node`
+-- 表的索引 `ss_node`
 --
 ALTER TABLE `ss_node`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `ss_node_info`
+-- 表的索引 `ss_node_info`
 --
 ALTER TABLE `ss_node_info`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `ss_node_online_log`
+-- 表的索引 `ss_node_online_log`
 --
 ALTER TABLE `ss_node_online_log`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `ss_password_reset`
+-- 表的索引 `ss_password_reset`
 --
 ALTER TABLE `ss_password_reset`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `telegram_session`
+-- 表的索引 `telegram_session`
 --
 ALTER TABLE `telegram_session`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `ticket`
+-- 表的索引 `ticket`
 --
 ALTER TABLE `ticket`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `unblockip`
+-- 表的索引 `unblockip`
 --
 ALTER TABLE `unblockip`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `user`
+-- 表的索引 `user`
 --
 ALTER TABLE `user`
   ADD PRIMARY KEY (`id`),
@@ -705,13 +715,13 @@ ALTER TABLE `user`
   ADD KEY `email` (`email`);
 
 --
--- Indexes for table `user_token`
+-- 表的索引 `user_token`
 --
 ALTER TABLE `user_token`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `user_traffic_log`
+-- 表的索引 `user_traffic_log`
 --
 ALTER TABLE `user_traffic_log`
   ADD PRIMARY KEY (`id`);
