@@ -1,6 +1,7 @@
 # Introduction
 
-A Shadowsocks(R/RR) panel originated from [ss-panel-v3-mod](https://github.com/esdeathlove/ss-panel-v3-mod)
+A Shadowsocks(R/RR) panel originated from [ss-panel-v3-mod](https://github.com/esdeathlove/ss-panel-v3-mod)  
+*Attention*: The default branch of this repository is dev branch which you should avoid using.
 
 ## Recommend
 
@@ -15,6 +16,10 @@ See the [Wiki](https://github.com/SakuraSa233/ss-panel-v3-mod-Sakura/wiki).
 ## Usage
 
 See the [Wiki](https://github.com/SakuraSa233/ss-panel-v3-mod-Sakura/wiki).
+
+## Communication
+Telegram Group: [@ss_panel_Sakura](https://t.me/ss_panel_Sakura)  
+Telegram Channel: [@ss_panel_Sakura_nikki](https://t.me/ss_panel_Sakura_nikki)
 
 ## License
 This repository is based on [MIT License](https://github.com/SakuraSa233/ss-panel-v3-mod-Sakura/blob/master/LICENSE) and the origin author of this repository is [orvice](https://github.com/orvice).
