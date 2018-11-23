@@ -2,5 +2,5 @@ vendor/
 .user.ini
 public/.user.ini
 storage/*
-config/.config.php
+.env
 resources/views/material/analytics.tpl
