@@ -107,7 +107,7 @@ class ApiController extends BaseController
                                             "password"=>$user->passwd,
                                             "tcp_over_udp"=>false,
                                             "udp_over_tcp"=>false,
-                                            "group"=>Config::get('appName'),
+                                            "group"=>$_ENV['appName'],
                                             "protocol"=>str_replace("_compatible", "", (($node->custom_rss==1&&!($user->obfs=='plain'&&$user->protocol=='origin'))?$user->protocol:"origin")),
                                             "obfs_udp"=>false,
                                             "enable"=>true));
@@ -122,7 +122,7 @@ class ApiController extends BaseController
                                         "server"=>$node->server,
                                         "server_port"=>$mu_user->port,
                                         "method"=>$mu_user->method,
-                                        "group"=>Config::get('appName'),
+                                        "group"=>$_ENV['appName'],
                                         "obfs"=>str_replace("_compatible", "", (($node->custom_rss==1&&!($mu_user->obfs=='plain'&&$mu_user->protocol=='origin'))?$mu_user->obfs:"plain")),
                                         "obfsparam"=>(($node->custom_rss==1&&!($mu_user->obfs=='plain'&&$mu_user->protocol=='origin'))?$mu_user->obfs_param:""),
                                         "remarks_base64"=>base64_encode($node->name."- ".$mu_node->server." 公共端口"),

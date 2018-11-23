@@ -60,8 +60,6 @@ class XCat
 				return Job::DailyJob();
 			case("checkjob"):
 				return Job::CheckJob();
-			case("syncduoshuo"):
-				return Job::SyncDuoshuo();
 			case("userga"):
 				return Job::UserGa();
 			case("backup"):
@@ -136,11 +134,11 @@ class XCat
 			$user->t = 0;
 			$user->u = 0;
 			$user->d = 0;
-			$user->transfer_enable = Tools::toGB(Config::get('defaultTraffic'));
-			$user->invite_num = Config::get('inviteNum');
+			$user->transfer_enable = Tools::toGB($_ENV['defaultTraffic']);
+			$user->invite_num = $_ENV['inviteNum'];
 			$user->ref_by = 0;
 			$user->is_admin = 1;
-			$user->expire_in=date("Y-m-d H:i:s", time()+Config::get('user_expire_in_default')*86400);
+			$user->expire_in=date("Y-m-d H:i:s", time()+$_ENV['user_expire_in_default']*86400);
 			$user->reg_date=date("Y-m-d H:i:s");
 			$user->money=0;
 			$user->im_type=1;
@@ -148,7 +146,7 @@ class XCat
 			$user->class=0;
 			$user->plan='A';
 			$user->node_speedlimit=0;
-			$user->theme=Config::get('theme');
+			$user->theme=$_ENV['theme'];
 
 
 
@@ -187,8 +185,8 @@ class XCat
 
 	public function setTelegram()
 	{
-		$bot = new \TelegramBot\Api\BotApi(Config::get('telegram_token'));
-		if ($bot->setWebhook(Config::get('baseUrl')."/telegram_callback?token=".Config::get('telegram_request_token')) == 1) {
+		$bot = new \TelegramBot\Api\BotApi($_ENV['telegram_token']);
+		if ($bot->setWebhook($_ENV['baseUrl']."/telegram_callback?token=".$_ENV['telegram_request_token']) == 1) {
 			echo("设置成功！");
 		}
 	}

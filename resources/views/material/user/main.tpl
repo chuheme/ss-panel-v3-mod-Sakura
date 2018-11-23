@@ -319,13 +319,6 @@
                         
                         <a class="waves-attach" data-toggle="collapse" href="#ui_menu_trade">帮助</a>
                         <ul class="menu-collapse collapse in" id="ui_menu_trade">
-                            {if $config['enable_wecenter']=='true'}
-                            <li>
-                                <a href="{$config["wecenter_url"]}" target="_blank">
-                                    <i class="icon icon-lg">help</i>&nbsp;问答系统
-                                </a>
-                            </li>
-                            {/if}
                             
                             <li>
                                 <a href="/user/ticket">

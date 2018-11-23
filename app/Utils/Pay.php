@@ -12,7 +12,7 @@ class Pay
 {
     public static function getHTML($user)
     {
-        $driver = Config::get("payment_system");
+        $driver = $_ENV["payment_system"];
         switch ($driver) {
             case "paymentwall":
                 return Pay::pmw_html($user);
@@ -52,7 +52,7 @@ class Pay
     {
         return '
 						<p>请扫码，给我转账来充值，记得备注上 <code>'.$user->id.'</code>。<br></p>
-						<img src="'.Config::get('zfbjk_qrcodeurl').'"/>
+						<img src="'.$_ENV['zfbjk_qrcodeurl'].'"/>
 ';
     }
 
@@ -60,13 +60,13 @@ class Pay
     {
         \Paymentwall_Config::getInstance()->set(array(
             'api_type' => \Paymentwall_Config::API_VC,
-            'public_key' => Config::get('pmw_publickey'),
-            'private_key' => Config::get('pmw_privatekey')
+            'public_key' => $_ENV['pmw_publickey'],
+            'private_key' => $_ENV['pmw_privatekey']
         ));
 
         $widget = new \Paymentwall_Widget(
             $user->id, // id of the end-user who's making the payment
-            Config::get('pmw_widget'),      // widget code, e.g. p1; can be picked inside of your merchant account
+            $_ENV['pmw_widget'],      // widget code, e.g. p1; can be picked inside of your merchant account
             array(),     // array of products - leave blank for Virtual Currency API
             array(
                 'email' => $user->email,
@@ -82,7 +82,7 @@ class Pay
             ) // additional parameters
         );
 
-        return $widget->getHtmlCode(array("height"=>Config::get('pmw_height'),"width"=>"100%"));
+        return $widget->getHtmlCode(array("height"=>$_ENV['pmw_height'],"width"=>"100%"));
     }
 
     private static function spay_gen($user, $amount)
@@ -130,7 +130,7 @@ class Pay
 
     public static function getGen($user, $amount)
     {
-        $driver = Config::get("payment_system");
+        $driver = $_ENV["payment_system"];
         switch ($driver) {
             case "paymentwall":
                 return Pay::pmw_html();
@@ -216,14 +216,14 @@ class Pay
 
                 if ($user->ref_by!=""&&$user->ref_by!=0&&$user->ref_by!=null) {
                     $gift_user=User::where("id", "=", $user->ref_by)->first();
-                    $gift_user->money=($gift_user->money+($codeq->number*(Config::get('code_payback')/100)));
+                    $gift_user->money=($gift_user->money+($codeq->number*($_ENV['code_payback']/100)));
                     $gift_user->save();
 
                     $Payback=new Payback();
                     $Payback->total=$_POST['total_fee'];
                     $Payback->userid=$user->id;
                     $Payback->ref_by=$user->ref_by;
-                    $Payback->ref_get=$codeq->number*(Config::get('code_payback')/100);
+                    $Payback->ref_get=$codeq->number*($_ENV['code_payback']/100);
                     $Payback->datetime=time();
                     $Payback->save();
                 }
@@ -257,14 +257,14 @@ class Pay
 
                 if ($user->ref_by!=""&&$user->ref_by!=0&&$user->ref_by!=null) {
                     $gift_user=User::where("id", "=", $user->ref_by)->first();
-                    $gift_user->money=($gift_user->money+($codeq->number*(Config::get('code_payback')/100)));
+                    $gift_user->money=($gift_user->money+($codeq->number*($_ENV['code_payback']/100)));
                     $gift_user->save();
 
                     $Payback=new Payback();
                     $Payback->total=$_POST['total_fee'];
                     $Payback->userid=$user->id;
                     $Payback->ref_by=$user->ref_by;
-                    $Payback->ref_get=$codeq->number*(Config::get('code_payback')/100);
+                    $Payback->ref_get=$codeq->number*($_ENV['code_payback']/100);
                     $Payback->datetime=time();
                     $Payback->save();
                 }
@@ -274,7 +274,7 @@ class Pay
 
               echo "success";    //请不要修改或删除
 
-              if (Config::get('enable_donate') == 'true') {
+              if ($_ENV['enable_donate'] == 'true') {
                   if ($user->is_hide == 1) {
                       Telegram::Send("姐姐姐姐，一位不愿透露姓名的大老爷给我们捐了 ".$codeq->number." 元呢~");
                   } else {
@@ -294,11 +294,11 @@ class Pay
 
     private static function pmw_callback()
     {
-        if (Config::get('pmw_publickey')!="") {
+        if ($_ENV['pmw_publickey'] != '') {
             \Paymentwall_Config::getInstance()->set(array(
                 'api_type' => \Paymentwall_Config::API_VC,
-                'public_key' => Config::get('pmw_publickey'),
-                'private_key' => Config::get('pmw_privatekey')
+                'public_key' => $_ENV['pmw_publickey'],
+                'private_key' => $_ENV['pmw_privatekey']
             ));
 
 
@@ -330,14 +330,14 @@ class Pay
 
                 if ($user->ref_by!=""&&$user->ref_by!=0&&$user->ref_by!=null) {
                     $gift_user=User::where("id", "=", $user->ref_by)->first();
-                    $gift_user->money=($gift_user->money+($codeq->number*(Config::get('code_payback')/100)));
+                    $gift_user->money=($gift_user->money+($codeq->number*($_ENV['code_payback']/100)));
                     $gift_user->save();
 
                     $Payback=new Payback();
                     $Payback->total=$pingback->getVirtualCurrencyAmount();
                     $Payback->userid=$user->id;
                     $Payback->ref_by=$user->ref_by;
-                    $Payback->ref_get=$codeq->number*(Config::get('code_payback')/100);
+                    $Payback->ref_get=$codeq->number*($_ENV['code_payback']/100);
                     $Payback->datetime=time();
                     $Payback->save();
                 }
@@ -347,7 +347,7 @@ class Pay
                 echo 'OK'; // Paymentwall expects response to be OK, otherwise the pingback will be resent
 
 
-                if (Config::get('enable_donate') == 'true') {
+                if ($_ENV['enable_donate'] == 'true') {
                     if ($user->is_hide == 1) {
                         Telegram::Send("姐姐姐姐，一位不愿透露姓名的大老爷给我们捐了 ".$codeq->number." 元呢~");
                     } else {
@@ -365,9 +365,9 @@ class Pay
     private static function zfbjk_callback($request)
     {
         //您在www.zfbjk.com的商户ID
-        $alidirect_pid = Config::get("zfbjk_pid");
+        $alidirect_pid = $_ENV["zfbjk_pid"];
         //您在www.zfbjk.com的商户密钥
-        $alidirect_key = Config::get("zfbjk_key");
+        $alidirect_key = $_ENV["zfbjk_key"];
 
 
         $tradeNo = $request->getParam('tradeNo');
@@ -414,19 +414,19 @@ class Pay
 
                 if ($user->ref_by!=""&&$user->ref_by!=0&&$user->ref_by!=null) {
                     $gift_user=User::where("id", "=", $user->ref_by)->first();
-                    $gift_user->money=($gift_user->money+($codeq->number*(Config::get('code_payback')/100)));
+                    $gift_user->money=($gift_user->money+($codeq->number*($_ENV['code_payback']/100)));
                     $gift_user->save();
 
                     $Payback=new Payback();
                     $Payback->total=$Money;
                     $Payback->userid=$user->id;
                     $Payback->ref_by=$user->ref_by;
-                    $Payback->ref_get=$codeq->number*(Config::get('code_payback')/100);
+                    $Payback->ref_get=$codeq->number*($_ENV['code_payback']/100);
                     $Payback->datetime=time();
                     $Payback->save();
                 }
 
-                if (Config::get('enable_donate') == 'true') {
+                if ($_ENV['enable_donate'] == 'true') {
                     if ($user->is_hide == 1) {
                         Telegram::Send("姐姐姐姐，一位不愿透露姓名的大老爷给我们捐了 ".$codeq->number." 元呢~");
                     } else {
@@ -445,7 +445,7 @@ class Pay
 
     public static function callback($request)
     {
-        $driver = Config::get("payment_system");
+        $driver = $_ENV["payment_system"];
         switch ($driver) {
             case "paymentwall":
                 return Pay::pmw_callback();

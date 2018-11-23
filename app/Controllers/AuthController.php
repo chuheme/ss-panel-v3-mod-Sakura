@@ -18,9 +18,7 @@ use App\Services\Mail;
 use App\Models\User;
 use App\Models\LoginIp;
 use App\Models\EmailVerify;
-use App\Utils\Duoshuo;
 use App\Utils\GA;
-use App\Utils\Wecenter;
 use App\Utils\Geetest;
 use App\Utils\TelegramSessionManager;
 
@@ -33,13 +31,13 @@ class AuthController extends BaseController
     public function login()
     {
         $uid = time().rand(1, 10000) ;
-        if (Config::get('enable_geetest_login') == 'true') {
+        if ($_ENV['enable_geetest_login'] == 'true') {
             $GtSdk = Geetest::get($uid);
         } else {
             $GtSdk = null;
         }
 
-        if (Config::get('enable_telegram') == 'true') {
+        if ($_ENV['enable_telegram'] == 'true') {
             $login_text = TelegramSessionManager::add_login_session();
             $login = explode("|", $login_text);
             $login_token = $login[0];
@@ -49,7 +47,13 @@ class AuthController extends BaseController
             $login_number = '';
         }
 
-        return $this->view()->assign('geetest_html', $GtSdk)->assign('login_token', $login_token)->assign('login_number', $login_number)->assign('telegram_bot', Config::get('telegram_bot'))->assign('baseUrl', Config::get('baseUrl'))->display('auth/login.tpl');
+        return $this->view()
+            ->assign('geetest_html', $GtSdk)
+            ->assign('login_token', $login_token)
+            ->assign('login_number', $login_number)
+            ->assign('telegram_bot', $_ENV['telegram_bot'])
+            ->assign('baseUrl', $_ENV['baseUrl'])
+            ->display('auth/login.tpl');
     }
 
     public function loginHandle($request, $response, $args)
@@ -61,7 +65,7 @@ class AuthController extends BaseController
         $code = $request->getParam('code');
         $rememberMe = $request->getParam('remember_me');
 
-        if (Config::get('enable_geetest_login') == 'true') {
+        if ($_ENV['enable_geetest_login'] == 'true') {
             $ret = Geetest::verify($request->getParam('geetest_challenge'), $request->getParam('geetest_validate'), $request->getParam('geetest_seccode'));
             if (!$ret) {
                 $res['ret'] = 0;
@@ -121,9 +125,6 @@ class AuthController extends BaseController
         $loginip->type=0;
         $loginip->save();
 
-        Wecenter::add($user, $passwd);
-        Wecenter::Login($user, $passwd, $time);
-
         return $response->getBody()->write(json_encode($rs));
     }
 
@@ -176,7 +177,7 @@ class AuthController extends BaseController
 
         $uid = time().rand(1, 10000) ;
 
-        if (Config::get('enable_geetest_reg') == 'true') {
+        if ($_ENV['enable_geetest_reg'] == 'true') {
             $GtSdk = Geetest::get($uid);
         } else {
             $GtSdk = null;
@@ -184,13 +185,13 @@ class AuthController extends BaseController
 
 
 
-        return $this->view()->assign('enable_invite_code', Config::get('enable_invite_code'))->assign('geetest_html', $GtSdk)->assign('enable_email_verify', Config::get('enable_email_verify'))->assign('code', $code)->display('auth/register.tpl');
+        return $this->view()->assign('enable_invite_code', $_ENV['enable_invite_code'])->assign('geetest_html', $GtSdk)->assign('enable_email_verify', $_ENV['enable_email_verify'])->assign('code', $code)->display('auth/register.tpl');
     }
 
 
     public function sendVerify($request, $response, $next)
     {
-        if (Config::get('enable_email_verify')=='true') {
+        if ($_ENV['enable_email_verify'] == 'true') {
             $email = $request->getParam('email');
 
             if ($email=="") {
@@ -215,7 +216,7 @@ class AuthController extends BaseController
             }
 
             $ipcount = EmailVerify::where('ip', '=', $_SERVER["REMOTE_ADDR"])->where('expire_in', '>', time())->count();
-            if ($ipcount>=(int)Config::get('email_verify_iplimit')) {
+            if ($ipcount>=(int)$_ENV['email_verify_iplimit']) {
                 $res['ret'] = 0;
                 $res['msg'] = "此IP请求次数过多";
                 return $response->getBody()->write(json_encode($res));
@@ -232,17 +233,17 @@ class AuthController extends BaseController
             $code = Tools::genRandomChar(6);
 
             $ev = new EmailVerify();
-            $ev->expire_in = time() + Config::get('email_verify_ttl');
+            $ev->expire_in = time() + $_ENV['email_verify_ttl'];
             $ev->ip = $_SERVER["REMOTE_ADDR"];
             $ev->email = $email;
             $ev->code = $code;
             $ev->save();
 
-            $subject = Config::get('appName')."- 验证邮件";
+            $subject = $_ENV['appName']."- 验证邮件";
 
             try {
                 Mail::send($email, $subject, 'auth/verify.tpl', [
-                    "code" => $code,"expire" => date("Y-m-d H:i:s", time() + Config::get('email_verify_ttl'))
+                    "code" => $code,"expire" => date("Y-m-d H:i:s", time() + $_ENV['email_verify_ttl'])
                 ], [
                     //BASE_PATH.'/public/assets/email/styles.css'
                 ]);
@@ -269,7 +270,7 @@ class AuthController extends BaseController
         $wechat = $request->getParam('wechat');
         // check code
 
-        if (Config::get('enable_geetest_reg') == 'true') {
+        if ($_ENV['enable_geetest_reg'] == 'true') {
             $ret = Geetest::verify($request->getParam('geetest_challenge'), $request->getParam('geetest_validate'), $request->getParam('geetest_seccode'));
             if (!$ret) {
                 $res['ret'] = 0;
@@ -278,7 +279,7 @@ class AuthController extends BaseController
             }
         }
 
-        if (Config::get('enable_invite_code')=='true') {
+        if ($_ENV['enable_invite_code'] == 'true') {
             $c = InviteCode::where('code', $code)->first();
             if ($c == null) {
                 $res['ret'] = 0;
@@ -294,7 +295,7 @@ class AuthController extends BaseController
             return $response->getBody()->write(json_encode($res));
         }
 
-        if (Config::get('enable_email_verify')=='true') {
+        if ($_ENV['enable_email_verify'] == 'true') {
             $mailcount = EmailVerify::where('email', '=', $email)->where('code', '=', $emailcode)->where('expire_in', '>', time())->first();
             if ($mailcount == null) {
                 $res['ret'] = 0;
@@ -353,34 +354,34 @@ class AuthController extends BaseController
         $user->t = 0;
         $user->u = 0;
         $user->d = 0;
-        $user->method = Config::get('reg_method');
-        $user->protocol = Config::get('reg_protocol');
-        $user->protocol_param = Config::get('reg_protocol_param');
-        $user->obfs = Config::get('reg_obfs');
-        $user->obfs_param = Config::get('reg_obfs_param');
-        $user->forbidden_ip = Config::get('reg_forbidden_ip');
-        $user->forbidden_port = Config::get('reg_forbidden_port');
+        $user->method = $_ENV['reg_method'];
+        $user->protocol = $_ENV['reg_protocol'];
+        $user->protocol_param = $_ENV['reg_protocol_param'];
+        $user->obfs = $_ENV['reg_obfs'];
+        $user->obfs_param = $_ENV['reg_obfs_param'];
+        $user->forbidden_ip = $_ENV['reg_forbidden_ip'];
+        $user->forbidden_port = $_ENV['reg_forbidden_port'];
         $user->im_type =  $imtype;
         $user->im_value =  $antiXss->xss_clean($wechat);
-        $user->transfer_enable = Tools::toGB(Config::get('defaultTraffic'));
-        $user->invite_num = Config::get('inviteNum');
-        $user->auto_reset_day = Config::get('reg_auto_reset_day');
-        $user->auto_reset_bandwidth = Config::get('reg_auto_reset_bandwidth');
-        if (Config::get('enable_invite_code')=='true') {
+        $user->transfer_enable = Tools::toGB($_ENV['defaultTraffic']);
+        $user->invite_num = $_ENV['inviteNum'];
+        $user->auto_reset_day = $_ENV['reg_auto_reset_day'];
+        $user->auto_reset_bandwidth = $_ENV['reg_auto_reset_bandwidth'];
+        if ($_ENV['enable_invite_code'] == 'true') {
             $user->ref_by = $c->user_id;
         } else {
             $user->ref_by = 0;
         }
-        $user->expire_in=date("Y-m-d H:i:s", time()+Config::get('user_expire_in_default')*86400);
+        $user->expire_in=date("Y-m-d H:i:s", time()+$_ENV['user_expire_in_default']*86400);
         $user->reg_date=date("Y-m-d H:i:s");
         $user->reg_ip=$_SERVER["REMOTE_ADDR"];
         $user->money=0;
         $user->class=0;
         $user->plan='A';
         $user->node_speedlimit=0;
-        $user->theme=Config::get('theme');
+        $user->theme=$_ENV['theme'];
 
-        $group=Config::get('ramdom_group');
+        $group=$_ENV['ramdom_group'];
         $Garray=explode(",", $group);
 
         $user->node_group=$Garray[rand(0, count($group)-1)];
@@ -396,12 +397,9 @@ class AuthController extends BaseController
             $res['ret'] = 1;
             $res['msg'] = "注册成功";
 
-            Duoshuo::add($user);
-
-
             Radius::Add($user, $user->passwd);
 
-            if (Config::get('enable_invite_code')=='true') {
+            if ($_ENV['enable_invite_code'] == 'true') {
                 $c->delete();
             }
 
@@ -424,7 +422,7 @@ class AuthController extends BaseController
         $token = $request->getQueryParams()["token"];
         $number = $request->getQueryParams()["number"];
 
-        if (Config::get('enable_telegram') == 'true') {
+        if ($_ENV['enable_telegram'] == 'true') {
             $ret = TelegramSessionManager::check_login_session($token, $number);
             $res['ret'] = $ret;
             return $response->getBody()->write(json_encode($res));
@@ -436,7 +434,7 @@ class AuthController extends BaseController
 
     public function telegram_oauth($request, $response, $args)
     {
-        if (Config::get('enable_telegram') == 'true') {
+        if ($_ENV['enable_telegram'] == 'true') {
             $auth_data = $request->getQueryParams();
             if ($this->telegram_oauth_check($auth_data)) {
                 $telegram_id = $auth_data['id'];
@@ -455,7 +453,7 @@ class AuthController extends BaseController
     private function telegram_oauth_check($auth_data)
     {
         $check_hash = $auth_data['hash'];
-        $bot_token = Config::get('telegram_token');;
+        $bot_token = $_ENV['telegram_token'];
         unset($auth_data['hash']);
         $data_check_arr = [];
         foreach ($auth_data as $key => $value) {

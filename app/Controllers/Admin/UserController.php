@@ -10,7 +10,6 @@ use App\Controllers\AdminController;
 use App\Utils\Hash;
 use App\Utils\Radius;
 use App\Utils\QQWry;
-use App\Utils\Wecenter;
 use App\Utils\Tools;
 
 class UserController extends AdminController
@@ -156,7 +155,6 @@ class UserController extends AdminController
 
         if ($request->getParam('pass') != '') {
             $user->pass = Hash::passwordHash($request->getParam('pass'));
-            Wecenter::ChangeUserName($email1, $email2, $request->getParam('pass'), $user->user_name);
             $user->clean_link();
         }
 

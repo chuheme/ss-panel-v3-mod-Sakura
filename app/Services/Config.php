@@ -24,8 +24,6 @@ class Config
             "checkinMin" => self::get("checkinMin"),
             "code_payback" => self::get("code_payback"),
             "checkinMax" => self::get("checkinMax"),
-            "wecenter_url" => self::get("wecenter_url"),
-            "enable_wecenter" => self::get("enable_wecenter"),
             "jump_delay" => self::get("jump_delay"),
             "enable_analytics_code" => self::get("enable_analytics_code"),
             "enable_donate" => self::get("enable_donate"),
@@ -55,19 +53,6 @@ class Config
             'database'  => self::get('radius_db_database'),
             'username'  => self::get('radius_db_user'),
             'password'  => self::get('radius_db_password'),
-            'charset'   => self::get('db_charset'),
-            'collation' => self::get('db_collation')
-        ];
-    }
-
-    public static function getWecenterDbConfig()
-    {
-        return [
-            'driver'  => self::get('db_driver'),
-            'host'  => self::get('wecenter_db_host'),
-            'database'  => self::get('wecenter_db_database'),
-            'username'  => self::get('wecenter_db_user'),
-            'password'  => self::get('wecenter_db_password'),
             'charset'   => self::get('db_charset'),
             'collation' => self::get('db_collation')
         ];

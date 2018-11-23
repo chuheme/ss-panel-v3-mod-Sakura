@@ -23,7 +23,7 @@ class Mu
         }
 
         $auth=false;
-        $keyset=explode(",", Config::get('muKey'));
+        $keyset=explode(",", $_ENV['muKey']);
         foreach ($keyset as $sinkey) {
             if ($key==$sinkey) {
                 $auth=true;

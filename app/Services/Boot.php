@@ -17,7 +17,7 @@ class Boot
     public static function setDebug()
     {
         // debug
-        if (Config::get('debug') == "true") {
+        if ($_ENV['debug'] == "true") {
             define("DEBUG", true);
         }
     }
@@ -30,7 +30,7 @@ class Boot
     public static function setTimezone()
     {
         // config time zone
-        date_default_timezone_set(Config::get('timeZone'));
+        date_default_timezone_set($_ENV['timeZone']);
     }
 
     public static function bootDb()
@@ -38,12 +38,8 @@ class Boot
         // Init Eloquent ORM Connection
         $capsule = new Capsule;
         $capsule->addConnection(Config::getDbConfig(), 'default');
-        if (Config::get('enable_radius')=='true') {
+        if ($_ENV['enable_radius'] == 'true') {
             $capsule->addConnection(Config::getRadiusDbConfig(), 'radius');
-        }
-
-        if (Config::get('enable_wecenter')=='true') {
-            $capsule->addConnection(Config::getWecenterDbConfig(), 'wecenter');
         }
         $capsule->bootEloquent();
     }

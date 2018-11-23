@@ -18,7 +18,6 @@ use App\Services\Config;
 use App\Utils\Hash;
 use App\Utils\Tools;
 use App\Utils\Radius;
-use App\Utils\Wecenter;
 use App\Utils\Check;
 use App\Models\RadiusBan;
 use App\Models\DetectLog;
@@ -71,7 +70,7 @@ class UserController extends BaseController
         $ssr_sub_token = LinkController::GenerateSSRSubCode($this->user->id, 0);
 
         $uid = time().rand(1, 10000) ;
-        if (Config::get('enable_geetest_checkin') == 'true') {
+        if ($_ENV['enable_geetest_checkin'] == 'true') {
             $GtSdk = Geetest::get($uid);
         } else {
             $GtSdk = null;
@@ -79,16 +78,16 @@ class UserController extends BaseController
 
         $Ann = Ann::orderBy('date', 'desc')->first();
 
-        $baseURL = Config::get('baseUrl');
+        $baseURL = $_ENV['baseUrl'];
         $subscribe = '<p>
                                                             <span class="icon icon-lg">flash_auto</span> 普通端口订阅地址：
-                                                            <input type="text" class="input form-control form-control-monospace" name="input1" readonly value="'.$baseURL.'/link/'.$ssr_sub_token.'?mu=0" readonly="true">
-                                                            <button class="copy-text btn btn-brand-accent" type="button" data-clipboard-text="'.$baseURL.'/link/'.$ssr_sub_token.'?mu=0">点击复制地址</button>
+                                                            <input type="text" class="input form-control form-control-monospace" name="input1" readonly value="'.$_ENV['baseUrl'].'/link/'.$ssr_sub_token.'?mu=0" readonly="true">
+                                                            <button class="copy-text btn btn-brand-accent" type="button" data-clipboard-text="'.$_ENV['baseUrl'].'/link/'.$ssr_sub_token.'?mu=0">点击复制地址</button>
                                                         </p>';
         $subscribe_mu = '<p>
                                                             <span class="icon icon-lg">flash_auto</span> 公共端口订阅地址：
-                                                            <input type="text" class="input form-control form-control-monospace" name="input1" readonly value="'.$baseURL.'/link/'.$ssr_sub_token.'?mu=1" readonly="true">
-                                                            <button class="copy-text btn btn-brand-accent" type="button" data-clipboard-text="'.$baseURL.'/link/'.$ssr_sub_token.'?mu=1">点击复制地址</button>
+                                                            <input type="text" class="input form-control form-control-monospace" name="input1" readonly value="'.$_ENV['baseUrl'].'/link/'.$ssr_sub_token.'?mu=1" readonly="true">
+                                                            <button class="copy-text btn btn-brand-accent" type="button" data-clipboard-text="'.$_ENV['baseUrl'].'/link/'.$ssr_sub_token.'?mu=1">点击复制地址</button>
                                                         </p>';
 
 
@@ -99,8 +98,6 @@ class UserController extends BaseController
             ->assign('ann', $Ann)
             ->assign('geetest_html', $GtSdk)
             ->assign("ios_token", $ios_token)
-            ->assign('enable_duoshuo', Config::get('enable_duoshuo'))
-            ->assign('duoshuo_shortname', Config::get('duoshuo_shortname'))
             ->assign("user", $this->user)->registerClass("URL", "App\Utils\URL")
             ->assign('baseUrl', $baseURL)
             ->assign('subscribe', $subscribe)
@@ -112,9 +109,12 @@ class UserController extends BaseController
 
     public function lookingglass($request, $response, $args)
     {
-        $Speedtest=Speedtest::where("datetime", ">", time()-Config::get('Speedtest_duration')*3600)->orderBy('datetime', 'desc')->get();
+        $Speedtest=Speedtest::where("datetime", ">", time()-$_ENV['Speedtest_duration']*3600)->orderBy('datetime', 'desc')->get();
 
-        return $this->view()->assign('speedtest', $Speedtest)->assign('hour', Config::get('Speedtest_duration'))->display('user/lookingglass.tpl');
+        return $this->view()
+            ->assign('speedtest', $Speedtest)
+            ->assign('hour', $_ENV['Speedtest_duration'])
+            ->display('user/lookingglass.tpl');
     }
 
 
@@ -136,7 +136,7 @@ class UserController extends BaseController
 
     public function donate($request, $response, $args)
     {
-        if (Config::get('enable_donate') != 'true') {
+        if ($_ENV['enable_donate'] != 'true') {
             exit(0);
         }
 
@@ -207,14 +207,14 @@ class UserController extends BaseController
 
             if ($user->ref_by!=""&&$user->ref_by!=0&&$user->ref_by!=null) {
                 $gift_user=User::where("id", "=", $user->ref_by)->first();
-                $gift_user->money=($gift_user->money+($codeq->number*(Config::get('code_payback')/100)));
+                $gift_user->money=($gift_user->money+($codeq->number*($_ENV['code_payback']/100)));
                 $gift_user->save();
 
                 $Payback=new Payback();
                 $Payback->total=$codeq->number;
                 $Payback->userid=$this->user->id;
                 $Payback->ref_by=$this->user->ref_by;
-                $Payback->ref_get=$codeq->number*(Config::get('code_payback')/100);
+                $Payback->ref_get=$codeq->number*($_ENV['code_payback']/100);
                 $Payback->datetime=time();
                 $Payback->save();
             }
@@ -222,7 +222,7 @@ class UserController extends BaseController
             $res['ret'] = 1;
             $res['msg'] = "充值成功，充值的金额为".$codeq->number."元。";
 
-            if (Config::get('enable_donate') == 'true') {
+            if ($_ENV['enable_donate'] == 'true') {
                 if ($this->user->is_hide == 1) {
                     Telegram::Send("姐姐姐姐，一位不愿透露姓名的大老爷给我们捐了 ".$codeq->number." 元呢~");
                 } else {
@@ -522,7 +522,7 @@ class UserController extends BaseController
                     $email=Radius::GetUserName($email);
                     $exp = explode(":", $node->server);
                     $token = LinkController::GenerateCode(3, $exp[0], $exp[1], 0, $this->user->id);
-                    $json_show="PAC 信息<br>地址：".Config::get('baseUrl')."/link/".$token."<br>"."用户名：".$email."<br>密码：".$this->user->passwd."<br>支持方式：".$node->method."<br>备注：".$node->info;
+                    $json_show="PAC 信息<br>地址：".$_ENV['baseUrl']."/link/".$token."<br>"."用户名：".$email."<br>密码：".$this->user->passwd."<br>支持方式：".$node->method."<br>备注：".$node->info;
 
                     return $this->view()->assign('json_show', $json_show)->display('user/nodeinfopac.tpl');
                 }
@@ -563,9 +563,11 @@ class UserController extends BaseController
                     $token_cnunc = LinkController::GenerateApnCode("3gnet", $exp[0], $exp[1], $this->user->id);
                     $token_ctnet = LinkController::GenerateApnCode("ctnet", $exp[0], $exp[1], $this->user->id);
 
-                    $json_show="APN 文件<br>移动地址：".Config::get('baseUrl')."/link/".$token_cmcc."<br>联通地址：".Config::get('baseUrl')."/link/".$token_cnunc."<br>电信地址：".Config::get('baseUrl')."/link/".$token_ctnet."<br>"."用户名：".$email."<br>密码：".$this->user->passwd."<br>支持方式：".$node->method."<br>备注：".$node->info;
+                    $json_show="APN 文件<br>移动地址：".$_ENV['baseUrl']."/link/".$token_cmcc."<br>联通地址：".$_ENV['baseUrl']."/link/".$token_cnunc."<br>电信地址：".$_ENV['baseUrl']."/link/".$token_ctnet."<br>"."用户名：".$email."<br>密码：".$this->user->passwd."<br>支持方式：".$node->method."<br>备注：".$node->info;
 
-                    return $this->view()->assign('json_show', $json_show)->display('user/nodeinfoapndownload.tpl');
+                    return $this->view()
+                        ->assign('json_show', $json_show)
+                        ->display('user/nodeinfoapndownload.tpl');
                 }
 
 
@@ -576,10 +578,12 @@ class UserController extends BaseController
                     $email=$this->user->email;
                     $email=Radius::GetUserName($email);
                     $token = LinkController::GenerateCode(7, $node->server, ($this->user->port-20000), 0, $this->user->id);
-                    $json_show="PAC Plus 信息<br>PAC 地址：".Config::get('baseUrl')."/link/".$token."<br>支持方式：".$node->method."<br>备注：".$node->info;
+                    $json_show="PAC Plus 信息<br>PAC 地址：".$_ENV['baseUrl']."/link/".$token."<br>支持方式：".$node->method."<br>备注：".$node->info;
 
 
-                    return $this->view()->assign('json_show', $json_show)->display('user/nodeinfopacplus.tpl');
+                    return $this->view()
+                        ->assign('json_show', $json_show)
+                        ->display('user/nodeinfopacplus.tpl');
                 }
 
 
@@ -591,9 +595,11 @@ class UserController extends BaseController
                     $email=Radius::GetUserName($email);
                     $token = LinkController::GenerateCode(8, $node->server, ($this->user->port-20000), 0, $this->user->id);
                     $token_ios = LinkController::GenerateCode(8, $node->server, ($this->user->port-20000), 1, $this->user->id);
-                    $json_show="PAC Plus Plus信息<br>PAC 一般地址：".Config::get('baseUrl')."/link/".$token."<br>PAC iOS 地址：".Config::get('baseUrl')."/link/".$token_ios."<br>"."备注：".$node->info;
+                    $json_show="PAC Plus Plus信息<br>PAC 一般地址：".$_ENV['baseUrl']."/link/".$token."<br>PAC iOS 地址：".$_ENV['baseUrl']."/link/".$token_ios."<br>"."备注：".$node->info;
 
-                    return $this->view()->assign('json_show', $json_show)->display('user/nodeinfopacpp.tpl');
+                    return $this->view()
+                        ->assign('json_show', $json_show)
+                        ->display('user/nodeinfopacpp.tpl');
                 }
 
 
@@ -734,8 +740,16 @@ class UserController extends BaseController
 
         $config_service = new Config();
 
-        return $this->view()->assign('user', $this->user)->assign('themes', $themes)->assign('isBlock', $isBlock)->assign('Block', $Block)->assign('bind_token', $bind_token)->assign('telegram_bot', Config::get('telegram_bot'))->assign('config_service', $config_service)
-                    ->registerClass("URL", "App\Utils\URL")->display('user/edit.tpl');
+        return $this->view()
+            ->assign('user', $this->user)
+            ->assign('themes', $themes)
+            ->assign('isBlock', $isBlock)
+            ->assign('Block', $Block)
+            ->assign('bind_token', $bind_token)
+            ->assign('telegram_bot', $_ENV['telegram_bot'])
+            ->assign('config_service', $config_service)
+            ->registerClass("URL", "App\Utils\URL")
+            ->display('user/edit.tpl');
     }
 
 
@@ -750,7 +764,9 @@ class UserController extends BaseController
 
 
 
-        return $this->view()->assign('codes', $codes)->display('user/invite.tpl');
+        return $this->view()
+            ->assign('codes', $codes)
+            ->display('user/invite.tpl');
     }
 
     public function doInvite($request, $response, $args)
@@ -1070,7 +1086,7 @@ class UserController extends BaseController
 
         $adminUser = User::where("is_admin", "=", "1")->get();
         foreach ($adminUser as $user) {
-            $subject = Config::get('appName')."-新工单被开启";
+            $subject = $_ENV['appName']."-新工单被开启";
             $to = $user->email;
             $text = "管理员您好，有人开启了新的工单，请您及时处理。。" ;
             try {
@@ -1116,9 +1132,9 @@ class UserController extends BaseController
         if ($status==1&&$ticket_main->status!=$status) {
             $adminUser = User::where("is_admin", "=", "1")->get();
             foreach ($adminUser as $user) {
-                $subject = Config::get('appName')."-工单被重新开启";
+                $subject = $_ENV['appName']."-工单被重新开启";
                 $to = $user->email;
-                $text = "管理员您好，有人重新开启了<a href=\"".Config::get('baseUrl')."/admin/ticket/".$ticket_main->id."/view\">工单</a>，请您及时处理。" ;
+                $text = "管理员您好，有人重新开启了<a href=\"".$_ENV['baseUrl']."/admin/ticket/".$ticket_main->id."/view\">工单</a>，请您及时处理。" ;
                 try {
                     Mail::send($to, $subject, 'news/warn.tpl', [
                         "user" => $user,"text" => $text
@@ -1131,9 +1147,9 @@ class UserController extends BaseController
         } else {
             $adminUser = User::where("is_admin", "=", "1")->get();
             foreach ($adminUser as $user) {
-                $subject = Config::get('appName')."-工单被回复";
+                $subject = $_ENV['appName']."-工单被回复";
                 $to = $user->email;
-                $text = "管理员您好，有人回复了<a href=\"".Config::get('baseUrl')."/admin/ticket/".$ticket_main->id."/view\">工单</a>，请您及时处理。" ;
+                $text = "管理员您好，有人回复了<a href=\"".$_ENV['baseUrl']."/admin/ticket/".$ticket_main->id."/view\">工单</a>，请您及时处理。" ;
                 try {
                     Mail::send($to, $subject, 'news/warn.tpl', [
                         "user" => $user,"text" => $text
@@ -1392,7 +1408,7 @@ class UserController extends BaseController
         }
 
         $ipcount = EmailVerify::where('userid', '=', $user->id)->where('expire_in', '>', time())->count();
-        if ($ipcount>=(int)Config::get('email_verify_iplimit')) {
+        if ($ipcount>=(int)$_ENV['email_verify_iplimit']) {
             $res['ret'] = 0;
             $res['msg'] = "你的请求次数过多，请稍候再试";
             return $response->getBody()->write(json_encode($res));
@@ -1401,18 +1417,18 @@ class UserController extends BaseController
         $code = Tools::genRandomChar(6);
 
         $ev = new EmailVerify();
-        $ev->expire_in = time() + Config::get('email_verify_ttl');
+        $ev->expire_in = time() + $_ENV['email_verify_ttl'];
         $ev->ip = $_SERVER["REMOTE_ADDR"];
         $ev->email = $email;
         $ev->code = $code;
         $ev->userid = $user->id;
         $ev->save();
 
-        $subject = Config::get('appName')."- 验证邮件";
+        $subject = $_ENV['appName']."- 验证邮件";
 
         try {
             Mail::send($email, $subject, 'auth/verify.tpl', [
-                "code" => $code,"expire" => date("Y-m-d H:i:s", time() + Config::get('email_verify_ttl'))
+                "code" => $code,"expire" => date("Y-m-d H:i:s", time() + $_ENV['email_verify_ttl'])
             ], [
                 //BASE_PATH.'/public/assets/email/styles.css'
             ]);
@@ -1536,7 +1552,7 @@ class UserController extends BaseController
 
     public function doCheckIn($request, $response, $args)
     {
-        if (Config::get('enable_geetest_checkin') == 'true') {
+        if ($_ENV['enable_geetest_checkin'] == 'true') {
             $ret = Geetest::verify($request->getParam('geetest_challenge'), $request->getParam('geetest_validate'), $request->getParam('geetest_seccode'));
             if (!$ret) {
                 $res['ret'] = 0;
@@ -1550,7 +1566,7 @@ class UserController extends BaseController
             $res['ret'] = 1;
             return $response->getBody()->write(json_encode($res));
         }
-        $traffic = rand(Config::get('checkinMin'), Config::get('checkinMax'));
+        $traffic = rand($_ENV['checkinMin'], $_ENV['checkinMax']);
         $this->user->transfer_enable = $this->user->transfer_enable + Tools::toMB($traffic);
         $this->user->last_check_in_time = time();
         $this->user->save();
