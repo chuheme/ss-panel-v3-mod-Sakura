@@ -1,10 +1,7 @@
 <?php
 
-//  BASE_PATH
-define('BASE_PATH', __DIR__.'/../');
-
 // Bootstrap
-require BASE_PATH.'/bootstrap.php';
+require __DIR__.'/../bootstrap.php';
 
 
 // Init slim routes

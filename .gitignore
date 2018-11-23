@@ -4,3 +4,4 @@ public/.user.ini
 storage/*
 .env
 resources/views/material/analytics.tpl
+composer.phar

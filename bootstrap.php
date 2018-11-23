@@ -9,6 +9,8 @@
 
 use App\Services\Boot;
 
+//  define BASE_PATH and VERSION
+define('BASE_PATH', __DIR__);
 define('VERSION', '20180627');
 
 // Vendor Autoload
