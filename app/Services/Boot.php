@@ -11,7 +11,7 @@ class Boot
     {
         // Env
         $env = new Dotenv(BASE_PATH);
-        $env->load();
+        $env->overload();
     }
 
     public static function setDebug()
