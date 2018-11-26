@@ -297,14 +297,6 @@ $app->group('/api', function () {
 });
 
 // mu
-$app->group('/mu', function () {
-    $this->get('/users', 'App\Controllers\Mu\UserController:index');
-    $this->post('/users/{id}/traffic', 'App\Controllers\Mu\UserController:addTraffic');
-    $this->post('/nodes/{id}/online_count', 'App\Controllers\Mu\NodeController:onlineUserLog');
-    $this->post('/nodes/{id}/info', 'App\Controllers\Mu\NodeController:info');
-})->add(new Mu());
-
-// mu
 $app->group('/mod_mu', function () {
     $this->get('/nodes/{id}/info', 'App\Controllers\Mod_Mu\NodeController:get_info');
     $this->get('/users', 'App\Controllers\Mod_Mu\UserController:index');
