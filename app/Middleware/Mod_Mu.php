@@ -14,37 +14,21 @@ class Mod_Mu
 {
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response, $next)
     {
-        $key = Helper::getMuKeyFromReq($request);
-        if ($key == null) {
+        $params = $request->getQueryParams();
+        if ($params['key'] == null) {
             $res['ret'] = 0;
             $res['data'] = "key is null";
             $response->getBody()->write(json_encode($res));
+
             return $response;
-        }
-
-        $auth=false;
-        $keyset=explode(",", $_ENV['muKey']);
-        foreach ($keyset as $sinkey) {
-            if ($key==$sinkey) {
-                $auth=true;
-                break;
-            }
-        }
-
-        if ($auth==false) {
+        }elseif($params['key'] != $_ENV['muKey']) {
             $res['ret'] = 0;
-            $res['data'] = "token or source is invalid";
+            $res['data'] = "muKey is wrong!!!";
             $response->getBody()->write(json_encode($res));
             return $response;
         }
 
-        $node = Node::where("node_ip", "LIKE", $_SERVER["REMOTE_ADDR"].'%')->first();
-        if ($node==null && $_SERVER["REMOTE_ADDR"] != '127.0.0.1') {
-            $res['ret'] = 0;
-            $res['data'] = "token or source is invalid";
-            $response->getBody()->write(json_encode($res));
-            return $response;
-        }
+        $node = Node::find($params['id'])->first();
 
         $response = $next($request, $response);
         return $response;
