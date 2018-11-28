@@ -17,7 +17,8 @@
     "illuminate/database": "5.2.*",
     "sendgrid/sendgrid": "7.0.0",
     "ozdemir/datatables": "1.6.*",
-    "slim/twig-view": "2.4.0"
+    "slim/twig-view": "2.4.0",
+    "cloudflare/sdk": "dev-master"
   },
   "autoload": {
     "classmap": [

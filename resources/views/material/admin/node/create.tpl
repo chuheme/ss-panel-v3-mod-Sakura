@@ -36,14 +36,6 @@
                                         <input class="form-control" id="node_ip" name="node_ip" type="text">
                                     </div>
 
-                                    <div class="form-group form-group-label">
-                                        <div class="checkbox switch">
-                                            <label for="auto_sync"></label>
-                                            <input class="access-hide" id="auto_sync" type="checkbox" name="auto_sync"><span class="switch-toggle"></span>IP 同步
-                                        </div>
-                                    </div>
-
-
                                     <div class="form-group form-group-label" hidden="hidden">
                                         <label class="floating-label" for="method">加密方式</label>
                                         <input class="form-control" id="method" type="text" name="method" value="aes-256-cfb">
@@ -55,13 +47,13 @@
                                     </div>
 
                                     <div class="form-group form-group-label">
-                                        <label for="mu_only">
+                                        <label for="dns_type">
                                             <label class="floating-label" for="dns_type">DNS 类型</label>
                                             <select id="dns_type" class="form-control" name="dns_type">
-                                                <option value="1">非使用节点</option>
-                                                <option value="1">静态 A 记录</option>
-                                                <option value="2">动态 CNAME 记录</option>
-                                                <option value="3">动态 A 记录</option>
+                                                <option value="">未定义</option>
+                                                <option value="A">A 记录</option>
+                                                <option value="CNAME">CNAME 记录</option>
+                                                <option value="A&AAAA">A&AAAA 记录</option>
                                             </select>
                                         </label>
                                     </div>
@@ -231,7 +223,6 @@
             status: {required: true},
             node_speedlimit: {required: true},
             sort: {required: true},
-            dns_type: {required: true},
             node_bandwidth_limit: {required: true},
             bandwidthlimit_resetday: {required: true}
         },

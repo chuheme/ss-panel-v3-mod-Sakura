@@ -26,9 +26,10 @@ use App\Services\Mail;
 use App\Utils\QQWry;
 use App\Utils\GA;
 use App\Utils\Telegram;
-use CloudXNS\Api;
 use App\Models\Disconnect;
 use App\Models\UnblockIp;
+use Cloudflare\API as Cloudflare;
+use CloudXNS\Api as CloudXNS;
 
 class Job
 {
@@ -487,20 +488,15 @@ class Job
              * @author SakuraSa233
              */
             // Sync node begin
-            if ($node->dns_type > 1){
+            if ($node->dns_type == 'CNAME'){    // only CNAME node could be dynamic node
                 if ($node->sort != 999 && $node->sort != 9) {
-                    if ($node->dns_type == 2){
-                        $sync_host = $node->dns_value;    // dynamic CNAME
-                    }else{
-                        $sync_host = $node->server;   // dynamic A
-                    }
-                    $ip = gethostbyname($sync_host);
+                    $ip = gethostbyname($node->dns_value);
                     if ($ip != $node->node_ip){
                         // process ss_node table
-                        $node->node_ip=$ip;
+                        $node->node_ip = $ip;
                         $node->save();
                         // process relay table
-                        $relay_rules = Relay::where('dist_node_id',$node->id)->get();
+                        $relay_rules = Relay::where('dist_node_id', $node->id)->get();
                         foreach ($relay_rules as $relay_rule){
                             $relay_rule->dist_ip = $ip;
                             $relay_rule->save();
@@ -537,7 +533,8 @@ class Job
                     }
                 }
                 $notice_text = '喵喵喵~ '.$node->name.' 节点掉线了喵~';
-                if (($node->sort==0 || $node->sort==10) && $_ENV['node_switcher'] != 'none'){
+                if (($node->sort==0 || $node->sort==10) && $_ENV['dns_provider'] != 'none'){
+                    $notice_text .= '域名解析被切换到了 '.$Temp_node->name.' 上了喵~';
                     $Temp_node = Node::where('node_class', '<=', $node->node_class)->where(
                         function ($query) use ($node) {
                         $query->where('node_group', '=', $node->node_group)
@@ -545,10 +542,10 @@ class Job
                         }
                     )->whereRaw('UNIX_TIMESTAMP() - `node_heartbeat` < 60')->inRandomOrder()->first();
 
-                    switch($_ENV['node_switcher'])
+                    switch($_ENV['dns_provider'])
                     {
                         case 'cloudxns':
-                            $api=new Api();
+                            $api=new CloudXNS();
                             $api->setApiKey($_ENV['cloudxns_apikey']);
                             $api->setSecretKey($_ENV['cloudxns_apisecret']);
 
@@ -558,50 +555,38 @@ class Job
 
                             foreach ($domain_json->data as $domain) {
                                 if (strpos($domain->domain, $_ENV['cloudxns_domain']) != false) {
-                                    $domain_id=$domain->id;
+                                    $domain_id = $domain->id;
+                                    break;
                                 }
                             }
 
-                            $record_json=json_decode($api->record->recordList($domain_id, 0, 0, 2000));
+                            $record_json = json_decode($api->record->recordList($domain_id, 0, 0, 2000));
 
                             foreach ($record_json->data as $record) {
                                 if (($record->host.".".$_ENV['cloudxns_domain']) == $node->server) {
-                                    $record_id=$record->record_id;
-
-                                    if ($Temp_node!=null) {
-                                        $api->record->recordUpdate($domain_id, $record->host, $Temp_node->server, 'CNAME', 55, 60, 1, '', $record_id);
-                                    }
+                                    $record_id = $record->record_id;
+                                    $record_host = $record->host;
+                                    $api->record->recordDelete($record_id, $domain_id);
                                 }
                             }
+                            $api->record->recordAdd($domain_id, $record_host, $Temp_node->server, 'CNAME', 55, 600, 1);
                             break;
                                 
                         case 'cloudflare':
-                            // define header
-                            $headers = [
-                                'X-Auth-Email: '.$_ENV['cloudflare_email'],
-                                'X-Auth-Key: '.$_ENV['cloudflare_key'],
-                                'Content-type: application/json'
-                            ];
-                            // get record id
-                            $getRecID = curl_init();
-                            curl_setopt($getRecID, CURLOPT_URL, 'https://api.cloudflare.com/client/v4/zones/'.$_ENV['cloudflare_zoneid'].'/dns_records?&name='.$node->server);
-                            curl_setopt($getRecID, CURLOPT_HTTPHEADER, $headers);
-                            curl_setopt($getRecID, CURLOPT_RETURNTRANSFER, true);
-                            $RecID = json_decode(curl_exec($getRecID),true)["result"][0]["id"];
-                            curl_close($getRecID);
-                            // update record
-                            $RecUpdate = curl_init();
-                            curl_setopt($RecUpdate, CURLOPT_URL, 'https://api.cloudflare.com/client/v4/zones/'.$_ENV['cloudflare_zoneid'].'/dns_records/'.$RecID);
-                            curl_setopt($RecUpdate, CURLOPT_HTTPHEADER, $headers);
-                            curl_setopt($RecUpdate, CURLOPT_RETURNTRANSFER, true);
-                            curl_setopt($RecUpdate, CURLOPT_CUSTOMREQUEST, 'PUT');
-                            $post_data = '{"type":"CNAME","name":"'.$node->server.'","content":"'.$Temp_node->server.'","ttl":'.$_ENV['cloudflare_ttl'].'}';
-                            curl_setopt($RecUpdate, CURLOPT_POSTFIELDS, $post_data);
-                            curl_exec($RecUpdate);
-                            curl_close($RecUpdate);
+                            // init API interface
+                            $key = new Cloudflare\Auth\APIKey($_ENV['cloudflare_email'], $_ENV['cloudflare_key']);
+                            $adapter = new Cloudflare\Adapter\Guzzle($key);
+                            $dns = new Cloudflare\Endpoints\DNS($adapter);
+                            $zoneid = $_ENV['cloudflare_zoneid'];
+                            // delete former record
+                            $details = $dns->listRecords($zoneid, '', $node->server);
+                            foreach ($details as $detail){
+                                 $dns->deleteRecord($zoneid, $detail->id);
+                            }
+                            // add new record
+                            $dns->addRecord($zoneid, 'CNAME', $node->server, $Temp_node->server, 1, false);
                             break;
                     }
-                    $notice_text .= '域名解析被切换到了 '.$Temp_node->name.' 上了喵~';
                 }
 
                 Telegram::Send($notice_text);
@@ -629,18 +614,11 @@ class Job
                     }
                 }
                 $notice_text = '喵喵喵~ '.$node->name.' 节点恢复了喵~';
-                if (($node->sort==0 || $node->sort==10) && $_ENV['node_switcher'] != 'none'){
-                            if($node->dns_type==2){
-                                $origin_type = 'CNAME';
-                                $origin_value = $node->dns_value;
-                            }else{
-                                $origin_type = 'A';
-                                $origin_value = $node->node_ip;
-                            }
-                    switch($_ENV['node_switcher'])
+                if (($node->sort==0 || $node->sort==10) && $_ENV['dns_provider'] != 'none'){
+                    switch($_ENV['dns_provider'])
                     {
                         case 'cloudxns':
-                            $api=new Api();
+                            $api=new CloudXNS();
                             $api->setApiKey($_ENV['cloudxns_apikey']);//修改成自己API KEY
                             $api->setSecretKey($_ENV['cloudxns_apisecret']);//修改成自己的SECERET KEY
 
@@ -650,43 +628,73 @@ class Job
 
                             foreach ($domain_json->data as $domain) {
                                 if (strpos($domain->domain, $_ENV['cloudxns_domain']) != false) {
-                                    $domain_id=$domain->id;
+                                    $domain_id = $domain->id;
+                                    break;
                                 }
                             }
 
                             $record_json=json_decode($api->record->recordList($domain_id, 0, 0, 2000));
 
-                            foreach ($record_json->data as $record) {
-                                if (($record->host.".".$_ENV['cloudxns_domain']) == $node->server) {
-                                    $record_id=$record->record_id;
-
-                                    $api->record->recordUpdate($domain_id, $record->host, $origin_value, $origin_type, 55, 600, 1, '', $record_id);
-                                }
+                            switch($node->dns_type)
+                            {
+                                case 'A':
+                                    $IPs = explode(',', $node->dns_value);
+                                    foreach ($record_json->data as $record) {
+                                        if (($record->host.".".$_ENV['cloudxns_domain']) == $node->server) {
+                                            $record_id = $record->record_id;
+                                            $record_host = $record->host;
+                                            $api->record->recordDelete($record_id, $domain_id);
+                                        }
+                                    }
+                                    foreach ($IPs as $IP){
+                                        $api->record->recordAdd($domain_id, $record_host, $IP, 'A', 55, 600, 1);
+                                    }
+                                case 'CNAME':
+                                    $api->record->recordAdd($domain_id, $record_host, $node->dns_value, 'A', 55, 600, 1);
+                                case 'A&AAAA':
+                                    $IP = explode('|', $node->dns_value);
+                                    $IPv4s = explode(',', $IPs[0]);
+                                    $IPv6s = explode(',', $IPs[1]);
+                                    foreach ($IPv4s as $IPv4){
+                                        $api->record->recordAdd($domain_id, $record_host, $IPv4, 'A', 55, 600, 1);
+                                    }
+                                    foreach ($IPv6s as $IPv6){
+                                        $api->record->recordAdd($domain_id, $record_host, $IPv6, 'AAAA', 55, 600, 1);
+                                    }
                             }
+                            break;
                         case 'cloudflare':
-                            // define header
-                            $headers = [
-                                'X-Auth-Email: '.$_ENV['cloudflare_email'],
-                                'X-Auth-Key: '.$_ENV['cloudflare_key'],
-                                'Content-type: application/json'
-                            ];
-                            // get record id
-                            $getRecID = curl_init();
-                            curl_setopt($getRecID, CURLOPT_URL, 'https://api.cloudflare.com/client/v4/zones/'.$_ENV['cloudflare_zoneid'].'/dns_records?&name='.$node->server);
-                            curl_setopt($getRecID, CURLOPT_HTTPHEADER, $headers);
-                            curl_setopt($getRecID, CURLOPT_RETURNTRANSFER, true);
-                            $RecID = json_decode(curl_exec($getRecID),true)["result"][0]["id"];
-                            curl_close($getRecID);
-                            // update record
-                            $RecUpdate = curl_init();
-                            curl_setopt($RecUpdate, CURLOPT_URL, 'https://api.cloudflare.com/client/v4/zones/'.$_ENV['cloudflare_zoneid'].'/dns_records/'.$RecID);
-                            curl_setopt($RecUpdate, CURLOPT_HTTPHEADER, $headers);
-                            curl_setopt($RecUpdate, CURLOPT_RETURNTRANSFER, true);
-                            curl_setopt($RecUpdate, CURLOPT_CUSTOMREQUEST, 'PUT');
-                            $post_data = '{"type":"'.$origin_type.'","name":"'.$node->server.'","content":"'.$origin_value.'","ttl":'.$_ENV['cloudflare_ttl'].'}';
-                            curl_setopt($RecUpdate, CURLOPT_POSTFIELDS, $post_data);
-                            curl_exec($RecUpdate);
-                            curl_close($RecUpdate);
+                            // init API interface
+                            $key = new Cloudflare\Auth\APIKey($_ENV['cloudflare_email'], $_ENV['cloudflare_key']);
+                            $adapter = new Cloudflare\Adapter\Guzzle($key);
+                            $dns = new Cloudflare\Endpoints\DNS($adapter);
+                            $zoneid = $_ENV['cloudflare_zoneid'];
+                            // delete former record
+                            $details = $dns->listRecords($zoneid, '', $node->server);
+                            foreach ($details as $detail){
+                                $dns->deleteRecord($zoneid, $detail->id);
+                            }
+                            // add record
+                            switch($node->dns_type)
+                            {
+                                case 'A':
+                                    $IPs = explode(',', $node->dns_value);
+                                    foreach ($IPs as $IP){
+                                        $dns->addRecord($zoneid, 'A', $node->server, $IP, 1, false);
+                                    }
+                                case 'CNAME':
+                                    $dns->addRecord($zoneid, 'CNAME', $node->server, $node->dns_value, 1, false);
+                                case 'A&AAAA':
+                                    $IP = explode('|', $node->dns_value);
+                                    $IPv4s = explode(',', $IPs[0]);
+                                    $IPv6s = explode(',', $IPs[1]);
+                                    foreach ($IPv4s as $IPv4){
+                                        $dns->addRecord($zoneid, 'A', $node->server, $IPv4, 1, false);
+                                    }
+                                    foreach ($IPv6s as $IPv6){
+                                        $dns->addRecord($zoneid, 'AAAA', $node->server, $IPv6, 1, false);
+                                    }
+                            }
                     }
                     $notice_text .= '域名解析被切换回来了喵~';
                 }
