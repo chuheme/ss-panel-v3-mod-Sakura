@@ -649,8 +649,10 @@ class Job
                                     foreach ($IPs as $IP){
                                         $api->record->recordAdd($domain_id, $record_host, $IP, 'A', 55, 600, 1);
                                     }
+                                    break;
                                 case 'CNAME':
                                     $api->record->recordAdd($domain_id, $record_host, $node->dns_value, 'A', 55, 600, 1);
+                                    break;
                                 case 'A&AAAA':
                                     $IP = explode('|', $node->dns_value);
                                     $IPv4s = explode(',', $IPs[0]);
@@ -661,6 +663,7 @@ class Job
                                     foreach ($IPv6s as $IPv6){
                                         $api->record->recordAdd($domain_id, $record_host, $IPv6, 'AAAA', 55, 600, 1);
                                     }
+                                    break;
                             }
                             break;
                         case 'cloudflare':
@@ -682,8 +685,10 @@ class Job
                                     foreach ($IPs as $IP){
                                         $dns->addRecord($zoneid, 'A', $node->server, $IP, 1, false);
                                     }
+                                    break;
                                 case 'CNAME':
                                     $dns->addRecord($zoneid, 'CNAME', $node->server, $node->dns_value, 1, false);
+                                    break;
                                 case 'A&AAAA':
                                     $IP = explode('|', $node->dns_value);
                                     $IPv4s = explode(',', $IPs[0]);
@@ -694,6 +699,7 @@ class Job
                                     foreach ($IPv6s as $IPv6){
                                         $dns->addRecord($zoneid, 'AAAA', $node->server, $IPv6, 1, false);
                                     }
+                                    break;
                             }
                     }
                     $notice_text .= '域名解析被切换回来了喵~';
