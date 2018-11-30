@@ -534,13 +534,13 @@ class Job
                 }
                 $notice_text = '喵喵喵~ '.$node->name.' 节点掉线了喵~';
                 if (($node->sort==0 || $node->sort==10) && Config::get('dns_provider') != 'none'){
-                    $notice_text .= '域名解析被切换到了 '.$Temp_node->name.' 上了喵~';
                     $Temp_node = Node::where('node_class', '<=', $node->node_class)->where(
                         function ($query) use ($node) {
                         $query->where('node_group', '=', $node->node_group)
                             ->orWhere('node_group', '=', 0);
                         }
                     )->whereRaw('UNIX_TIMESTAMP() - `node_heartbeat` < 60')->inRandomOrder()->first();
+                    $notice_text .= '域名解析被切换到了 '.$Temp_node->name.' 上了喵~';
 
                     switch(Config::get('dns_provider'))
                     {
@@ -579,7 +579,7 @@ class Job
                             $dns = new Cloudflare\Endpoints\DNS($adapter);
                             $zoneid = Config::get('cloudflare_zoneid');
                             // delete former record
-                            $details = $dns->listRecords($zoneid, '', $node->server);
+                            $details = $dns->listRecords($zoneid, '', $node->server)->result;
                             foreach ($details as $detail){
                                  $dns->deleteRecord($zoneid, $detail->id);
                             }
@@ -670,7 +670,7 @@ class Job
                             $dns = new Cloudflare\Endpoints\DNS($adapter);
                             $zoneid = Config::get('cloudflare_zoneid');
                             // delete former record
-                            $details = $dns->listRecords($zoneid, '', $node->server);
+                            $details = $dns->listRecords($zoneid, '', $node->server)->result;
                             foreach ($details as $detail){
                                 $dns->deleteRecord($zoneid, $detail->id);
                             }
