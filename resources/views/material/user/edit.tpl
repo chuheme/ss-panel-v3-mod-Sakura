@@ -390,7 +390,7 @@
                             </div>
                         </div>
 
-                        {if $config['enable_telegram'] == 'true'}
+                        {if $config['enable_telegram']}
                         <div class="card margin-bottom-no">
                             <div class="card-main">
                                 <div class="card-inner">
@@ -528,7 +528,7 @@
         "text": ga_qrcode
     });
 
-    {if $config['enable_telegram'] == 'true'}
+    {if $config['enable_telegram']}
     var telegram_qrcode = 'mod://bind/{$bind_token}';
     jQuery('#telegram-qr').qrcode({
         "text": telegram_qrcode

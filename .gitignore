@@ -2,6 +2,6 @@ vendor/
 .user.ini
 public/.user.ini
 storage/*
-.env
+.config.php
 resources/views/material/analytics.tpl
 composer.phar

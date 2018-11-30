@@ -12,7 +12,7 @@
                                 <li class="active">
                                     <a class="waves-attach" data-toggle="tab" href="#passwd_login">账号密码登录</a>
                                 </li>
-                                {if $config['enable_telegram'] == 'true'}
+                                {if $config['enable_telegram']}
                                 <li>
                                     <a class="waves-attach" data-toggle="tab" href="#telegram_login">Telegram 登录</a>
                                 </li>
@@ -98,7 +98,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                {if $config['enable_telegram'] == 'true'}
+                                {if $config['enable_telegram']}
                                 <div class="tab-pane fade" id="telegram_login">
                                     <div class="card">
                                         <div class="card-main">
@@ -254,7 +254,7 @@
     })
 </script>
 
-{if $config['enable_telegram'] == 'true'}
+{if $config['enable_telegram']}
 <script src=" /assets/public/js/jquery.qrcode.min.js "></script>
 <script>
     var telegram_qrcode = 'mod://login/{$login_token}';

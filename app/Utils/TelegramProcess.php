@@ -23,7 +23,7 @@ class TelegramProcess
                         $bot->sendMessage($message->getChat()->getId(), "您今天续过了，别续了！再续，再续我就把你续给长者了！", $parseMode = null, $disablePreview = false, $replyToMessageId = $reply_to);
                         break;
                     }
-                    $traffic = rand($_ENV['checkinMin'], $_ENV['checkinMax']);
+                    $traffic = rand(Config::get('checkinMin'), Config::get('checkinMax'));
                     $user->transfer_enable = $user->transfer_enable + Tools::toMB($traffic);
                     $user->last_check_in_time = time();
                     $user->save();
@@ -40,7 +40,7 @@ class TelegramProcess
                         $bot->sendMessage($message->getChat()->getId(), "乃的余额只有 ".$user->money." CNY 的呢~~", $parseMode = null, $disablePreview = false, $replyToMessageId = $reply_to);
                         break;
                     }
-                    $traffic = rand($_ENV['lotteryMin'], $_ENV['lotteryMax'])*$price;
+                    $traffic = rand(Config::get('lotteryMin'), Config::get('lotteryMax'))*$price;
                     $user->transfer_enable = $user->transfer_enable + Tools::toMB($traffic);
                     $user->money -= $price;
                     $user->save();
@@ -124,12 +124,12 @@ class TelegramProcess
 
                         foreach ($photo_id_array as $key => $value) {
                             $file = $bot->getFile($value);
-                            $qrcode_text = QRcode::decode("https://api.telegram.org/file/bot".$_ENV['telegram_token']."/".$file->getFilePath());
+                            $qrcode_text = QRcode::decode("https://api.telegram.org/file/bot".Config::get('telegram_token')."/".$file->getFilePath());
 
                             if ($qrcode_text == null) {
                                 foreach ($photo_id_list_array[$key] as $fail_key => $fail_value) {
                                     $fail_file = $bot->getFile($fail_value);
-                                    $qrcode_text = QRcode::decode("https://api.telegram.org/file/bot".$_ENV['telegram_token']."/".$fail_file->getFilePath());
+                                    $qrcode_text = QRcode::decode("https://api.telegram.org/file/bot".Config::get('telegram_token')."/".$fail_file->getFilePath());
                                     if ($qrcode_text != null) {
                                         break;
                                     }
@@ -184,7 +184,7 @@ class TelegramProcess
             }
         } else {
             //群组
-            if ($_ENV['telegram_group_quiet'] == 'true') {
+            if (Config::get('telegram_group_quiet')) {
                 return;
             }
 
@@ -195,7 +195,7 @@ class TelegramProcess
                     $bot->sendMessage($message->getChat()->getId(), 'Pong!这个群组的 ID 是 '.$message->getChat()->getId().'!', $parseMode = null, $disablePreview = false, $replyToMessageId = $message->getMessageId());
                     break;
                 case 'chat':
-                    if ($message->getChat()->getId() == $_ENV['telegram_chatid']) {
+                    if ($message->getChat()->getId() == Config::get('telegram_chatid')) {
                         $bot->sendMessage($message->getChat()->getId(), Tuling::chat($message->getFrom()->getId(), substr($message->getText(), 5)), $parseMode = null, $disablePreview = false, $replyToMessageId = $message->getMessageId());
                     } else {
                         $bot->sendMessage($message->getChat()->getId(), '不约，叔叔我们不约。', $parseMode = null, $disablePreview = false, $replyToMessageId = $message->getMessageId());
@@ -225,7 +225,7 @@ class TelegramProcess
                     break;
                 default:
                     if ($message->getText() != null) {
-                        if ($message->getChat()->getId() == $_ENV['telegram_chatid']) {
+                        if ($message->getChat()->getId() == Config::get('telegram_chatid')) {
                             $bot->sendMessage($message->getChat()->getId(), Tuling::chat($message->getFrom()->getId(), $message->getText()), $parseMode = null, $disablePreview = false, $replyToMessageId = $message->getMessageId());
                         } else {
                             $bot->sendMessage($message->getChat()->getId(), '不约，叔叔我们不约。', $parseMode = null, $disablePreview = false, $replyToMessageId = $message->getMessageId());
@@ -240,7 +240,7 @@ class TelegramProcess
     public static function process()
     {
         try {
-            $bot = new \TelegramBot\Api\Client($_ENV['telegram_token']);
+            $bot = new \TelegramBot\Api\Client(Config::get('telegram_token'));
             // or initialize with botan.io tracker api key
             // $bot = new \TelegramBot\Api\Client('YOUR_BOT_API_TOKEN', 'YOUR_BOTAN_TRACKER_API_KEY');
 

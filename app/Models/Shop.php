@@ -118,7 +118,7 @@ class Shop extends Model
             switch ($key) {
                 case "bandwidth":
                     if ($is_renew == 0) {
-                        if ($_ENV['enable_bought_reset'] == 'true') {
+                        if (Config::get('enable_bought_reset')) {
                             $user->transfer_enable=$value*1024*1024*1024;
                             $user->u = 0;
                             $user->d = 0;

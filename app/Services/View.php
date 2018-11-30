@@ -15,7 +15,7 @@ class View
         if ($user->isLogin) {
             $theme=$user->theme;
         } else {
-            $theme=$_ENV['theme'];
+            $theme=Config::get('theme');
         }
         
         

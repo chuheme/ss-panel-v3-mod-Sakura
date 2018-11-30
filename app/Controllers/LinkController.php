@@ -364,7 +364,7 @@ class LinkController extends BaseController
 
         $items = URL::getAllItems($user, $is_mu, $is_ss);
         foreach($items as $item) {
-            $proxy_group .= $item['remark'].' = custom,'.$item['address'].','.$item['port'].','.$item['method'].','.$item['passwd'].','.$_ENV['baseUrl'].'/downloads/SSEncrypt.module'.URL::getSurgeObfs($item)."\n";
+            $proxy_group .= $item['remark'].' = custom,'.$item['address'].','.$item['port'].','.$item['method'].','.$item['passwd'].','.Config::get('baseUrl').'/downloads/SSEncrypt.module'.URL::getSurgeObfs($item)."\n";
             $proxy_name .= ",".$item['remark'];
         }
 
@@ -744,7 +744,7 @@ dns-server = 119.29.29.29, 223.5.5.5, 114.114.114.114
 loglevel = notify
 
 [Proxy]
-Proxy = custom,'.$server.','.$port.','.$method.','.$passwd.','.$_ENV['baseUrl'].'/downloads/SSEncrypt.module
+Proxy = custom,'.$server.','.$port.','.$method.','.$passwd.','.Config::get('baseUrl').'/downloads/SSEncrypt.module
 
 [Rule]
 DOMAIN-KEYWORD,adsmogo,REJECT
@@ -969,7 +969,7 @@ loglevel = notify
 
 [Proxy]
 
-Proxy = custom,'.$server.','.$port.','.$method.','.$passwd.','.$_ENV['baseUrl'].'/downloads/SSEncrypt.module
+Proxy = custom,'.$server.','.$port.','.$method.','.$passwd.','.Config::get('baseUrl').'/downloads/SSEncrypt.module
 
 
 

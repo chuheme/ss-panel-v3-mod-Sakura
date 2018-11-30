@@ -9,9 +9,9 @@ class Tuling
 {
     public static function chat($user, $text)
     {
-        if ($_ENV['enable_tuling'] == 'true') {
+        if (Config::get('enable_tuling')) {
             $data = array();
-            $data['key'] = $_ENV['tuling_apikey'];
+            $data['key'] = Config::get('tuling_apikey');
             $data['userid'] = $user;
             $data['info'] = $text;
             

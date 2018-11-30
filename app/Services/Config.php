@@ -6,7 +6,8 @@ class Config
 {
     public static function get($key)
     {
-        return $_ENV[$key];
+        global $System_Config;
+        return $System_Config[$key];
     }
 
     public static function getPublicConfig()

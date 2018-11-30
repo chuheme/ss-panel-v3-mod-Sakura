@@ -272,7 +272,7 @@
                             </li>
                             
                             
-                            {if $config['enable_donate']=='true'}
+                            {if $config['enable_donate']}
                             <li>
                                 <a href="/user/donate">
                                     <i class="icon icon-lg">attach_money</i>&nbsp;捐赠公示

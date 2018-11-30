@@ -2,22 +2,14 @@
 
 namespace App\Services;
 
-use Dotenv\Dotenv;
 use Illuminate\Database\Capsule\Manager as Capsule;
 
 class Boot
 {
-    public static function loadEnv()
-    {
-        // Env
-        $env = new Dotenv(BASE_PATH);
-        $env->overload();
-    }
-
     public static function setDebug()
     {
         // debug
-        if ($_ENV['debug'] == "true") {
+        if (Config::get('debug')) {
             define("DEBUG", true);
         }
     }
@@ -30,7 +22,7 @@ class Boot
     public static function setTimezone()
     {
         // config time zone
-        date_default_timezone_set($_ENV['timeZone']);
+        date_default_timezone_set(Config::get('timeZone'));
     }
 
     public static function bootDb()
@@ -38,7 +30,7 @@ class Boot
         // Init Eloquent ORM Connection
         $capsule = new Capsule;
         $capsule->addConnection(Config::getDbConfig(), 'default');
-        if ($_ENV['enable_radius'] == 'true') {
+        if (Config::get('enable_radius')) {
             $capsule->addConnection(Config::getRadiusDbConfig(), 'radius');
         }
         $capsule->bootEloquent();

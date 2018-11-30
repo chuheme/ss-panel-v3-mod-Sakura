@@ -40,7 +40,7 @@
                                             </div>
                                         </div>
                                         
-                                        {if $enable_email_verify == 'true'}
+                                        {if $enable_email_verify}
                                         <div class="form-group form-group-label">
                                             <div class="row">
                                                 <div class="col-md-10 col-md-push-1">
@@ -98,7 +98,7 @@
                                         
                                         
                                         
-                                        {if $enable_invite_code == 'true'}
+                                        {if $enable_invite_code}
                                             <div class="form-group form-group-label">
                                                 <div class="row">
                                                     <div class="col-md-10 col-md-push-1">
@@ -191,8 +191,8 @@
                     passwd: $("#passwd").val(),
                     repasswd: $("#repasswd").val(),
                     wechat: $("#wechat").val(),
-                    imtype: $("#imtype").val(){if $enable_invite_code == 'true'},
-                    code: $("#code").val(){/if}{if $enable_email_verify == 'true'},
+                    imtype: $("#imtype").val(){if $enable_invite_code},
+                    code: $("#code").val(){/if}{if $enable_email_verify},
                     emailcode: $("#email_code").val(){/if}{if $geetest_html != null},
                     geetest_challenge: validate.geetest_challenge,
                     geetest_validate: validate.geetest_validate,
@@ -270,7 +270,7 @@
 </script>
 
 
-{if $enable_email_verify == 'true'}
+{if $enable_email_verify}
 <script>
 var wait=60;
 function time(o) {

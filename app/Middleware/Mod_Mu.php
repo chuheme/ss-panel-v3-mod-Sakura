@@ -21,7 +21,7 @@ class Mod_Mu
             $response->getBody()->write(json_encode($res));
 
             return $response;
-        }elseif($params['key'] != $_ENV['muKey']) {
+        }elseif($params['key'] != Config::get('muKey')) {
             $res['ret'] = 0;
             $res['data'] = "muKey is wrong!!!";
             $response->getBody()->write(json_encode($res));

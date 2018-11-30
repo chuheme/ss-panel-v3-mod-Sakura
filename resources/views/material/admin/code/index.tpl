@@ -9,7 +9,7 @@
 <main class="content">
     <div class="content-header ui-content-header">
         <div class="container">
-            <h1 class="content-heading">充值码{if $config['enable_donate']=='true'}与捐赠{/if}管理</h1>
+            <h1 class="content-heading">充值码{if $config['enable_donate']}与捐赠{/if}管理</h1>
         </div>
     </div>
     <div class="container">
@@ -44,7 +44,7 @@
                     <div class="fbtn-inner">
                         <a class="fbtn fbtn-lg fbtn-brand-accent waves-attach waves-circle waves-light" data-toggle="dropdown"><span class="fbtn-ori icon">add</span><span class="fbtn-sub icon">close</span></a>
                         <div class="fbtn-dropup">
-                            <a class="fbtn fbtn-brand waves-attach waves-circle waves-light" href="/admin/code/create"><span class="fbtn-text fbtn-text-left">充值码</span><span class="icon">code</span></a> {if $config['enable_donate']=='true'}
+                            <a class="fbtn fbtn-brand waves-attach waves-circle waves-light" href="/admin/code/create"><span class="fbtn-text fbtn-text-left">充值码</span><span class="icon">code</span></a> {if $config['enable_donate']}
                             <a class="fbtn fbtn-green waves-attach waves-circle waves-light" href="/admin/donate/create"><span class="fbtn-text fbtn-text-left">捐赠和支出</span><span class="icon">attach_money</span></a> {/if}
                         </div>
                     </div>
