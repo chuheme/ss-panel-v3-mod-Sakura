@@ -5,7 +5,6 @@
     "smarty/smarty": "3.*",
     "mailgun/mailgun-php": "2.*",
     "phpmailer/phpmailer": "~5.2",
-    "vlucas/phpdotenv": "2.4.0",
     "zeuxisoo/slim-whoops": "0.6.*",
     "gregwar/captcha": "1.*",
     "cloudxns/cloud-xns-api-sdk-php": "*",
@@ -29,9 +28,6 @@
     }
   },
 
- "config": {
-        "secure-http": false
- },
  "minimum-stability": "dev",
   "require-dev": {
     "khanamiryan/qrcode-detector-decoder": "*"
