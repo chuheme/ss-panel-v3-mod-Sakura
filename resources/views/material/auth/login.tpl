@@ -73,7 +73,7 @@
                                                         </div>
                                                     {/if}
 
-                                                    {if recaptcha_secret != null}
+                                                    {if $recaptcha_sitekey != null}
                                                         <div class="form-group">
                                                             <div class="row">
                                                                 <div align="center" class="g-recaptcha" data-sitekey="{$recaptcha_sitekey}"></div>
