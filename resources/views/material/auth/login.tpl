@@ -73,6 +73,14 @@
                                                         </div>
                                                     {/if}
 
+                                                    {if recaptcha_secret != null}
+                                                        <div class="form-group">
+                                                            <div class="row">
+                                                                <div align="center" class="g-recaptcha" data-sitekey="{$recaptcha_sitekey}"></div>
+                                                            </div>
+                                                        </div>
+                                                    {/if}
+
                                                     <div class="form-group">
                                                         <div class="row">
                                                             <div class="col-md-10 col-md-push-1">
@@ -204,7 +212,8 @@
                 data:{
                     email: $("#email").val(),
                     passwd: $("#passwd").val(),
-                    code: $("#code").val(),
+                    code: $("#code").val(),{if $recaptcha_sitekey != null}
+                    recaptcha: grecaptcha.getResponse(),{/if}
                     remember_me: $("#remember_me:checked").val(){if $geetest_html != null},
                     geetest_challenge: validate.geetest_challenge,
                     geetest_validate: validate.geetest_validate,
@@ -356,3 +365,4 @@ $(document).ready(function () {
 </script>
 
 {/if}
+{if $recaptcha_sitekey != null}<script src="https://recaptcha.net/recaptcha/api.js" async defer></script>{/if}

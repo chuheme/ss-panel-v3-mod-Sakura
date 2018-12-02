@@ -21,7 +21,7 @@ $System_Config['pwdMethod'] = 'sha256';
 $System_Config['salt'] = 'z5GeZzByM10YoHRl';
 # 默认主题
 $System_Config['theme'] = 'material';
-# WebAPI 用 Key，多个请使用半角逗号(,)分隔
+# WebAPI 用 Key
 $System_Config['muKey'] = 'sakura';
 # ----------------------------
 
@@ -105,7 +105,7 @@ $System_Config['defaultTraffic'] = 1;
 # 用户注册时设定的过期时间 单位:天
 $System_Config['user_expire_in_default'] = 7;
 # 注册时随机分配到的分组，多个分组请用英文半角逗号(,)分隔
-$System_Config['ramdom_group'] = 0;
+$System_Config['ramdom_group'] = '0';
 # 启用邀请码注册
 $System_Config['enable_invite_code'] = false;
 # 启用邮箱验证码注册
@@ -172,15 +172,20 @@ $System_Config['enable_auto_clean_unused_days'] = 30;
 
 
 # -------------- 验证码 --------------
-# 申请: geetest.com
+# 验证服务 可选: geetest,recaptcha
+$System_Config['captcha_provider'] = '';
+# reCAPTCHA
+$System_Config['recaptcha_secret'] = '';
+$System_Config['recaptcha_sitekey'] = '';
+# 极验
 $System_Config['geetest_id'] = '';
 $System_Config['geetest_key'] = '';
 # 启用注册验证码
-$System_Config['enable_geetest_reg'] = false;
+$System_Config['enable_reg_captcha'] = false;
 # 启用登录验证码
-$System_Config['enable_geetest_login'] = false;
+$System_Config['enable_login_captcha'] = false;
 # 启用签到验证码
-$System_Config['enable_geetest_checkin'] = false;
+$System_Config['enable_checkin_captcha'] = false;
 # ----------------------------
 
 

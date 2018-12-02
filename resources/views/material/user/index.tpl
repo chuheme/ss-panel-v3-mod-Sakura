@@ -364,6 +364,9 @@
                                             {if $geetest_html != null}
                                                 <div id="popup-captcha"></div>
                                             {/if}
+                                            {if recaptcha_secret != null && $user->isAbleToCheckin()}
+                                                <div class="g-recaptcha" data-sitekey="{$recaptcha_sitekey}"></div>
+                                            {/if}
                                     </div>
 
                                     <div class="card-action">
@@ -434,7 +437,10 @@ window.onload = function() {
         $.ajax({
                 type: "POST",
                 url: "/user/checkin",
-                dataType: "json",
+                dataType: "json",{if $recaptcha_sitekey != null}
+                data: {
+                    recaptcha: grecaptcha.getResponse()
+                },{/if}
                 success: function (data) {
                     $("#checkin-msg").html(data.msg);
                     $("#checkin-btn").hide();
@@ -455,7 +461,10 @@ $(document).ready(function () {
         $.ajax({
             type: "POST",
             url: "/user/checkin",
-            dataType: "json",
+            dataType: "json",{if $recaptcha_sitekey != null}
+            data: {
+                recaptcha: grecaptcha.getResponse()
+            },{/if}
             success: function (data) {
                 $("#checkin-msg").html(data.msg);
                 $("#checkin-btn").hide();
@@ -540,3 +549,4 @@ initGeetest({
 
 
 </script>
+{if $recaptcha_sitekey != null}<script src="https://recaptcha.net/recaptcha/api.js" async defer></script>{/if}

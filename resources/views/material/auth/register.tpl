@@ -118,6 +118,14 @@
                                                 </div>
                                             </div>
                                         {/if}
+
+                                        {if recaptcha_secret != null}
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div align="center" class="g-recaptcha" data-sitekey="{$recaptcha_sitekey}"></div>
+                                                </div>
+                                            </div>
+                                        {/if}
                                         
                                         <div class="form-group">
                                             <div class="row">
@@ -190,7 +198,8 @@
                     name: $("#name").val(),
                     passwd: $("#passwd").val(),
                     repasswd: $("#repasswd").val(),
-                    wechat: $("#wechat").val(),
+                    wechat: $("#wechat").val(),{if $recaptcha_sitekey != null}
+                    recaptcha: grecaptcha.getResponse(),{/if}
                     imtype: $("#imtype").val(){if $enable_invite_code},
                     code: $("#code").val(){/if}{if $enable_email_verify},
                     emailcode: $("#email_code").val(){/if}{if $geetest_html != null},
@@ -346,9 +355,4 @@ function time(o) {
 </script>
 
 {/if}
-
-
-
-
-
-    
+{if $recaptcha_sitekey != null}<script src="https://recaptcha.net/recaptcha/api.js" async defer></script>{/if}
