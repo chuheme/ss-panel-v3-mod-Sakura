@@ -6,9 +6,10 @@
 
 
     <!-- js -->
-    <script src="//cdn.staticfile.org/jquery/2.2.1/jquery.min.js"></script>
+    <script src="//cdn.staticfile.org/jquery/3.3.1/jquery.min.js"></script>
+    {if isset($geetest_html) && $geetest_html != null}
     <script src="//static.geetest.com/static/tools/gt.js"></script>
-    
+    {/if}
     <script src="/theme/material/js/base.min.js"></script>
     <script src="/theme/material/js/project.min.js"></script>
 </body>

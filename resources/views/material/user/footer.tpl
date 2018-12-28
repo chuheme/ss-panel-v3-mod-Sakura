@@ -5,13 +5,14 @@
     </footer>
 
     <!-- js -->
-    <script src="//cdn.staticfile.org/jquery/2.2.1/jquery.min.js"></script>
+    <script src="//cdn.staticfile.org/jquery/3.3.1/jquery.min.js"></script>
     <script src="//cdn.staticfile.org/jquery-validate/1.15.0/jquery.validate.min.js"></script>
+    {if isset($geetest_html) && $geetest_html != null}
     <script src="//static.geetest.com/static/tools/gt.js"></script>
-    
+    {/if}
     <script src="/theme/material/js/base.min.js"></script>
     <script src="/theme/material/js/project.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.16/clipboard.min.js"></script>
+    <script src="//cdn.staticfile.org/clipboard.js/2.0.4/clipboard.min.js"></script>
     
 </body>
 </html>
