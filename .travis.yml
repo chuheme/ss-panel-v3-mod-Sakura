@@ -1,0 +1,13 @@
+language: php
+php: 7.1
+dist: bionic
+install:
+  - cp .config.example.php .config.php
+  - composer install
+  - chmod -R 755 *
+before_script:
+  - composer require overtrue/phplint --dev
+script:
+  - ./vendor/bin/phplint ./ --exclude=vendor
+  - php xcat initdownload
+  - php xcat initQQWry
