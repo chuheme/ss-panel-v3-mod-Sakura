@@ -264,7 +264,7 @@
 </script>
 
 {if $config['enable_telegram']}
-<script src=" /assets/public/js/jquery.qrcode.min.js "></script>
+<script src=" //cdn.staticfile.org/jquery.qrcode/1.0/jquery.qrcode.min.js "></script>
 <script>
     var telegram_qrcode = 'mod://login/{$login_token}';
     jQuery('#telegram-qr').qrcode({
@@ -334,7 +334,7 @@ $(document).ready(function () {
         el.src = 'https://telegram.org/js/telegram-widget.js?4';
         el.setAttribute('data-size', 'large')
         el.setAttribute('data-telegram-login', '{$telegram_bot}')
-        el.setAttribute('data-auth-url', '{$baseUrl}/auth/telegram_oauth')
+        el.setAttribute('data-auth-url', '{$baseUrl}/callback/telegram_oauth')
         el.setAttribute('data-request-access', 'write')
         });
 </script>

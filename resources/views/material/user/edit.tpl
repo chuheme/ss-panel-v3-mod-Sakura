@@ -521,7 +521,7 @@
     })
 </script>
 
-<script src=" /assets/public/js/jquery.qrcode.min.js "></script>
+<script src=" //cdn.staticfile.org/jquery.qrcode/1.0/jquery.qrcode.min.js "></script>
 <script>
     var ga_qrcode = '{$user->getGAurl()}';
     jQuery('#ga-qr').qrcode({

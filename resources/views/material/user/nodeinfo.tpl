@@ -310,7 +310,7 @@
 {include file='user/footer.tpl'}
 
 
-<script src="/assets/public/js/jquery.qrcode.min.js"></script>
+<script src="//cdn.staticfile.org/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
 <script>
     {if URL::SSCanConnect($user, $mu)}
     var text_qrcode = '{URL::getItemUrl($ss_item, 1)}';
