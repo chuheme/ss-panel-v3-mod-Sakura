@@ -140,30 +140,6 @@ class UserController extends BaseController
         return $this->view()->assign('codes', $codes)->assign('pmw', Pay::getHTML($this->user))->display('user/code.tpl');
     }
 
-
-
-
-    public function donate($request, $response, $args)
-    {
-        if (!Config::get('enable_donate')) {
-            exit(0);
-        }
-
-        $pageNum = 1;
-        if (isset($request->getQueryParams()["page"])) {
-            $pageNum = $request->getQueryParams()["page"];
-        }
-        $codes = Code::where(
-            function ($query) {
-                $query->where("type", "=", -1)
-                    ->orWhere("type", "=", -2);
-            }
-        )->where("isused", 1)->orderBy('id', 'desc')->paginate(15, ['*'], 'page', $pageNum);
-        $codes->setPath('/user/donate');
-        return $this->view()->assign('codes', $codes)->assign('total_in', Code::where('isused', 1)->where('type', -1)->sum('number'))->assign('total_out', Code::where('isused', 1)->where('type', -2)->sum('number'))->display('user/donate.tpl');
-    }
-
-
     public function code_check($request, $response, $args)
     {
         $time = $request->getQueryParams()["time"];

@@ -252,6 +252,4 @@ $System_Config['tuling_apisecert'] = '';
 $System_Config['jump_delay'] = 1000;
 # 启用统计代码，在 resources/views/{主题名} 下创建一个 analytics.tpl ，如果有必要就用 literal 界定符
 $System_Config['enable_analytics_code'] = false;
-# 启用捐赠相关功能
-$System_Config['enable_donate'] = true;
 # ----------------------------
