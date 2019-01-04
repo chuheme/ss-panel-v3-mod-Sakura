@@ -245,22 +245,24 @@ class Job
             Job::backup();
         }
 
-        Job::updatedownload();
+        Job::updateDownload();
     }
 
-    public static function updatedownload()
+    public static function updateDownload()
     {
         $old_version_file = file_get_contents(BASE_PATH."/public/download/version.json");
         $new_version_file = file_get_contents("https://github.com/SakuraSa233/panel-download/raw/master/version.json");
-        if($old_version_file != $new_version_file){
-            $old_versions = json_decode($old_version_file,true);
-            $new_versions = json_decode($new_version_file,true);
+        if ($old_version_file != $new_version_file){
+            $old_versions = json_decode($old_version_file, true);
+            $new_versions = json_decode($new_version_file, true);
             foreach ($old_versions as $file => $version){
-                if($version != $new_versions[$file]){
-                    system("wget https://github.com/SakuraSa233/panel-download/raw/master/".$file, $ret);
+                if ($version != $new_versions[$file]){
+                    system("wget https://github.com/SakuraSa233/panel-download/raw/master/".$file." -O ".BASE_PATH."/public/download/".$file, $ret);
                     echo $ret;
                 }
             }
+            system("wget https://github.com/SakuraSa233/panel-download/raw/master/version.json -O ".BASE_PATH."/public/download/version.json", $ret);
+            echo $ret;
         }
     }
 
