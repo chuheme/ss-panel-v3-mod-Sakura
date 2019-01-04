@@ -7,7 +7,7 @@
     <!-- js -->
     <script src="//cdn.staticfile.org/jquery/3.3.1/jquery.min.js"></script>
     <script src="//cdn.staticfile.org/jquery-validate/1.15.0/jquery.validate.min.js"></script>
-    {if isset($geetest_html) && $geetest_html != null}
+    {if isset($geetest_html)}
     <script src="//static.geetest.com/static/tools/gt.js"></script>
     {/if}
     <script src="/theme/material/js/base.min.js"></script>
