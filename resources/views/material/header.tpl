@@ -11,6 +11,14 @@
     <link href="/theme/material/css/base.min.css" rel="stylesheet">
     <link href="/theme/material/css/project.min.css" rel="stylesheet">
     <link href="//fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!-- js -->
+    <script src="//cdn.staticfile.org/jquery/3.3.1/jquery.min.js"></script>
+    {if isset($geetest_html)}
+    <script src="//static.geetest.com/static/tools/gt.js"></script>
+    {/if}
+    <script src="/theme/material/js/base.min.js"></script>
+    <script src="/theme/material/js/project.min.js"></script>
     
     <!-- favicon -->
     <!-- ... -->
