@@ -319,6 +319,12 @@ $app->group('/mod_mu', function () {
     //============================================
 })->add(new Mod_Mu());
 
+// Trojan API
+$app->group('/trojan', function () {
+    $this->get('/getuser', 'App\Controllers\Trojan\API:getUser');
+    $this->post('/updateinfo', 'App\Controllers\Trojan\API:updateInfo');
+})->add(new \App\Controllers\Trojan\Auth());
+
 // res
 $app->group('/res', function () {
     $this->get('/captcha/{id}', 'App\Controllers\ResController:captcha');
