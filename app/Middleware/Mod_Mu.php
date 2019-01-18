@@ -28,7 +28,7 @@ class Mod_Mu
             return $response;
         }
 
-        $node = Node::find($params['id'])->first();
+        $node = Node::find($params['id']);
 
         $response = $next($request, $response);
         return $response;
