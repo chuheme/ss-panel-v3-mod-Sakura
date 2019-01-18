@@ -20,6 +20,8 @@ class Pay
                 return Pay::spay_html($user);
             case 'zfbjk':
                 return Pay::zfbjk_html($user);
+            case 'trimepay':
+                return \App\Services\Payment::purchaseHTML();
             default:
                 return "";
         }

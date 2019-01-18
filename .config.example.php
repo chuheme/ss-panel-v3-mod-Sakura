@@ -40,7 +40,7 @@ $System_Config['db_prefix'] = '';
 
 
 # -------------- 支付系统 --------------
-# 可选：paymentwall,zfbjk,spay,none
+# 可选：paymentwall,zfbjk,spay,trimepay,none
 $System_Config['payment_system'] = 'none';
 # PaymentWall
 $System_Config['pmw_publickey'] = '';
@@ -54,6 +54,9 @@ $System_Config['alipay_key'] = '';
 $System_Config['zfbjk_pid'] = '';
 $System_Config['zfbjk_key'] = '';
 $System_Config['zfbjk_qrcodeurl'] = '';
+# Trimepay
+$System_Config['trimepay_secret']='';           //AppSecret
+$System_Config['trimepay_appid']='';            //AppID
 # ----------------------------
 
 

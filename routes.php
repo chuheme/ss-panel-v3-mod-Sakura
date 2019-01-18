@@ -329,8 +329,15 @@ $app->group('/link', function () {
     $this->get('/{token}', 'App\Controllers\LinkController:GetContent');
 });
 
-
-
+// Trimepay callback
+$app->group('/user/payment', function () {
+    $this->post('/purchase', 'App\Services\Payment:purchase');
+    $this->get('/return', 'App\Services\Payment:returnHTML');
+})->add(new Auth());
+$app->group('/payment', function () {
+    $this->post('/notify', 'App\Services\Payment:notify');
+    $this->post('/status', 'App\Services\Payment:getStatus');
+});
 
 
 // Run Slim Routes for App
