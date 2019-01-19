@@ -87,9 +87,12 @@
                                                                             </p>
 
 
-                                                                            {if $node->sort > 2 && $node->sort != 5 && $node->sort != 10}
+                                                                            {if $node->sort > 2 && $node->sort != 5 && $node->sort != 10 && $node->sort != 11}
                                                                                 <p>地址：<span class="label" >
                                                                                 <a href="javascript:void(0);" onClick="urlChange('{$node->id}',0,0)">请点这里进入查看详细信息</a>
+                                                                            {elseif $node->sort == 11}
+                                                                                <p>地址和端口：<span class="label label-red" >{$node->server}</span></p>
+                                                                                <p>连接密码：<span class="label label-green">{$trojanPass}
                                                                             {else}
                                                                                 <p>地址：<span class="label label-brand-accent">
                                                                                 {$node->server}
