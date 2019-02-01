@@ -13,8 +13,9 @@
     <!-- css -->
     <link href="/theme/material/css/base.min.css" rel="stylesheet">
     <link href="/theme/material/css/project.min.css" rel="stylesheet">
-    
 
+    <!-- js -->
+    <script src="//cdn.staticfile.org/jquery/3.3.1/jquery.min.js"></script>
     
     <!-- favicon -->
     <!-- ... -->
