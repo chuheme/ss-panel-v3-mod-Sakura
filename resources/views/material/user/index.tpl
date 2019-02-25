@@ -408,11 +408,9 @@
 
 <script>
 
-$(function(){
-    new Clipboard('.copy-text');
-});
 
 $(".copy-text").click(function () {
+    var clipboard = new ClipboardJS('.copy-text');
     $("#result").modal();
     $("#msg").html("已复制到您的剪贴板，请您继续接下来的操作。");
 });
