@@ -16,6 +16,9 @@
 
     <!-- js -->
     <script src="//cdn.staticfile.org/jquery/3.3.1/jquery.min.js"></script>
+    <script src="//cdn.staticfile.org/jquery-validate/1.15.0/jquery.validate.min.js"></script>
+    <script src="/theme/material/js/base.min.js"></script>
+    <script src="/theme/material/js/project.min.js"></script>
     
     <!-- favicon -->
     <!-- ... -->
