@@ -62,9 +62,9 @@ class API extends \App\Controllers\BaseController
         $users = array();
         foreach ($users_raw as $user_raw) {
             $user = [
-                'user_id' => $user_raw->id,
+                'id' => $user_raw->id,
                 'password' => $user_raw->id . ':' . $user_raw->passwd,
-                'last' => $user_raw->transfer_enable - ($user_raw->u - $user_raw->d),
+                'quota' => $user_raw->transfer_enable - ($user_raw->u - $user_raw->d),
             ];
             array_push($users, $user);
         }
@@ -96,8 +96,8 @@ class API extends \App\Controllers\BaseController
             foreach ($data as $log) {
                 $u = $log['upload'];
                 $d = $log['download'];
-                $user_id = $log['user_id'];
-                $user = User::find($user_id);
+                $id = $log['id'];
+                $user = User::find($id);
 
                 if($user == NULL) {
                     continue;
@@ -117,7 +117,7 @@ class API extends \App\Controllers\BaseController
 
                 // log
                 $traffic = new \App\Models\TrafficLog();
-                $traffic->user_id = $user_id;
+                $traffic->user_id = $id;
                 $traffic->u = $u;
                 $traffic->d = $d;
                 $traffic->node_id = $node_id;
