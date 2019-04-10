@@ -3,7 +3,6 @@
 namespace App\Controllers;
 
 use App\Services\Auth;
-use App\Services\View;
 
 /**
  * BaseController
@@ -11,32 +10,11 @@ use App\Services\View;
 
 class BaseController
 {
-    public $view;
-
-    public $smarty;
+    public $user;
     
-    public function construct__()
+    public function __construct()
     {
+        $this->user =  Auth::getUser();
     }
 
-    public function smarty()
-    {
-        $this->smarty = View::getSmarty();
-        return $this->smarty;
-    }
-
-    public function view()
-    {
-        return $this->smarty();
-    }
-
-    /**
-     * @param $response
-     * @param $res
-     * @return mixed
-     */
-    public function echoJson($response, $res)
-    {
-        return $response->getBody()->write(json_encode($res));
-    }
 }
