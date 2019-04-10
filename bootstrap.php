@@ -17,7 +17,7 @@ define('VERSION', '20181213');
 require BASE_PATH.'/vendor/autoload.php';
 require BASE_PATH.'/.config.php';
 
-
+$_ENV = $System_Config;
 
 Boot::setDebug();
 //Boot::setVersion(VERSION);
