@@ -8,11 +8,7 @@ use App\Utils\Check;
 use App\Utils\Tools;
 use App\Utils\Radius;
 use voku\helper\AntiXSS;
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Message\ResponseInterface;
-
 use App\Utils\Hash;
-use App\Utils\Da;
 use App\Services\Auth;
 use App\Services\Mail;
 use App\Models\User;
@@ -30,17 +26,18 @@ class AuthController extends BaseController
 {
     public function login()
     {
-        $GtSdk = null;
+        $user = $this->user;
+        $geetest_html = null;
         $recaptcha_sitekey = null;
-        if (Config::get('enable_login_captcha')){
-            switch(Config::get('captcha_provider'))
+        if ($_ENV['enable_login_captcha']){
+            switch ($_ENV['captcha_provider'])
             {
                 case 'recaptcha':
-                    $recaptcha_sitekey = Config::get('recaptcha_sitekey');
+                    $recaptcha_sitekey = $_ENV['recaptcha_sitekey'];
                     break;
                 case 'geetest':
-                    $uid = time().rand(1, 10000) ;
-                    $GtSdk = Geetest::get($uid);
+                    $uid = time() . rand(1, 10000) ;
+                    $geetest_html = Geetest::get($uid);
                     break;
             }
         }
@@ -54,15 +51,7 @@ class AuthController extends BaseController
             $login_token = '';
             $login_number = '';
         }
-
-        return $this->view()
-            ->assign('geetest_html', $GtSdk)
-            ->assign('login_token', $login_token)
-            ->assign('login_number', $login_number)
-            ->assign('telegram_bot', Config::get('telegram_bot'))
-            ->assign('baseUrl', Config::get('baseUrl'))
-            ->assign('recaptcha_sitekey', $recaptcha_sitekey)
-            ->display('auth/login.tpl');
+        require TEMPLATE_PATH . 'auth/login.phtml';
     }
 
     public function loginHandle($request, $response, $args)
@@ -191,37 +180,28 @@ class AuthController extends BaseController
 
     public function register($request, $response, $next)
     {
+        $user = $this->user;
         $ary = $request->getQueryParams();
         $code = "";
         if (isset($ary['code'])) {
             $antiXss = new AntiXSS();
             $code = $antiXss->xss_clean($ary['code']);
         }
-
-        $GtSdk = null;
+        $geetest_html = null;
         $recaptcha_sitekey = null;
-        if (Config::get('enable_reg_captcha')){
-            switch(Config::get('captcha_provider'))
+        if ($_ENV['enable_reg_captcha']){
+            switch ($_ENV['captcha_provider'])
             {
                 case 'recaptcha':
-                    $recaptcha_sitekey = Config::get('recaptcha_sitekey');
+                    $recaptcha_sitekey = $_ENV['recaptcha_sitekey'];
                     break;
                 case 'geetest':
-                    $uid = time().rand(1, 10000) ;
-                    $GtSdk = Geetest::get($uid);
+                    $uid = time() . rand(1, 10000) ;
+                    $geetest_html = Geetest::get($uid);
                     break;
             }
         }
-
-
-
-        return $this->view()
-            ->assign('enable_invite_code', Config::get('enable_invite_code'))
-            ->assign('geetest_html', $GtSdk)
-            ->assign('enable_email_verify', Config::get('enable_email_verify'))
-            ->assign('code', $code)
-            ->assign('recaptcha_sitekey', $recaptcha_sitekey)
-            ->display('auth/register.tpl');
+        require TEMPLATE_PATH . 'auth/register.phtml';
     }
 
 
