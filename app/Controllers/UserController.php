@@ -6,7 +6,6 @@ use App\Services\Auth;
 use App\Models\Node;
 use App\Models\TrafficLog;
 use App\Models\InviteCode;
-use App\Models\CheckInLog;
 use App\Models\Ann;
 use App\Models\Speedtest;
 use App\Models\Shop;
@@ -19,7 +18,6 @@ use App\Utils\Hash;
 use App\Utils\Tools;
 use App\Utils\Radius;
 use App\Utils\Check;
-use App\Models\RadiusBan;
 use App\Models\DetectLog;
 use App\Models\DetectRule;
 
@@ -28,7 +26,6 @@ use voku\helper\AntiXSS;
 use App\Models\User;
 use App\Models\Code;
 use App\Models\Ip;
-use App\Models\Paylist;
 use App\Models\LoginIp;
 use App\Models\BlockIp;
 use App\Models\UnblockIp;
@@ -48,13 +45,6 @@ use App\Services\Mail;
  */
 class UserController extends BaseController
 {
-    private $user;
-
-    public function __construct()
-    {
-        $this->user = Auth::getUser();
-    }
-
     public function index($request, $response, $args)
     {
 
@@ -69,7 +59,7 @@ class UserController extends BaseController
 
         $ssr_sub_token = LinkController::GenerateSSRSubCode($this->user->id, 0);
 
-        $GtSdk = null;
+        $geetest_html = null;
         $recaptcha_sitekey = null;
         if (Config::get('enable_checkin_captcha')){
             switch(Config::get('captcha_provider'))
@@ -79,12 +69,13 @@ class UserController extends BaseController
                     break;
                 case 'geetest':
                     $uid = time().rand(1, 10000) ;
-                    $GtSdk = Geetest::get($uid);
+                    $geetest_html = Geetest::get($uid);
                     break;
             }
         }
 
-        $Ann = Ann::orderBy('date', 'desc')->first();
+        $ann = Ann::orderBy('date', 'desc')->first();
+        $baseUrl = $_ENV['baseUrl'];
 
         $baseURL = Config::get('baseUrl');
         $subscribe = '<p>
@@ -98,20 +89,8 @@ class UserController extends BaseController
                                                             <button class="copy-text btn btn-brand-accent" type="button" data-clipboard-text="'.Config::get('baseUrl').'/link/'.$ssr_sub_token.'?mu=1">点击复制地址</button>
                                                         </p>';
 
-
-        return $this->view()->assign("ssr_sub_token", $ssr_sub_token)
-            ->assign("router_token", $router_token)
-            ->assign("router_token_without_mu", $router_token_without_mu)
-            ->assign("acl_token", $acl_token)
-            ->assign('ann', $Ann)
-            ->assign('geetest_html', $GtSdk)
-            ->assign("ios_token", $ios_token)
-            ->assign("user", $this->user)->registerClass("URL", "App\Utils\URL")
-            ->assign('baseUrl', $baseURL)
-            ->assign('subscribe', $subscribe)
-            ->assign('subscribe_mu', $subscribe_mu)
-            ->assign('recaptcha_sitekey', $recaptcha_sitekey)
-            ->display('user/index.tpl');
+        require TEMPLATE_PATH . 'user/index.phtml';
+        
     }
 
 
