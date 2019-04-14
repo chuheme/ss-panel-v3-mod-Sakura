@@ -12,7 +12,6 @@ use App\Services\Boot;
 //  define BASE_PATH and VERSION
 define('BASE_PATH', __DIR__);
 define('VERSION', '20181213');
-define('TEMPLATE_PATH', BASE_PATH . '/resources/views/material/');
 
 // Vendor Autoload
 require BASE_PATH.'/vendor/autoload.php';
