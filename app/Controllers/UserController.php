@@ -45,10 +45,10 @@ use App\Services\Mail;
  */
 class UserController extends BaseController
 {
+
     public function index($request, $response, $args)
     {
-
-        $user = $this->user;
+        global $user;
 
         $ios_token = LinkController::GenerateIosCode("smart", 0, $this->user->id, 0, "smart");
 
@@ -90,33 +90,32 @@ class UserController extends BaseController
                                                         </p>';
 
         require TEMPLATE_PATH . 'user/index.phtml';
-        
+
     }
 
 
 
     public function lookingglass($request, $response, $args)
     {
-        $Speedtest=Speedtest::where("datetime", ">", time()-Config::get('Speedtest_duration')*3600)->orderBy('datetime', 'desc')->get();
+        global $user;
+        $speedtest = Speedtest::where("datetime", ">", time()-Config::get('Speedtest_duration')*3600)->orderBy('datetime', 'desc')->get();
+        $hour = $_ENV['Speedtest_duration'];
 
-        return $this->view()
-            ->assign('speedtest', $Speedtest)
-            ->assign('hour', Config::get('Speedtest_duration'))
-            ->display('user/lookingglass.tpl');
+        require TEMPLATE_PATH . 'user/lookingglass.phtml';
     }
-
-
 
 
     public function code($request, $response, $args)
     {
+        global $user;
         $pageNum = 1;
         if (isset($request->getQueryParams()["page"])) {
             $pageNum = $request->getQueryParams()["page"];
         }
-        $codes = Code::where('type', '<>', '-2')->where('userid', '=', $this->user->id)->orderBy('id', 'desc')->paginate(15, ['*'], 'page', $pageNum);
+        $codes = Code::where('type', '<>', '-2')->where('userid', '=', $user->id)->orderBy('id', 'desc')->paginate(15, ['*'], 'page', $pageNum);
         $codes->setPath('/user/code');
-        return $this->view()->assign('codes', $codes)->assign('pmw', Pay::getHTML($this->user))->display('user/code.tpl');
+        $pmw = Pay::getHTML($user);
+        require TEMPLATE_PATH . 'user/code.phtml';
     }
 
     public function code_check($request, $response, $args)
@@ -691,11 +690,10 @@ class UserController extends BaseController
 
     public function announcement($request, $response, $args)
     {
-        $Anns = Ann::orderBy('date', 'desc')->get();
+        global $user;
+        $anns = Ann::orderBy('date', 'desc')->get();
 
-
-
-        return $this->view()->assign("anns", $Anns)->display('user/announcement.tpl');
+        require TEMPLATE_PATH . 'user/announcement.phtml';
     }
 
 
@@ -703,7 +701,9 @@ class UserController extends BaseController
 
     public function edit($request, $response, $args)
     {
-        $themes=Tools::getDir(BASE_PATH."/resources/views");
+        global $user;
+
+        $themes = Tools::getDir(BASE_PATH."/resources/views");
 
         $BIP = BlockIp::where("ip", $_SERVER["REMOTE_ADDR"])->first();
         if ($BIP == null) {
@@ -714,20 +714,11 @@ class UserController extends BaseController
             $isBlock = 1;
         }
 
-        $bind_token = TelegramSessionManager::add_bind_session($this->user);
+        $bind_token = TelegramSessionManager::add_bind_session($user);
 
         $config_service = new Config();
 
-        return $this->view()
-            ->assign('user', $this->user)
-            ->assign('themes', $themes)
-            ->assign('isBlock', $isBlock)
-            ->assign('Block', $Block)
-            ->assign('bind_token', $bind_token)
-            ->assign('telegram_bot', Config::get('telegram_bot'))
-            ->assign('config_service', $config_service)
-            ->registerClass("URL", "App\Utils\URL")
-            ->display('user/edit.tpl');
+        require TEMPLATE_PATH . 'user/edit.phtml';
     }
 
 
@@ -1627,7 +1618,7 @@ class UserController extends BaseController
 
     public function disable($request, $response, $args)
     {
-        return $this->view()->display('user/disable.tpl');
+        return require TEMPLATE_PATH . 'user/disable.phtml';
     }
 
     public function telegram_reset($request, $response, $args)

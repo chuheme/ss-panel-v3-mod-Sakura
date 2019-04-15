@@ -1,36 +1,24 @@
-
-
-
-
-
-
-
-
-
-{include file='user/main.tpl'}
-
-
-
-
-
-
+<?php include(TEMPLATE_PATH . 'user/main.phtml'); ?>
 
     <main class="content">
+
         <div class="content-header ui-content-header">
             <div class="container">
                 <h1 class="content-heading">充值</h1>
             </div>
         </div>
+
         <div class="container">
             <section class="content-inner margin-top-no">
                 <div class="row">
+
                     <div class="col-lg-12 col-md-12">
                         <div class="card margin-bottom-no">
                             <div class="card-main">
                                 <div class="card-inner">
                                     <div class="card-inner">
                                         <p class="card-heading">充值码</p>
-                                        <p>当前余额：{$user->money} 元</p>
+                                        <p>当前余额：<?= $user->money; ?> 元</p>
                                         <div class="form-group form-group-label">
                                             <label class="floating-label" for="code">充值码</label>
                                             <input class="form-control" id="code" type="text">
@@ -45,22 +33,22 @@
                             </div>
                         </div>
                     </div>
-                    
-                    {if $pmw!=''}
+
+<?php if ($pmw!='') { ?>
                     <div class="col-lg-12 col-md-12">
                         <div class="card margin-bottom-no">
                             <div class="card-main">
                                 <div class="card-inner">
                                     <div class="card-inner">
-                                        {$pmw}
+                                        <?= $pmw; ?>
                                     </div>
-                                    
+
                                 </div>
                             </div>
                         </div>
                     </div>
-                    {/if}
-                    
+<?php } ?>
+
                     <div class="col-lg-12 col-md-12">
                         <div class="card margin-bottom-no">
                             <div class="card-main">
@@ -68,7 +56,7 @@
                                     <div class="card-inner">
                                         <div class="card-table">
                                             <div class="table-responsive">
-                                                {$codes->render()}
+                                                <?= $codes->render() ?>
                                                 <table class="table table-hover">
                                                     <tr>
                                                         <th>ID</th>
@@ -76,65 +64,66 @@
                                                         <th>类型</th>
                                                         <th>操作</th>
                                                         <th>使用时间</th>
-                                                        
+
                                                     </tr>
-                                                    {foreach $codes as $code}
-                                                        {if $code->type!=-2}
+<?php
+foreach ($codes as $code) {
+    if ($code->type != -2) {
+?>
                                                             <tr>
-                                                                <td>#{$code->id}</td>
-                                                                <td>{$code->code}</td>
-                                                                {if $code->type==-1}
+                                                                <td>#<?= $code->id; ?></td>
+                                                                <td><?= $code->code; ?></td>
+<?php   switch ($node->type) { case -1: ?>
                                                                 <td>金额充值</td>
-                                                                {/if}
-                                                                {if $code->type==10001}
+<?php       break; case 10001: ?>
                                                                 <td>流量充值</td>
-                                                                {/if}
-                                                                {if $code->type==10002}
+<?php       break; case 10002: ?>
                                                                 <td>用户续期</td>
-                                                                {/if}
-                                                                {if $code->type>=1&&$code->type<=10000}
-                                                                <td>等级续期 - 等级{$code->type}</td>
-                                                                {/if}
-                                                                {if $code->type==-1}
-                                                                <td>充值 {$code->number} 元</td>
-                                                                {/if}
-                                                                {if $code->type==10001}
-                                                                <td>充值 {$code->number} GB 流量</td>
-                                                                {/if}
-                                                                {if $code->type==10002}
-                                                                <td>延长账户有效期 {$code->number} 天</td>
-                                                                {/if}
-                                                                {if $code->type>=1&&$code->type<=10000}
-                                                                <td>延长等级有效期 {$code->number} 天</td>
-                                                                {/if}
-                                                                <td>{$code->usedatetime}</td>
+<?php       break; } ?>
+
+<?php   if ($code->type >= 1 && $code->type <= 10000) { ?>
+                                                                <td>等级续期 - 等级<?= $code->type; ?></td>
+<?php   } ?>
+
+<?php   if ($code->type == -1) { ?>
+                                                                <td>充值 <?= $code->number; ?> 元</td>
+<?php   } ?>
+
+<?php   if ($code->type == 10001) { ?>
+                                                                <td>充值 <?= $code->number; ?> GB 流量</td>
+<?php   } ?>
+
+<?php   if ($code->type == 10002) { ?>
+                                                                <td>延长账户有效期 <?= $code->number; ?> 天</td>
+<?php   } ?>
+
+<?php   if ($code->type >= 1 && $code->type <= 10000) { ?>
+                                                                <td>延长等级有效期 <?= $code->number; ?> 天</td>
+<?php   } ?>
+                                                                <td><?= $code->usedatetime; ?></td>
                                                             </tr>
-                                                        {/if}
-                                                    {/foreach}
+<?php 
+    }
+}
+?>
                                                 </table>
-                                                {$codes->render()}
+                                                <?= $codes->render(); ?>
                                             </div>
                                         </div>
                                     </div>
-                                    
+
                                 </div>
                             </div>
                         </div>
                     </div>
-                    
-                    {include file='dialog.tpl'}
+
+<?php include(TEMPLATE_PATH . 'dialog.phtml'); ?>
                 </div>
             </section>
         </div>
     </main>
 
-
-
-
-
-
-
-{include file='user/footer.tpl'}
+<?php include(TEMPLATE_PATH . 'user/footer.phtml'); ?>
 
 
 <script>
@@ -151,11 +140,11 @@
                     if (data.ret) {
                         $("#result").modal();
                         $("#msg").html(data.msg);
-                        window.setTimeout("location.href=window.location.href", {$config['jump_delay']});
+                        window.setTimeout("location.href=window.location.href", <?= $_ENV['jump_delay']; ?>);
                     } else {
                         $("#result").modal();
                         $("#msg").html(data.msg);
-                        window.setTimeout("location.href=window.location.href", {$config['jump_delay']});
+                        window.setTimeout("location.href=window.location.href", <?= $_ENV['jump_delay']; ?>);
                     }
                 },
                 error: function (jqXHR) {
@@ -164,11 +153,11 @@
                 }
             })
         })
-        
-        
-    timestamp = {time()}; 
-        
-        
+
+
+    timestamp = {time()};
+
+
     function f(){
         $.ajax({
             type: "GET",
@@ -182,7 +171,7 @@
                     clearTimeout(tid);
                     $("#result").modal();
                     $("#msg").html("充值成功！");
-                    window.setTimeout("location.href=window.location.href", {$config['jump_delay']});
+                    window.setTimeout("location.href=window.location.href", <?= $_ENV['jump_delay']; ?>);
                 }
             }
         });
@@ -191,4 +180,3 @@
     setTimeout(f, 1000);
 })
 </script>
-
