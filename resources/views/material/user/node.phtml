@@ -3,13 +3,16 @@
     <script src="//cdn.staticfile.org/canvasjs/1.7.0/canvasjs.min.js"></script>
 
     <main class="content">
+
         <div class="content-header ui-content-header">
             <div class="container">
                 <h1 class="content-heading">节点列表</h1>
             </div>
         </div>
+
         <div class="container">
             <section class="content-inner margin-top-no">
+
                 <div class="row">
                     <div class="col-lg-12 col-md-12">
                         <div class="card margin-bottom-no">
@@ -24,6 +27,7 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="ui-card-wrap">
                     <div class="row">
                         <div class="col-lg-12 col-sm-12">
@@ -31,97 +35,94 @@
                                 <div class="card-main">
                                     <div class="card-inner margin-bottom-no">
                                         <div class="tile-wrap">
-<?php 
+<?php
 $id=0;
 foreach ($node_prefix as $prefix => $nodes) {
     $id = $id++;
 ?>
-                                                    <div class="tile tile-collapse">
-                                                        <div data-toggle="tile" data-target="#heading<?= $node_order->$prefix; ?>">
-                                                            <div class="tile-side pull-left" data-ignore="tile">
-                                                                <div class="avatar avatar-sm">
-                                                                    <span class="icon
-                                                                        <?php if ($node_heartbeat[$prefix] == '在线') { ?>
-                                                                            text-green">backup
-                                                                        <?php } elseif ($node_heartbeat[$prefix] == '暂无数据') { ?>
-                                                                            text-orange">report
-                                                                        <?php } else { ?>
-                                                                            text-red">warning
-                                                                        <?php } ?>
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-                                                            <div class="tile-inner">
-                                                                <div class="text-overflow">
-                                                                    <?= $prefix; ?> | <i class="icon icon-lg">person</i> <?= $node_alive[$prefix]; ?> | <i class="icon icon-lg">build</i> <?= $node_method[$prefix]; ?> | <i class="icon icon-lg">traffic</i> <?= $node_bandwidth[$prefix]; ?>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="collapsible-region collapse" id="heading<?= $node_order->$prefix; ?>">
-                                                            <div class="tile-sub">
+                                            <div class="tile tile-collapse">
 
-                                                                <br>
+                                                <div data-toggle="tile" data-target="#heading<?= $node_order->$prefix; ?>">
+                                                    <div class="tile-side pull-left" data-ignore="tile">
+                                                        <div class="avatar avatar-sm">
+                                                            <span class="icon
+                                                                <?php if ($node_heartbeat[$prefix] == '在线') { ?>
+                                                                    text-green">backup
+                                                                <?php } elseif ($node_heartbeat[$prefix] == '暂无数据') { ?>
+                                                                    text-orange">report
+                                                                <?php } else { ?>
+                                                                    text-red">warning
+                                                                <?php } ?>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="tile-inner">
+                                                        <div class="text-overflow">
+                                                            <?= $prefix; ?> | <i class="icon icon-lg">person</i> <?= $node_alive[$prefix]; ?> | <i class="icon icon-lg">build</i> <?= $node_method[$prefix]; ?> | <i class="icon icon-lg">traffic</i> <?= $node_bandwidth[$prefix]; ?>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                </div>
+
+                                                <div class="collapsible-region collapse" id="heading<?= $node_order->$prefix; ?>">
+                                                    <div class="tile-sub">
 <?php
-    foreach ($nodes as $node) { 
+    foreach ($nodes as $node) {
         $relay_rule = null;
         if ($node->sort == 10) {
             $relay_rule = $tools->pick_out_relay_rule($node->id, $user->port, $relay_rules);
         }
-        if ($node->mu_only != 1) { 
+        if ($node->mu_only != 1) {
 ?>
-                                                                    <div class="card">
-                                                                        <div class="card-main">
-                                                                            <div class="card-inner">
-                                                                            <p class="card-heading" >
-                                                                                <a href="javascript:void(0);" onClick="urlChange('<?= $node->id; ?>',0,<?php if ($relay_rule != null) { ?><?= $relay_rule->id; ?><?php } else { ?>0<?php } ?>)"><?= $node->name ?><?php if ($relay_rule != null) { ?> - <?= $relay_rule->dist_node()->name; }?></a>
-                                                                                <span class="label label-brand-accent"><?= $node->status; ?></span>
-                                                                            </p>
+                                                        <div class="card">
+                                                            <div class="card-main">
+                                                                <div class="card-inner">
+                                                                    <p class="card-heading" >
+                                                                        <a href="javascript:void(0);" onClick="urlChange('<?= $node->id; ?>',0,<?php if ($relay_rule != null) { ?><?= $relay_rule->id; ?><?php } else { ?>0<?php } ?>)"><?= $node->name ?><?php if ($relay_rule != null) { ?> - <?= $relay_rule->dist_node()->name; }?></a>
+                                                                        <span class="label label-brand-accent"><?= $node->status; ?></span>
+                                                                    </p>
 
 <?php       if ($node->sort > 2 && $node->sort != 5 && $node->sort != 10 && $node->sort != 11) { ?>
-                                                                            <p>地址：<span class="label" >
-                                                                            <a href="javascript:void(0);" onClick="urlChange('<?= $node->id; ?>',0,0)">请点这里进入查看详细信息</a>
+                                                                    <p>地址：<span class="label" >
+                                                                    <a href="javascript:void(0);" onClick="urlChange('<?= $node->id; ?>',0,0)">请点这里进入查看详细信息</a>
 <?php       } elseif ($node->sort == 11) { ?>
-                                                                            <p>地址和端口：<span class="label label-red" ><?= $node->server; ?></span></p>
-                                                                            <p>连接密码：<span class="label label-green"><?= $trojanPass; ?>
+                                                                    <p>地址和端口：<span class="label label-red" >
+                                                                        <?= $node->server; ?>
+                                                                    </span></p>
+                                                                    <p>连接密码：<span class="label label-green">
+                                                                        <?= $trojanPass; ?>
 <?php       } else { ?>
-                                                                                <p>地址：<span class="label label-brand-accent">
-                                                                                <?= $node->server; ?>
-<?php       } ?>                                                                           
-
-                                                                                </span></p>
-
-<?php       if ($node->sort == 0 || $node->sort==7 || $node->sort == 8 || $node->sort == 10) { ?>
-
-
-                                                                                <p>流量比例：<span class="label label-red">
-                                                                                    <?= $node->traffic_rate; ?>
-                                                                                </span></p>
+                                                                    <p>地址：<span class="label label-brand-accent">
+                                                                        <?= $node->server; ?>
+                                                                    </span></p>
+<?php       }
+            if ($node->sort == 0 || $node->sort==7 || $node->sort == 8 || $node->sort == 10) { ?>
+                                                                    <p>流量比例：<span class="label label-red">
+                                                                        <?= $node->traffic_rate; ?>
+                                                                    </span></p>
 
 
 
 <?php           if (($node->sort == 0 || $node->sort == 7 || $node->sort == 8 || $node->sort == 10) && ($node->node_speedlimit != 0 || $user->node_speedlimit != 0)) { ?>
-                                                                                    <p>节点限速：<span class="label label-green">
-<?php
-                                                                                    if ($node->node_speedlimit > $user->node_speedlimit) { ?>
-                                                                                        <?= $node->node_speedlimit; ?> Mbps
-                                                                                    <?php } else { ?>
-                                                                                        <?= $user->node_speedlimit; ?> Mbps
-                                                                                    <?php } ?>
-                                                                                    </span>
-                                                                                    </p>
+                                                                    <p>节点限速：<span class="label label-green">
+<?php                if ($node->node_speedlimit > $user->node_speedlimit) { ?>
+                                                                        <?= $node->node_speedlimit; ?> Mbps
+<?php               } else { ?>
+                                                                        <?= $user->node_speedlimit; ?> Mbps
+<?php               } ?>
+                                                                    </span></p>
 <?php
                 }
             }
 ?>
+                                                                    <p><?= $node->info; ?></p>
 
-                                                                            <p><?= $node->info; ?></p>
-
-                                                                             </div>
-
-                                                                        </div>
-                                                                    </div>
-<?php 
-        } 
+                                                                </div>
+                                                            </div>
+                                                        </div>
+<?php
+        }
         if ($node->sort == 0 || $node->sort == 10) {
             $point_node = $node;
         }
@@ -132,7 +133,7 @@ foreach ($node_prefix as $prefix => $nodes) {
                         $single_muport['server']->node_class <= $user->class
                         &&
                         ($single_muport['server']->node_group == 0 || $single_muport['server']->node_group == $user->node_group)
-                    )) { 
+                    )) {
                     contine;
                 }
 
@@ -143,65 +144,63 @@ foreach ($node_prefix as $prefix => $nodes) {
                     ) {
                     contine;
                 }
-                
+
                 $relay_rule = null;
                 if ($node->sort == 10 && $single_muport['user']['is_multi_user'] != 2) {
                     $relay_rule = $tools->pick_out_relay_rule($node->id, $single_muport['server']->server, $relay_rules);
                 }
 ?>
 
-                                                                            <div class="card">
-                                                                                <div class="card-main">
-                                                                                    <div class="card-inner">
-                                                                                    <p class="card-heading" >
-            <a href="javascript:void(0);" onClick="urlChange('<?= $node->id; ?>',<?= $single_muport['server']->server; ?>,<?php if ($relay_rule != null) { ?><?= $relay_rule->id; ?><?php } else { ?>0<?php } ?>)"><?= $prefix; ?> <?php if ($relay_rule != null) { ?> - <?= $relay_rule->dist_node()->name; ?><?php } ?> - 公共端口 Shadowsocks - <?= $single_muport['server']->server; ?> 端口</a>
-                                                                                        <span class="label label-brand-accent"><?= $node->status; ?></span>
-                                                                                    </p>
+                                                        <div class="card">
+                                                            <div class="card-main">
+                                                                <div class="card-inner">
+                                                                    <p class="card-heading" >
+                                                                        <a href="javascript:void(0);" onClick="urlChange('<?= $node->id; ?>',<?= $single_muport['server']->server; ?>,<?php if ($relay_rule != null) { ?><?= $relay_rule->id; ?><?php } else { ?>0<?php } ?>)"><?= $prefix; ?> <?php if ($relay_rule != null) { ?> - <?= $relay_rule->dist_node()->name; ?><?php } ?> - 公共端口 Shadowsocks - <?= $single_muport['server']->server; ?> 端口</a>
+                                                                        <span class="label label-brand-accent"><?= $node->status; ?></span>
+                                                                    </p>
 
 
-                                                                                    <p>地址：
-                                                                                        <span class="label label-brand-accent"><?= $node->server; ?></span>
-                                                                                    </p>
+                                                                    <p>地址：<span class="label label-brand-accent">
+                                                                        <?= $node->server; ?>
+                                                                    </span></p>
 
-                                                                                    <p>端口：<span class="label label-brand-red">
-                                                                                        <?= $single_muport['user']['port']; ?>
-                                                                                    </span></p>
+                                                                    <p>端口：<span class="label label-brand-red">
+                                                                        <?= $single_muport['user']['port']; ?>
+                                                                    </span></p>
 
-                                                                                    <p>加密方式：<span class="label label-brand">
-                                                                                        <?= $single_muport['user']['method']; ?>
-                                                                                    </span></p>
+                                                                    <p>加密方式：<span class="label label-brand">
+                                                                        <?= $single_muport['user']['method']; ?>
+                                                                    </span></p>
 
-                                                                                    <p>协议：<span class="label label-brand-accent">
-                                                                                        <?= $single_muport['user']['protocol']; ?>
-                                                                                    </span></p>
+                                                                    <p>协议：<span class="label label-brand-accent">
+                                                                        <?= $single_muport['user']['protocol']; ?>
+                                                                    </span></p>
 
 <?php           if ($single_muport['user']['is_multi_user'] != 0) { ?>
-                                                                                    <p>协议参数：<span class="label label-green">
-                                                                                        <?= $user->id; ?>:<?= $user->passwd; ?>
-                                                                                    </span></p>
+                                                                    <p>协议参数：<span class="label label-green">
+                                                                        <?= $user->id; ?>:<?= $user->passwd; ?>
+                                                                    </span></p>
 <?php           } ?>
 
-                                                                                    <p>混淆方式：<span class="label label-brand">
-                                                                                        <?= $single_muport['user']['obfs']; ?>
-                                                                                    </span></p>
+                                                                    <p>混淆方式：<span class="label label-brand">
+                                                                        <?= $single_muport['user']['obfs']; ?>
+                                                                    </span></p>
 
 <?php           if ($single_muport['user']['is_multi_user'] == 1) { ?>
-                                                                                    <p>混淆参数：<span class="label label-green">
-                                                                                        <?= $single_muport['user']['obfs_param']; ?>
-                                                                                    </span></p>
+                                                                    <p>混淆参数：<span class="label label-green">
+                                                                        <?= $single_muport['user']['obfs_param']; ?>
+                                                                    </span></p>
 <?php           } ?>
+                                                                    <p>流量比例：<span class="label label-red">
+                                                                    <?= $node->traffic_rate; ?>
+                                                                    </span></p>
 
-                                                                                    <p>流量比例：<span class="label label-red">
-                                                                                        <?= $node->traffic_rate; ?>
-                                                                                    </span></p>
+                                                                    <p><?= $node->info; ?></p>
+                                                                </div>
 
-                                                                                    <p><?= $node->info; ?></p>
-
-                                                                                     </div>
-
-                                                                                </div>
-                                                                            </div>
-<?php           
+                                                            </div>
+                                                        </div>
+<?php
             }
         }
     }
@@ -209,41 +208,32 @@ foreach ($node_prefix as $prefix => $nodes) {
         if ($point_node != null) {
 ?>
 
-                                                                        <div class="card">
-                                                                            <div class="card-main">
-                                                                                <div class="card-inner" id="info<?= $id; ?>">
+                                                        <div class="card">
+                                                            <div class="card-main">
+                                                                <div class="card-inner" id="info<?= $id; ?>">
+                                                                </div>
+                                                            </div>
+                                                        </div>
 
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
+                                                        <script>
+                                                        $().ready(function(){
+                                                            $('#heading<?= $node_order->$prefix; ?>').on("shown.bs.tile", function() {
 
-                                                                        <script>
-                                                                        $().ready(function(){
-                                                                            $('#heading<?= $node_order->$prefix; ?>').on("shown.bs.tile", function() {
+                                                                $("#info<?= $id; ?>").load("/user/node/<?= $point_node->id; ?>/ajax");
 
-                                                                                $("#info<?= $id; ?>").load("/user/node/<?= $point_node->id; ?>/ajax");
-
-                                                                            });
-                                                                        });
-                                                                        </script>
+                                                            });
+                                                        });
+                                                        </script>
 <?php
         }
     }
     $point_node = null;
 ?>
 
-
-
-
-                                                            </div>
-
-
-
-                                                        </div>
-
-
-
+                                                    </div>
                                                 </div>
+
+                                            </div>
 
 <?php } ?>
                                         </div>
@@ -260,24 +250,16 @@ foreach ($node_prefix as $prefix => $nodes) {
                                 </div>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </section>
         </div>
     </main>
 
-
-
-
-
-
-
 <?php include(TEMPLATE_PATH . 'user/footer.phtml'); ?>
 
-
 <script>
-
-
 function urlChange(id,is_mu,rule_id) {
     var site = './node/'+id+'?ismu='+is_mu+'&relay_rule='+rule_id;
     if(id == 'guide')
