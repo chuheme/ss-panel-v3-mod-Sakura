@@ -48,8 +48,7 @@ class UserController extends BaseController
 
     public function index($request, $response, $args)
     {
-        global $user;
-
+        $user = $this->user;
         $ios_token = LinkController::GenerateIosCode("smart", 0, $this->user->id, 0, "smart");
 
         $acl_token = LinkController::GenerateAclCode("smart", 0, $this->user->id, 0, "smart");
@@ -97,7 +96,7 @@ class UserController extends BaseController
 
     public function lookingglass($request, $response, $args)
     {
-        global $user;
+        $user = $this->user;
         $speedtest = Speedtest::where("datetime", ">", time()-Config::get('Speedtest_duration')*3600)->orderBy('datetime', 'desc')->get();
         $hour = $_ENV['Speedtest_duration'];
 
@@ -107,7 +106,7 @@ class UserController extends BaseController
 
     public function code($request, $response, $args)
     {
-        global $user;
+        $user = $this->user;
         $pageNum = 1;
         if (isset($request->getQueryParams()["page"])) {
             $pageNum = $request->getQueryParams()["page"];
@@ -143,8 +142,6 @@ class UserController extends BaseController
     {
         $code = $request->getParam('code');
         $user = $this->user;
-
-
 
         if ($code == "") {
             $res['ret'] = 0;
@@ -433,20 +430,7 @@ class UserController extends BaseController
         $node_order=(object)$node_order;
         $tools = new Tools();
         $trojanPass = $user->id . ':' . $user->passwd;
-        return $this->view()
-            ->assign('relay_rules', $relay_rules)
-            ->assign('tools', $tools)
-            ->assign('node_method', $node_method)
-            ->assign('node_muport', $node_muport)
-            ->assign('node_bandwidth', $node_bandwidth)
-            ->assign('node_heartbeat', $node_heartbeat)
-            ->assign('node_prefix', $node_prefix)
-            ->assign('node_prealive', $node_prealive)
-            ->assign('node_order', $node_order)
-            ->assign('user', $user)
-            ->assign('node_alive', $node_alive)
-            ->assign('trojanPass', $trojanPass)
-            ->display('user/node.tpl');
+        require TEMPLATE_PATH . 'user/node.phtml';
     }
 
 
@@ -690,7 +674,7 @@ class UserController extends BaseController
 
     public function announcement($request, $response, $args)
     {
-        global $user;
+        $user = $this->user;
         $anns = Ann::orderBy('date', 'desc')->get();
 
         require TEMPLATE_PATH . 'user/announcement.phtml';
@@ -701,7 +685,7 @@ class UserController extends BaseController
 
     public function edit($request, $response, $args)
     {
-        global $user;
+        $user = $this->user;
 
         $themes = Tools::getDir(BASE_PATH."/resources/views");
 
@@ -731,11 +715,7 @@ class UserController extends BaseController
         $codes=InviteCode::where('user_id', $this->user->id)->orderBy("created_at", "desc")->paginate(15, ['*'], 'page', $pageNum);
         $codes->setPath('/user/invite');
 
-
-
-        return $this->view()
-            ->assign('codes', $codes)
-            ->display('user/invite.tpl');
+        require TEMPLATE_PATH . 'user/invite.phtml';
     }
 
     public function doInvite($request, $response, $args)

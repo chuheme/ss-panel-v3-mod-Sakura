@@ -9,14 +9,15 @@ use App\Services\Auth;
  */
 
 class BaseController
-{  
+{
+    public $user;
+
     /**
      * Get user and define TEMPLATE_PATH
      */
     public function __construct()
     {
-        global $user;
-        $user = Auth::getUser();
+        $this->user = $user = Auth::getUser();
 
         if ($user->isLogin) {
             define('TEMPLATE_PATH', BASE_PATH . '/resources/views/' . $user->theme . '/');
