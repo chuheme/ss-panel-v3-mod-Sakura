@@ -15,26 +15,26 @@ class HomeController extends BaseController
 {
     public function index()
     {
-        global $user;
+        $user = $this->user;
         require TEMPLATE_PATH . 'index.phtml';
     }
 
     public function code()
     {
-        global $user;
+        $user = $this->user;
         $codes = InviteCode::where('user_id', '=', '0')->take(10)->get();
         require TEMPLATE_PATH . 'code.phtml';
     }
 
     public function tos()
     {
-        global $user;
+        $user = $this->user;
         require TEMPLATE_PATH . 'tos.phtml';
     }
 
     public function staff()
     {
-        global $user;
+        $user = $this->user;
         require TEMPLATE_PATH . 'staff.phtml';
     }
 
@@ -54,7 +54,7 @@ class HomeController extends BaseController
 
     public function page404($request, $response, $args)
     {
-        global $user;
+        $user = $this->user;
         $pics = scandir(BASE_PATH . '/public/theme/material/images/error/404/');
 
         if (count($pics)>2) {
@@ -71,7 +71,7 @@ class HomeController extends BaseController
 
     public function page405($request, $response, $args)
     {
-        global $user;
+        $user = $this->user;
         $pics = scandir(BASE_PATH . '/public/theme/material/images/error/405/');
         if (count($pics)>2) {
             $pic=$pics[rand(2, count($pics)-1)];
@@ -87,7 +87,7 @@ class HomeController extends BaseController
 
     public function page500($request, $response, $args)
     {
-        global $user;
+        $user = $this->user;
         $pics = scandir(BASE_PATH . '/public/theme/material/images/error/500/');
         if (count($pics)>2) {
             $pic=$pics[rand(2, count($pics)-1)];
