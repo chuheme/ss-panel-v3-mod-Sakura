@@ -17,7 +17,8 @@
     "sendgrid/sendgrid": "7.0.0",
     "ozdemir/datatables": "1.6.*",
     "slim/twig-view": "2.4.0",
-    "cloudflare/sdk": "dev-master"
+    "cloudflare/sdk": "dev-master",
+    "slim/php-view": "^2.0"
   },
   "autoload": {
     "classmap": [
