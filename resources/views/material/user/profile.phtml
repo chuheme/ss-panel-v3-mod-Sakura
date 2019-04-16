@@ -1,13 +1,4 @@
-
-
-
-{include file='user/main.tpl'}
-
-
-
-
-
-
+<?php include(TEMPLATE_PATH . 'user/main.phtml'); ?>
 
     <main class="content">
         <div class="content-header ui-content-header">
@@ -15,10 +6,12 @@
                 <h1 class="content-heading">我的账户</h1>
             </div>
         </div>
+
         <div class="container">
             <section class="content-inner margin-top-no">
                 <div class="row">
                     <div class="col-lg-12 col-md-12">
+
                         <div class="card margin-bottom-no">
                             <div class="card-main">
                                 <div class="card-inner">
@@ -26,9 +19,9 @@
                                         <p class="card-heading">我的帐号</p>
                                         <dl class="dl-horizontal">
                                             <dt>用户名</dt>
-                                            <dd>{$user->user_name}</dd>
+                                            <dd><?= $user->user_name; ?></dd>
                                             <dt>邮箱</dt>
-                                            <dd>{$user->email}</dd>
+                                            <dd><?= $user->email; ?></dd>
                                         </dl>
                                     </div>
                                     <div class="card-action">
@@ -49,17 +42,15 @@
                                         <div class="table-responsive">
                                             <table class="table">
                                                 <tr>
-
                                                     <th>IP</th>
                                                     <th>归属地</th>
                                                 </tr>
-                                                {foreach $userip as $single=>$location}
-                                                    <tr>
-
-                                                        <td>{$single}</td>
-                                                        <td>{$location}</td>
-                                                    </tr>
-                                                {/foreach}
+<?php foreach ($userip as $single => $location) { ?>
+                                                <tr>
+                                                    <td><?= $single; ?></td>
+                                                    <td><?= $location; ?></td>
+                                                </tr>
+<?php } ?>
                                             </table>
                                         </div>
                                     </div>
@@ -77,17 +68,15 @@
                                         <div class="table-responsive">
                                             <table class="table">
                                                 <tr>
-
                                                     <th>IP</th>
                                                     <th>归属地</th>
                                                 </tr>
-                                                {foreach $userloginip as $single=>$location}
+<?php foreach ($userloginip as $single => $location) { ?>
                                                     <tr>
-
-                                                        <td>{$single}</td>
-                                                        <td>{$location}</td>
+                                                        <td><?= $single; ?></td>
+                                                        <td><?= $location; ?></td>
                                                     </tr>
-                                                {/foreach}
+<?php } ?>
                                             </table>
                                         </div>
                                     </div>
@@ -104,8 +93,7 @@
                                     <div class="card-inner">
                                         <p class="card-heading">返利记录</p>
                                         <div class="card-table">
-                                            <div class="table-responsive">
-                                            {$paybacks->render()}
+                                            <div class="table-responsive">\
                                                 <table class="table">
                                                     <thead>
                                                     <tr>
@@ -115,23 +103,22 @@
                                                     </tr>
                                                     </thead>
                                                     <tbody>
-                                                    {foreach $paybacks as $payback}
+<?php foreach ($paybacks as $payback) { ?>
                                                         <tr>
-                                                            <td><b>{$payback->id}</b></td>
-                                                            {if $payback->user()!=null}
-                                                                <td>{$payback->user()->user_name}
+                                                            <td><b><?= $payback->id; ?></b></td>
+<?php   if ($payback->user() != null) { ?>
+                                                                <td><?= $payback->user()->user_name; ?>
                                                                 </td>
-                                                                {else}
+<?php   } else { ?>
                                                                 <td>已注销
                                                                 </td>
-                                                            {/if}
+<?php   } ?>
                                                             </td>
-                                                            <td>{$payback->ref_get} 元</td>
+                                                            <td><?= $payback->ref_get; ?> 元</td>
                                                         </tr>
-                                                    {/foreach}
+<?php } ?>
                                                     </tbody>
                                                 </table>
-                                            {$paybacks->render()}
                                             </div>
                                         </div>
                                     </div>
@@ -146,13 +133,4 @@
         </div>
     </main>
 
-
-
-
-
-
-
-
-
-
-{include file='user/footer.tpl'}
+<?php include(TEMPLATE_PATH . 'user/footer.phtml'); ?>

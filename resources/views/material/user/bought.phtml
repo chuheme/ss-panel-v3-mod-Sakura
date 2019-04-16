@@ -1,24 +1,17 @@
-
-
-
-{include file='user/main.tpl'}
-
-
-
-
-
-
+<?php include(TEMPLATE_PATH . 'user/main.phtml'); ?>
 
     <main class="content">
+
         <div class="content-header ui-content-header">
             <div class="container">
                 <h1 class="content-heading">购买记录</h1>
             </div>
         </div>
+
         <div class="container">
             <div class="col-lg-12 col-sm-12">
                 <section class="content-inner margin-top-no">
-                    
+
                     <div class="card">
                         <div class="card-main">
                             <div class="card-inner">
@@ -26,9 +19,8 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="table-responsive">
-                        {$shops->render()}
                         <table class="table ">
                             <tr>
                                 <th>操作</th>
@@ -38,36 +30,33 @@
                                 <th>价格</th>
                                 <th>续费时间</th>
                                 <th>续费时重置流量</th>
-                                
+
                             </tr>
-                            {foreach $shops as $shop}
+<?php foreach ($shops as $shop) { ?>
                             <tr>
                                 <td>
-                                    <a class="btn btn-brand" {if $shop->renew==0}disabled{else} href="javascript:void(0);" onClick="delete_modal_show('{$shop->id}')"{/if}>退订</a>
+                                    <a class="btn btn-brand" <?php if ($shop->renew == 0): ?>disabled<?php else: ?> href="javascript:void(0);" onClick="delete_modal_show('<?= $shop->id; ?>')"<?php endif; ?>>退订</a>
                                 </td>
-                                <td>#{$shop->id}</td>
-                                <td>{$shop->shop()->name}</td>
-                                <td>{$shop->shop()->content()}</td>
-                                <td>{$shop->price} 元</td>
-                                {if $shop->renew==0}
+                                <td>#<?= $shop->id; ?></td>
+                                <td><?= $shop->shop()->name; ?></td>
+                                <td><?= $shop->shop()->content(); ?></td>
+                                <td><?= $shop->price; ?> 元</td>
+<?php   if ($shop->renew == 0) { ?>
                                 <td>不自动续费</td>
-                                {else}
-                                <td>在 {$shop->renew_date()} 续费</td>
-                                {/if}
-                                
-                                {if $shop->shop()->auto_reset_bandwidth==0}
+<?php   } else { ?>
+                                <td>在 <?= $shop->renew_date(); ?> 续费</td>
+<?php   } ?>
+<?php   if ($shop->shop()->auto_reset_bandwidth == 0) { ?>
                                 <td>不自动重置</td>
-                                {else}
+<?php   } else {?>
                                 <td>自动重置</td>
-                                {/if}
-                                
+<?php   } ?>
+
                             </tr>
-                            {/foreach}
+<?php } ?>
                         </table>
-                        {$shops->render()}
                     </div>
-                    
-                    
+
                     <div aria-hidden="true" class="modal modal-va-middle fade" id="delete_modal" role="dialog" tabindex="-1">
                         <div class="modal-dialog modal-xs">
                             <div class="modal-content">
@@ -84,26 +73,14 @@
                             </div>
                         </div>
                     </div>
-                    
-                    {include file='dialog.tpl'}
 
-                            
+<?php include(TEMPLATE_PATH . 'dialog.phtml'); ?>
             </div>
-            
-            
-            
         </div>
+
     </main>
 
-
-
-
-
-
-{include file='user/footer.tpl'}
-
-
-
+<?php include(TEMPLATE_PATH . 'user/footer.phtml'); ?>
 
 <script>
 function delete_modal_show(id) {
@@ -124,7 +101,7 @@ $(document).ready(function(){
                 if(data.ret){
                     $("#result").modal();
                     $("#msg").html(data.msg);
-                    window.setTimeout("location.href=window.location.href", {$config['jump_delay']});
+                    window.setTimeout("location.href=window.location.href", <?= $_ENV['jump_delay']; ?>);
                 }else{
                     $("#result").modal();
                     $("#msg").html(data.msg);
@@ -140,12 +117,4 @@ $(document).ready(function(){
         delete_id();
     });
 })
-    
 </script>
-
-
-
-
-
-
-

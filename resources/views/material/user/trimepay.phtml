@@ -109,7 +109,7 @@
                     console.log(data);
                     $("#result").modal();
                     $("#msg").html("充值成功！");
-                    window.setTimeout("location.href=window.location.href", {$config['jump_delay']});
+                    window.setTimeout("location.href=window.location.href", <?= $_ENV['jump_delay']; ?>);
                 }
             },
             error: function (jqXHR) {

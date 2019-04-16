@@ -1,27 +1,17 @@
-
-
-
-
-
-
-{include file='user/main.tpl'}
-
-
-
-
-
-
+<?php include(TEMPLATE_PATH . 'user/main.phtml'); ?>
 
     <main class="content">
+
         <div class="content-header ui-content-header">
             <div class="container">
                 <h1 class="content-heading">删除我的帐号</h1>
             </div>
         </div>
+
         <div class="container">
             <section class="content-inner margin-top-no">
                 <div class="row">
-                
+
                     <div class="col-lg-12 col-md-12">
                         <div class="card margin-bottom-no">
                             <div class="card-main">
@@ -61,21 +51,15 @@
                         </div>
                     </div>
                     
-                    {include file='dialog.tpl'}
+<?php include(TEMPLATE_PATH . 'dialog.phtml'); ?>
+
                 </div>
             </section>
         </div>
+
     </main>
 
-
-
-
-
-
-
-{include file='user/footer.tpl'}
-
-
+<?php include(TEMPLATE_PATH . 'user/footer.phtml'); ?>
 
 <script>
     $(document).ready(function () {
@@ -91,7 +75,7 @@
                     if (data.ret) {
                         $("#result").modal();
                         $("#msg").html(data.msg);
-                        window.setTimeout("location.href='/'", {$config['jump_delay']});
+                        window.setTimeout("location.href='/'", <?= $_ENV['jump_delay']; ?>);
                     } else {
                         $("#result").modal();
                         $("#msg").html(data.msg);
@@ -105,4 +89,3 @@
         })
     })
 </script>
-
