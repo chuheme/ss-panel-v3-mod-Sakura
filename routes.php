@@ -48,6 +48,10 @@ $container['notFoundHandler'] = function ($c) {
     };
 };
 
+$container['renderer'] = function ($c) {
+    return new Slim\Views\PhpRenderer();
+};
+
 $container['notAllowedHandler'] = function ($c) {
     return function ($request, $response, $methods) use ($c) {
         return $response->withAddedHeader('Location', '/405');

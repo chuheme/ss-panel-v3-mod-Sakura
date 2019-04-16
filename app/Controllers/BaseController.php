@@ -10,20 +10,24 @@ use App\Services\Auth;
 
 class BaseController
 {
-    public $user;
+    protected $user;
+
+    protected $renderer;
 
     /**
      * Get user and define TEMPLATE_PATH
      */
-    public function __construct()
+    public function __construct(\Slim\Container $container)
     {
-        $this->user = $user = Auth::getUser();
+        $this->user = Auth::getUser();
+        $this->renderer = $container->get('renderer');
 
-        if ($user->isLogin) {
-            define('TEMPLATE_PATH', BASE_PATH . '/resources/views/' . $user->theme . '/');
+        if ($this->user->isLogin) {
+            define('TEMPLATE_PATH', BASE_PATH . '/resources/views/' . $this->user->theme . '/');
         } else {
             define('TEMPLATE_PATH', BASE_PATH . '/resources/views/' . $_ENV['theme'] . '/');
         }
+        $this->renderer->setTemplatePath(TEMPLATE_PATH);
     }
 
     /**
