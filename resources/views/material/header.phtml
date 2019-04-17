@@ -37,7 +37,7 @@
         <ul class="nav nav-list pull-right">
             <li class="dropdown margin-right">
                 <a class="dropdown-toggle padding-left-no padding-right-no" data-toggle="dropdown">
-<?php if ($user->isLogin): ?>
+<?php if ($user->isLogin) { ?>
                     <span class="access-hide"><?= $user->user_name; ?></span>
                     <span class="avatar avatar-sm"><img alt="alt text for John Smith avatar" src="<?= $user->gravatar; ?>"></span>
                     </a>
@@ -49,7 +49,7 @@
                             <a class="padding-right-lg waves-attach" href="/user/logout"><span class="icon icon-lg margin-right">exit_to_app</span>登出</a>
                         </li>
                     </ul>
-<?php else: ?>
+<?php } else { ?>
                     <span class="access-hide">未登录</span>
                     <span class="avatar avatar-sm"><img alt="alt text for John Smith avatar" src="/theme/material/images/users/avatar-001.jpg"></span>
                     </a>
@@ -61,7 +61,7 @@
                             <a class="padding-right-lg waves-attach" href="/auth/register"><span class="icon icon-lg margin-right">pregnant_woman</span>注册</a>
                         </li>
                     </ul>
-<?php endif; ?>
+<?php } ?>
                     
             </li>
         </ul>
@@ -82,21 +82,21 @@
                     <li>
                         <a  href="/code"><i class="icon icon-lg">code</i>&nbsp;邀请码</a>
                     </li>
-<?php if ($user->isLogin): ?>
+<?php if ($user->isLogin) { ?>
                     <li>
                         <a  href="/user"><i class="icon icon-lg">person</i>&nbsp;用户中心</a>
                     </li>
                     <li>
                         <a  href="/user/logout"><i class="icon icon-lg">call_missed_outgoing</i>&nbsp;退出</a>
                     </li>
-<?php else: ?>
+<?php } else { ?>
                     <li>
                         <a  href="/auth/login"><i class="icon icon-lg">vpn_key</i>&nbsp;登录</a>
                     </li>
                     <li>
                         <a  href="/auth/register"><i class="icon icon-lg">pregnant_woman</i>&nbsp;注册</a>
                     </li>
-<?php endif; ?>
+<?php } ?>
                 </ul>
             </div>
         </div>

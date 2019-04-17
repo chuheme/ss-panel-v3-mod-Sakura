@@ -38,13 +38,13 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-<?php foreach($codes as $code): ?>
+<?php foreach($codes as $code) { ?>
                                         <tr>
                                             <td><?= $code->id; ?></td>
                                             <td><a href="/auth/register?code=<?= $code->code; ?>"><?= $code->code; ?></a></td>
                                             <td>可用</td>
                                         </tr>
-<?php endforeach; ?>
+<?php } ?>
                                         </tbody>
                                     </table>
                                 </div>

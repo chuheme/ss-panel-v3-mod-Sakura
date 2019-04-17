@@ -1,8 +1,8 @@
-<?php include(TEMPLATE_PATH . 'user/main.phtml') ?>
-
-
 <?php
-    use App\Utils\URL as URL;
+    include(TEMPLATE_PATH . 'user/main.phtml');
+    
+    use App\Utils\URL;
+
     $ssr_prefer = URL::SSRCanConnect($user, 0);
     $pre_user = URL::cloneUser($user);
     $user = URL::getSSRConnectInfo($pre_user);
