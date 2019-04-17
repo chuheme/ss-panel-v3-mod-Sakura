@@ -1,6 +1,6 @@
 <?php
-include(TEMPLATE_PATH . 'user/main.phtml');
-use App\Utils\URL as URL;
+    include(TEMPLATE_PATH . 'user/main.phtml');
+    use App\Utils\URL;
 ?>
 
     <main class="content">
@@ -116,11 +116,11 @@ use App\Utils\URL as URL;
                                             <label class="floating-label" for="method">加密方式</label>
                                             <select id="method" class="form-control">
 <?php 
-$method_list = $config_service->getSupportParam('method');
-foreach ($method_list as $method) {
+    $method_list = $config_service->getSupportParam('method');
+        foreach ($method_list as $method) {
 ?>
-                                                    <option value="<?= $method ?>" <?php if ($user->method == $method) { ?>selected="selected"<?php } ?>>[<?php if (URL::CanMethodConnect($method) == 2) { ?>SS<?php } else { ?>SS/SSR<?php } ?>>] <?= $method ?></option>
-<?php } ?>
+                                                    <option value="<?= $method ?>" <?php if ($user->method == $method) { ?>selected="selected"<?php } ?>>[<?php if (URL::CanMethodConnect($method) == 2) { ?>SS<?php } else { ?>SS/SSR<?php } ?>] <?= $method ?></option>
+<?php   } ?>
                                             </select>
                                         </div>
                                     </div>
@@ -490,6 +490,7 @@ foreach ($method_list as $method) {
     jQuery('#telegram-qr').qrcode({
         "text": telegram_qrcode
     });
+<?php } ?>
 </script>
 
 
@@ -780,7 +781,7 @@ foreach ($method_list as $method) {
         })
     })
 </script>
-<?php } ?>
+
 <script>
     var wait=60;
     function time(o) {
