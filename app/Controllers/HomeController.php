@@ -3,7 +3,6 @@
 namespace App\Controllers;
 
 use App\Models\InviteCode;
-use App\Services\Auth;
 use App\Services\Config;
 use App\Utils\Pay;
 use App\Utils\TelegramProcess;
@@ -13,29 +12,34 @@ use App\Utils\TelegramProcess;
  */
 class HomeController extends BaseController
 {
-    public function index()
+    public function index($request, $response, $args)
     {
-        $user = $this->user;
-        require TEMPLATE_PATH . 'index.phtml';
+        $this->renderer->render($response, 'index.phtml', [
+            'user' => $this->user,
+        ]);
     }
 
-    public function code()
+    public function code($request, $response, $args)
     {
-        $user = $this->user;
         $codes = InviteCode::where('user_id', '=', '0')->take(10)->get();
-        require TEMPLATE_PATH . 'code.phtml';
+        $this->renderer->render($response, 'code.phtml', [
+            'user' => $this->user,
+            'codes' => $codes,
+        ]);
     }
 
-    public function tos()
+    public function tos($request, $response, $args)
     {
-        $user = $this->user;
-        require TEMPLATE_PATH . 'tos.phtml';
+        $this->renderer->render($response, 'tos.phtml', [
+            'user' => $this->user,
+        ]);
     }
 
-    public function staff()
+    public function staff($request, $response, $args)
     {
-        $user = $this->user;
-        require TEMPLATE_PATH . 'staff.phtml';
+        $this->renderer->render($response, 'staff.phtml', [
+            'user' => $this->user,
+        ]);
     }
 
     public function telegram($request, $response, $args)
@@ -54,19 +58,21 @@ class HomeController extends BaseController
 
     public function page404($request, $response, $args)
     {
-        $user = $this->user;
         $pics = scandir(BASE_PATH . '/public/theme/material/images/error/404/');
 
-        if (count($pics)>2) {
-            $pic=$pics[rand(2, count($pics)-1)];
+        if (count($pics) > 2) {
+            $pic = $pics[rand(2, count($pics)-1)];
         } else {
-            $pic="4041.png";
+            $pic = "4041.png";
         }
 
         $pic = '/theme/material/images/error/404/'.$pic;
-        header('HTTP/2 404 Not Found');
-        require TEMPLATE_PATH . '404.phtml';
-        exit();
+        $response = $response->withStatus(404);
+        $response->getBody()->write($this->renderer->fetch('404.phtml', [
+            'user' => $this->user,
+            'pic' => $pic,
+        ]));
+        return $response;
     }
 
     public function page405($request, $response, $args)
@@ -80,9 +86,12 @@ class HomeController extends BaseController
         }
 
         $pic = '/theme/material/images/error/405/'.$pic;
-        header('HTTP/2 405 Method Not Allowed');
-        require TEMPLATE_PATH . '405.phtml';
-        exit();
+        $response = $response->withStatus(405);
+        $response->getBody()->write($this->renderer->fetch('405.phtml', [
+            'user' => $this->user,
+            'pic' => $pic,
+        ]));
+        return $response;
     }
 
     public function page500($request, $response, $args)
@@ -96,9 +105,12 @@ class HomeController extends BaseController
         }
 
         $pic = '/theme/material/images/error/500/'.$pic;
-        header('HTTP/2 500 Internal Server Error');
-        require TEMPLATE_PATH . '500.phtml';
-        exit();
+        $response = $response->withStatus(500);
+        $response->getBody()->write($this->renderer->fetch('500.phtml', [
+            'user' => $this->user,
+            'pic' => $pic,
+        ]));
+        return $response;
     }
 
     public function pay_callback($request, $response, $args)
