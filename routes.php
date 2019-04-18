@@ -42,26 +42,26 @@ $configuration = [
 
 $container = new Container($configuration);
 
-$container['notFoundHandler'] = function ($c) {
-    return function ($request, $response) use ($c) {
-        return $response->withAddedHeader('Location', '/404');
-    };
-};
-
 $container['renderer'] = function ($c) {
     return new Slim\Views\PhpRenderer();
 };
 
+$container['notFoundHandler'] = function ($c) {
+    return function ($request, $response) use ($c) {
+        return $response->withHeader('Location', '/404');
+    };
+};
+
 $container['notAllowedHandler'] = function ($c) {
     return function ($request, $response, $methods) use ($c) {
-        return $response->withAddedHeader('Location', '/405');
+        return $response->withHeader('Location', '/405');
     };
 };
 
 if ($debug==false) {
     $container['errorHandler'] = function ($c) {
         return function ($request, $response, $exception) use ($c) {
-            return $response->withAddedHeader('Location', '/500');
+            return $response->withHeader('Location', '/500');
         };
     };
 }
