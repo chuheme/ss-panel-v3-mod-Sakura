@@ -323,11 +323,12 @@ class UserController extends BaseController
     public function nodeAjax($request, $response, $args)
     {
         $id = $args['id'];
-        $point_node=Node::find($id);
-        return $this->view()
-                    ->assign('point_node', $point_node)
-                    ->assign('id', $id)
-                    ->display('user/nodeajax.tpl');
+        $point_node = Node::find($id);
+        $this->renderer->render($response, 'user/nodeajax.phtml', [
+            'user' => $this->user,
+            'point_node' => $point_node,
+            'id' => $id,
+        ]);
     }
 
 
