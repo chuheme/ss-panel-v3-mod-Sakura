@@ -1,10 +1,4 @@
- {include file='admin/main.tpl'}
-
-
-
-
-
-
+<?php include(TEMPLATE_PATH . 'admin/main.phtml'); ?>
 
 <main class="content">
     <div class="content-header ui-content-header">
@@ -23,7 +17,6 @@
                 </div>
             </div>
 
-
             <div class="card">
                 <div class="card-main">
                     <div class="card-inner">
@@ -41,8 +34,6 @@
                             <label class="floating-label" for="prefix">邀请码数量</label>
                             <input class="form-control" id="num" type="number">
                         </div>
-
-
                     </div>
 
                     <div class="card-action">
@@ -57,41 +48,28 @@
                 <div class="card-main">
                     <div class="card-inner">
                         <p class="card-heading">返利记录</p>
-                        <p>显示表项: {include file='table/checkbox.tpl'}
+                        <p>显示表项: 
+<?php include(TEMPLATE_PATH . 'table/checkbox.phtml'); ?>
                         </p>
                         <div class="card-table">
                             <div class="table-responsive">
-                                {include file='table/table.tpl'}
+<?php include(TEMPLATE_PATH . 'table/table.phtml'); ?>
                             </div>
                         </div>
-
-
                     </div>
                 </div>
             </div>
 
-            {include file='dialog.tpl'}
-
+<?php include(TEMPLATE_PATH . 'dialog.phtml'); ?>
 
     </div>
 
-
-
 </main>
 
-
-
-
-
-
-
-
-
-
-{include file='admin/footer.tpl'}
+<?php include(TEMPLATE_PATH . 'admin/footer.phtml'); ?>
 
 <script>
-{include file='table/js_1.tpl'}
+<?php include(TEMPLATE_PATH . 'table/js_1.phtml'); ?>
 
 $("#invite").click(function () {
     $.ajax({
@@ -107,14 +85,11 @@ $("#invite").click(function () {
             if (data.ret) {
                 $("#result").modal();
                 $("#msg").html(data.msg);
-                window.setTimeout("location.href='/admin/invite'", {$config['jump_delay']});
-                        }
-            else
-                        {
-                            $("#result").modal();
-                            $("#msg").html(data.msg+"。");
-                        }
-
+                window.setTimeout("location.href='/admin/invite'", <?= $_ENV['jump_delay']; ?>);
+            } else {
+                $("#result").modal();
+                $("#msg").html(data.msg+"。");
+            }
             // window.location.reload();
         },
         error: function (jqXHR) {
@@ -124,6 +99,6 @@ $("#invite").click(function () {
 });
 
 $(document).ready(function(){
-     {include file='table/js_2.tpl'}
+<?php include(TEMPLATE_PATH . 'table/js_2.phtml'); ?>
 });
 </script>

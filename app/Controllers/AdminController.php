@@ -4,8 +4,6 @@ namespace App\Controllers;
 
 use App\Models\InviteCode;
 use App\Models\Node;
-use App\Models\TrafficLog;
-use App\Models\Payback;
 use App\Models\Coupon;
 use App\Models\User;
 use App\Utils\Tools;
@@ -17,23 +15,21 @@ use App\Utils\DatatablesHelper;
 /**
  *  Admin Controller
  */
-class AdminController extends UserController
+class AdminController extends BaseController
 {
     public function index($request, $response, $args)
     {
         $sts = new Analytics();
-        return $this->view()->assign('sts', $sts)->display('admin/index.tpl');
+        $this->renderer->render($response, 'admin/index.phtml', [
+            'user' => $this->user,
+            'sts' => $sts,
+        ]);
     }
 
     public function node($request, $response, $args)
     {
         $nodes = Node::all();
         return $this->view()->assign('nodes', $nodes)->display('admin/node.tpl');
-    }
-
-    public function sys()
-    {
-        return $this->view()->display('admin/index.tpl');
     }
 
     public function invite($request, $response, $args)
@@ -48,7 +44,11 @@ class AdminController extends UserController
             array_push($table_config['default_show_column'], $column);
         }
         $table_config['ajax_url'] = 'payback/ajax';
-        return $this->view()->assign('table_config', $table_config)->display('admin/invite.tpl');
+
+        $this->renderer->render($response, 'admin/invite.phtml', [
+            'user' => $this->user,
+            'table_config' => $table_config,
+        ]);
     }
 
     public function addInvite($request, $response, $args)
@@ -100,7 +100,11 @@ class AdminController extends UserController
             array_push($table_config['default_show_column'], $column);
         }
         $table_config['ajax_url'] = 'coupon/ajax';
-        return $this->view()->assign('table_config', $table_config)->display('admin/coupon.tpl');
+
+        $this->renderer->render($response, 'admin/coupon.phtml', [
+            'user' => $this->user,
+            'table_config' => $table_config,
+        ]);
     }
 
     public function addCoupon($request, $response, $args)
@@ -132,7 +136,11 @@ class AdminController extends UserController
                                   "rate", "origin_traffic",
                                   "traffic", "log_time");
         $table_config['ajax_url'] = 'trafficlog/ajax';
-        return $this->view()->assign('table_config', $table_config)->display('admin/trafficlog.tpl');
+
+        $this->renderer->render($response, 'admin/trafficlog.phtml', [
+            'user' => $this->user,
+            'table_config' => $table_config,
+        ]);
     }
 
     public function ajax_trafficLog($request, $response, $args)
