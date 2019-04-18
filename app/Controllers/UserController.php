@@ -48,7 +48,6 @@ class UserController extends BaseController
 
     public function index($request, $response, $args)
     {
-        $user = $this->user;
         $ios_token = LinkController::GenerateIosCode("smart", 0, $this->user->id, 0, "smart");
 
         $acl_token = LinkController::GenerateAclCode("smart", 0, $this->user->id, 0, "smart");
@@ -74,9 +73,7 @@ class UserController extends BaseController
         }
 
         $ann = Ann::orderBy('date', 'desc')->first();
-        $baseUrl = $_ENV['baseUrl'];
 
-        $baseURL = Config::get('baseUrl');
         $subscribe = '<p>
                                                             <span class="icon icon-lg">flash_auto</span> 普通端口订阅地址：
                                                             <input type="text" class="input form-control form-control-monospace" name="input1" readonly value="'.Config::get('baseUrl').'/link/'.$ssr_sub_token.'?mu=0" readonly="true">
@@ -88,7 +85,19 @@ class UserController extends BaseController
                                                             <button class="copy-text btn btn-brand-accent" type="button" data-clipboard-text="'.Config::get('baseUrl').'/link/'.$ssr_sub_token.'?mu=1">点击复制地址</button>
                                                         </p>';
 
-        require TEMPLATE_PATH . 'user/index.phtml';
+        $this->renderer->render($response, 'user/index.phtml', [
+            'user' => $this->user,
+            'router_token' => $router_token,
+            'router_token_without_mu' => $router_token_without_mu,
+            'acl_token' => $acl_token,
+            'ann' => $ann,
+            'geetest_html' => $geetest_html,
+            'ios_token' => $ios_token,
+            'baseUrl' => $_ENV['baseUrl'],
+            'subscribe' => $subscribe,
+            'subscribe_mu' => $subscribe_mu,
+            'recaptcha_sitekey' => $recaptcha_sitekey,
+        ]);
 
     }
 
@@ -96,25 +105,31 @@ class UserController extends BaseController
 
     public function lookingglass($request, $response, $args)
     {
-        $user = $this->user;
-        $speedtest = Speedtest::where("datetime", ">", time()-Config::get('Speedtest_duration')*3600)->orderBy('datetime', 'desc')->get();
-        $hour = $_ENV['Speedtest_duration'];
+        $duration = $_ENV['Speedtest_duration'];
+        $speedtest = Speedtest::where("datetime", ">", time() - $duration*3600)->orderBy('datetime', 'desc')->get();
 
-        require TEMPLATE_PATH . 'user/lookingglass.phtml';
+        $this->renderer->render($response, 'user/lookingglass.phtml', [
+            'user' => $this->user,
+            'speedtest' => $speedtest,
+            'hour' => $duration,
+        ]);
     }
 
 
     public function code($request, $response, $args)
     {
-        $user = $this->user;
         $pageNum = 1;
         if (isset($request->getQueryParams()["page"])) {
             $pageNum = $request->getQueryParams()["page"];
         }
-        $codes = Code::where('type', '<>', '-2')->where('userid', '=', $user->id)->orderBy('id', 'desc')->paginate(15, ['*'], 'page', $pageNum);
+        $codes = Code::where('type', '<>', '-2')->where('userid', '=', $this->user->id)->orderBy('id', 'desc')->paginate(15, ['*'], 'page', $pageNum);
         $codes->setPath('/user/code');
-        $pmw = Pay::getHTML($user);
-        require TEMPLATE_PATH . 'user/code.phtml';
+
+        $this->renderer->render($response, 'user/code.phtml', [
+            'user' => $this->user,
+            'codes' => $codes,
+            'payment_html' => Pay::getHTML($this->user, $this->renderer),
+        ]);
     }
 
     public function code_check($request, $response, $args)
@@ -430,13 +445,27 @@ class UserController extends BaseController
         $node_order=(object)$node_order;
         $tools = new Tools();
         $trojanPass = $user->id . ':' . $user->passwd;
-        require TEMPLATE_PATH . 'user/node.phtml';
+
+        $this->renderer->render($response, 'user/node.phtml', [
+            'user' => $this->user,
+            'relay_rules' => $relay_rules,
+            'tools' => $tools,
+            'node_method' => $node_method,
+            'node_muport' => $node_muport,
+            'node_bandwidth' => $node_bandwidth,
+            'node_heartbeat' => $node_heartbeat,
+            'node_prefix' => $node_prefix,
+            'node_prealive' => $node_prealive,
+            'node_order' => $node_order,
+            'node_alive' => $node_alive,
+            'trojanPass' => $trojanPass,
+        ]);
     }
 
 
     public function nodeInfo($request, $response, $args)
     {
-        $user = Auth::getUser();
+        $user = $this->user;
         $id = $args['id'];
         $mu = $request->getQueryParams()["ismu"];
         $relay_rule_id = $request->getQueryParams()["relay_rule"];
@@ -451,7 +480,12 @@ class UserController extends BaseController
 
             case 0:
                 if ((($user->class>=$node->node_class&&($user->node_group==$node->node_group||$node->node_group==0))||$user->is_admin)&&($node->node_bandwidth_limit==0||$node->node_bandwidth<$node->node_bandwidth_limit)) {
-                    return $this->view()->assign('node', $node)->assign('user', $user)->assign('mu', $mu)->assign('relay_rule_id', $relay_rule_id)->registerClass("URL", "App\Utils\URL")->display('user/nodeinfo.tpl');
+                    $this->renderer->render($response, 'user/nodeinfo.phtml', [
+                        'user' => $this->user,
+                        'node' => $node,
+                        'mu' => $mu,
+                        'relay_rule_id' => $relay_rule_id,
+                    ]);
                 }
             break;
 
@@ -569,7 +603,12 @@ class UserController extends BaseController
 
             case 10:
                 if ((($user->class>=$node->node_class&&($user->node_group==$node->node_group||$node->node_group==0))||$user->is_admin)&&($node->node_bandwidth_limit==0||$node->node_bandwidth<$node->node_bandwidth_limit)) {
-                    return $this->view()->assign('node', $node)->assign('user', $user)->assign('mu', $mu)->assign('relay_rule_id', $relay_rule_id)->registerClass("URL", "App\Utils\URL")->display('user/nodeinfo.tpl');
+                    $this->renderer->render($response, 'user/nodeinfo.phtml', [
+                        'user' => $this->user,
+                        'node' => $node,
+                        'mu' => $mu,
+                        'relay_rule_id' => $relay_rule_id,
+                    ]);
                 }
                 break;
             default:
@@ -618,6 +657,7 @@ class UserController extends BaseController
 
     public function profile($request, $response, $args)
     {
+        $user = $this->user;
         $pageNum = 1;
         if (isset($request->getQueryParams()["page"])) {
             $pageNum = $request->getQueryParams()["page"];
@@ -666,18 +706,24 @@ class UserController extends BaseController
             }
         }
 
+        $this->renderer->render($response, 'user/profile.phtml', [
+            'user' => $this->user,
+            'userip' => $userip,
+            'userloginip' => $userloginip,
+            'paybacks' => $paybacks,
+        ]);
 
-
-        return $this->view()->assign("userip",$userip)->assign("userloginip", $userloginip)->assign("paybacks", $paybacks)->display('user/profile.tpl');
     }
 
 
     public function announcement($request, $response, $args)
     {
-        $user = $this->user;
         $anns = Ann::orderBy('date', 'desc')->get();
 
-        require TEMPLATE_PATH . 'user/announcement.phtml';
+        $this->renderer->render($response, 'user/announcement.phtml', [
+            'user' => $this->user,
+            'anns' => $anns,
+        ]);
     }
 
 
@@ -685,8 +731,6 @@ class UserController extends BaseController
 
     public function edit($request, $response, $args)
     {
-        $user = $this->user;
-
         $themes = Tools::getDir(BASE_PATH."/resources/views");
 
         $BIP = BlockIp::where("ip", $_SERVER["REMOTE_ADDR"])->first();
@@ -698,16 +742,24 @@ class UserController extends BaseController
             $isBlock = 1;
         }
 
-        $bind_token = TelegramSessionManager::add_bind_session($user);
+        $bind_token = TelegramSessionManager::add_bind_session($this->user);
 
         $config_service = new Config();
 
-        require TEMPLATE_PATH . 'user/edit.phtml';
+        $this->renderer->render($response, 'user/edit.phtml', [
+            'user' => $this->user,
+            'themes' => $themes,
+            'isBlock' => $isBlock,
+            'Block' => $Block,
+            'bind_token' => $bind_token,
+            'config_service' => $config_service,
+        ]);
     }
 
 
     public function invite($request, $response, $args)
     {
+        $user = $this->user;
         $pageNum = 1;
         if (isset($request->getQueryParams()["page"])) {
             $pageNum = $request->getQueryParams()["page"];
@@ -715,7 +767,10 @@ class UserController extends BaseController
         $codes=InviteCode::where('user_id', $this->user->id)->orderBy("created_at", "desc")->paginate(15, ['*'], 'page', $pageNum);
         $codes->setPath('/user/invite');
 
-        require TEMPLATE_PATH . 'user/invite.phtml';
+        $this->renderer->render($response, 'user/invite.phtml', [
+            'user' => $this->user,
+            'codes' => $codes,
+        ]);
     }
 
     public function doInvite($request, $response, $args)
@@ -740,9 +795,11 @@ class UserController extends BaseController
         return $this->echoJson($response, $res);
     }
 
-    public function sys()
+    public function sys($request, $response, $args)
     {
-        return $this->view()->assign('ana', "")->display('user/sys.tpl');
+        $this->renderer->render($response, 'user/invite.phtml', [
+            'user' => $this->user,
+        ]);
     }
 
     public function updatePassword($request, $response, $args)
@@ -819,7 +876,11 @@ class UserController extends BaseController
         $shops = Shop::where("status", 1)->paginate(15, ['*'], 'page', $pageNum);
         $shops->setPath('/user/shop');
 
-        return $this->view()->assign('shops', $shops)->display('user/shop.tpl');
+        $this->renderer->render($response, 'user/shop.phtml', [
+            'user' => $this->user,
+            'shops' => $shops
+        ]);
+
     }
 
     public function CouponCheck($request, $response, $args)
@@ -950,6 +1011,7 @@ class UserController extends BaseController
 
     public function bought($request, $response, $args)
     {
+        $user = $this->user;
         $pageNum = 1;
         if (isset($request->getQueryParams()["page"])) {
             $pageNum = $request->getQueryParams()["page"];
@@ -957,7 +1019,10 @@ class UserController extends BaseController
         $shops = Bought::where("userid", $this->user->id)->orderBy("id", "desc")->paginate(15, ['*'], 'page', $pageNum);
         $shops->setPath('/user/bought');
 
-        return $this->view()->assign('shops', $shops)->display('user/bought.tpl');
+        $this->renderer->render($response, 'user/bought.phtml', [
+            'user' => $this->user,
+            'shops' => $shops,
+        ]);
     }
 
     public function deleteBoughtGet($request, $response, $args)
@@ -995,12 +1060,18 @@ class UserController extends BaseController
         $tickets = Ticket::where("userid", $this->user->id)->where("rootid", 0)->orderBy("datetime", "desc")->paginate(15, ['*'], 'page', $pageNum);
         $tickets->setPath('/user/ticket');
 
-        return $this->view()->assign('tickets', $tickets)->display('user/ticket.tpl');
+        $this->renderer->render($response, 'user/ticket/index.phtml', [
+            'user' => $this->user,
+            'tickets' => $tickets,
+        ]);
+
     }
 
     public function ticket_create($request, $response, $args)
     {
-        return $this->view()->display('user/ticket_create.tpl');
+        $this->renderer->render($response, 'user/ticket/create.phtml', [
+            'user' => $this->user,
+        ]);
     }
 
     public function ticket_add($request, $response, $args)
@@ -1149,8 +1220,10 @@ class UserController extends BaseController
         $ticketset=Ticket::where("id", $id)->orWhere("rootid", "=", $id)->orderBy("datetime", "desc")->paginate(5, ['*'], 'page', $pageNum);
         $ticketset->setPath('/user/ticket/'.$id."/view");
 
-
-        return $this->view()->assign('ticketset', $ticketset)->assign("id", $id)->display('user/ticket_view.tpl');
+        $this->renderer->render($response, 'user/ticket/view.phtml', [
+            'user' => $this->user,
+            'ticketset' => $ticketset,
+        ]);
     }
 
 
@@ -1540,7 +1613,9 @@ class UserController extends BaseController
 
     public function kill($request, $response, $args)
     {
-        return $this->view()->display('user/kill.tpl');
+        $this->renderer->render($response, 'user/kill.phtml', [
+            'user' => $this->user,
+        ]);
     }
 
     public function handleKill($request, $response, $args)
@@ -1567,11 +1642,12 @@ class UserController extends BaseController
 
     public function trafficLog($request, $response, $args)
     {
-        $traffic=TrafficLog::where('user_id', $this->user->id)->where("log_time", ">", (time()-3*86400))->orderBy('id', 'desc')->get();
-        return $this->view()->assign('logs', $traffic)->display('user/trafficlog.tpl');
+        $traffic = TrafficLog::where('user_id', $this->user->id)->where("log_time", ">", (time()-3*86400))->orderBy('id', 'desc')->get();
+        $this->renderer->render($response, 'user/trafficlog.phtml', [
+            'user' => $this->user,
+            'logs' => $traffic,
+        ]);
     }
-
-
 
 
     public function detect_index($request, $response, $args)
@@ -1580,9 +1656,13 @@ class UserController extends BaseController
         if (isset($request->getQueryParams()["page"])) {
             $pageNum = $request->getQueryParams()["page"];
         }
-        $logs = DetectRule::paginate(15, ['*'], 'page', $pageNum);
-        $logs->setPath('/user/detect');
-        return $this->view()->assign('rules', $logs)->display('user/detect_index.tpl');
+        $rules = DetectRule::paginate(15, ['*'], 'page', $pageNum);
+        $rules->setPath('/user/detect');
+
+        $this->renderer->render($response, 'user/detect_index.phtml', [
+            'user' => $this->user,
+            'rules' => $rules,
+        ]);
     }
 
     public function detect_log($request, $response, $args)
@@ -1593,12 +1673,18 @@ class UserController extends BaseController
         }
         $logs = DetectLog::orderBy('id', 'desc')->where('user_id', $this->user->id)->paginate(15, ['*'], 'page', $pageNum);
         $logs->setPath('/user/detect/log');
-        return $this->view()->assign('logs', $logs)->display('user/detect_log.tpl');
+
+        $this->renderer->render($response, 'user/detect_log.phtml', [
+            'user' => $this->user,
+            'logs' => $logs,
+        ]);
     }
 
     public function disable($request, $response, $args)
     {
-        return require TEMPLATE_PATH . 'user/disable.phtml';
+        $this->renderer->render($response, 'user/edit.phtml', [
+            'user' => $this->user,
+        ]);
     }
 
     public function telegram_reset($request, $response, $args)

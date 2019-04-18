@@ -1,16 +1,4 @@
-
-
-
-
-
-
-{include file='user/main.tpl'}
-
-
-
-
-
-
+<?php include(TEMPLATE_PATH . 'user/main.phtml'); ?>
 
     <main class="content">
         <div class="content-header ui-content-header">
@@ -21,16 +9,16 @@
         <div class="container">
             <div class="col-lg-12 col-sm-12">
                 <section class="content-inner margin-top-no">
-                    
+
                     <div class="card">
                         <div class="card-main">
                             <div class="card-inner">
                                 <p>系统中所有商品的列表。您购买等级类的商品时有效期会从当前时间开始计算。</p>
-                                <p>当前余额：{$user->money} 元</p>
+                                <p>当前余额：<?= $user->money; ?> 元</p>
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="ui-card-wrap">
                     <div class="row">
                         <div class="col-lg-12 col-sm-12">
@@ -38,50 +26,55 @@
                                 <div class="card-main">
                                     <div class="card-inner margin-bottom-no">
                                         <div class="tile-wrap">
-                                            {$shops->render()}
-                                            {foreach $shops as $shop}
+<?php foreach ($shops as $shop) { ?>
                                                 <div class="tile tile-collapse">
-                                                    <div data-toggle="tile" data-target="#heading{$shop->id}">
+
+                                                    <div data-toggle="tile" data-target="#heading<?= $shop->id; ?>">
                                                         <div class="tile-side pull-left" data-ignore="tile">
                                                             <div class="avatar avatar-sm">
                                                                 <span class="icon shop">shop</span>
                                                             </div>
                                                         </div>
                                                         <div class="tile-inner">
-                                                            <div class="text-overflow">#{$shop->id} {$shop->name} <span class="label label-brand-accent">{$shop->price} 元</span></div>
+                                                            <div class="text-overflow">#<?= $shop->id; ?> <?= $shop->name; ?> <span class="label label-brand-accent"><?= $shop->price; ?> 元</span></div>
                                                         </div>
                                                     </div>
-                                                    <div class="collapsible-region collapse" id="heading{$shop->id}">
+
+                                                    <div class="collapsible-region collapse" id="heading<?= $shop->id; ?>">
                                                         <div class="tile-sub">
                                                             <br />
                                                             <div class="card">
                                                                 <div class="card-main">
                                                                     <div class="card-inner">
                                                                         <p class="card-heading">
-                                                                            <a>#{$shop->id} {$shop->name}</a><span class="label label-brand-accent">{$shop->price} 元</span>
+                                                                            <a>#<?= $shop->id; ?> <?= $shop->name; ?></a><span class="label label-brand-accent"><?= $shop->price; ?> 元</span>
                                                                         </p>
                                                                         <hr />
                                                                         <p class="card-heading">商品内容</p>
-                                                                        {$shop->content()}
+                                                                        <?= $shop->content(); ?>
                                                                         <p class="card-heading">自动续费</p>
-                                                                        {if $shop->auto_renew==0}不能自动续费{else}在 <span class="label label-brand-red">{$shop->auto_renew}</span> 天后自动续费（可选）{/if}
+<?php if ($shop->auto_renew == 0) { ?>
+                                                                        不能自动续费
+<?php } else { ?>
+                                                                        在 <span class="label label-brand-red"><?= $shop->auto_renew; ?></span> 天后自动续费（可选）
+<?php } ?>
                                                                         <p class="card-heading">续费时流量重置</p>
-                                                                        <span class="label label-brand">{if $shop->auto_reset_bandwidth==0}不自动重置{else}自动重置{/if}</span>
+                                                                        <span class="label label-brand"><?php if ($shop->auto_reset_bandwidth == 0) { ?>不自动重置<?php } else { ?>自动重置<?php } ?></span>
                                                                         <hr />
-                                                                        <p><a class="btn btn-brand-accent" href="javascript:void(0);" onClick="buy('{$shop->id}',{$shop->auto_renew},{$shop->auto_reset_bandwidth})"><span class="icon shopping_cart">shopping_cart</span> 购买</a></p>
+                                                                        <p><a class="btn btn-brand-accent" href="javascript:void(0);" onClick="buy('<?= $shop->id; ?>',<?= $shop->auto_renew; ?>,<?= $shop->auto_reset_bandwidth; ?>)"><span class="icon shopping_cart">shopping_cart</span> 购买</a></p>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            {/foreach}
-                                            {$shops->render()}
+<?php } ?>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+
                         <div aria-hidden="true" class="modal modal-va-middle fade" id="nodeinfo" role="dialog" tabindex="-1">
                             <div class="modal-dialog modal-full">
                                 <div class="modal-content">
@@ -89,11 +82,12 @@
                                 </div>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>
-                    
-                    
+
+
                     <div aria-hidden="true" class="modal modal-va-middle fade" id="coupon_modal" role="dialog" tabindex="-1">
                         <div class="modal-dialog modal-xs">
                             <div class="modal-content">
@@ -113,8 +107,7 @@
                             </div>
                         </div>
                     </div>
-                    
-                    
+
                     <div aria-hidden="true" class="modal modal-va-middle fade" id="order_modal" role="dialog" tabindex="-1">
                         <div class="modal-dialog modal-xs">
                             <div class="modal-content">
@@ -127,40 +120,30 @@
                                     <p id="credit">优惠额度：</p>
                                     <p id="total">总金额：</p>
                                     <p id="auto_reset">在到期时自动续费</p>
-                                    
+
                                     <div class="checkbox switch" id="autor">
                                         <label for="autorenew">
                                             <input checked class="access-hide" id="autorenew" type="checkbox"><span class="switch-toggle"></span>自动续费
                                         </label>
                                     </div>
-                                    
+
                                 </div>
-                                
+
                                 <div class="modal-footer">
                                     <p class="text-right"><button class="btn btn-flat btn-brand waves-attach" data-dismiss="modal" id="order_input" type="button">确定</button></p>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    
-                    {include file='dialog.tpl'}
-    
+
+<?php include(TEMPLATE_PATH . 'dialog.phtml'); ?>
+
             </div>
-            
-            
-            
+
         </div>
     </main>
 
-
-
-
-
-
-
-
-
-{include file='user/footer.tpl'}
+<?php include(TEMPLATE_PATH . 'user/footer.phtml'); ?>
 
 
 <script>
@@ -174,7 +157,7 @@ function buy(id,auto,auto_reset) {
     {
         document.getElementById('autor').style.display="";
     }
-    
+
     if(auto_reset==0)
     {
         document.getElementById('auto_reset').style.display="none";
@@ -183,7 +166,7 @@ function buy(id,auto,auto_reset) {
     {
         document.getElementById('auto_reset').style.display="";
     }
-    
+
     shop=id;
     $("#coupon_modal").modal();
 }
@@ -215,7 +198,7 @@ $("#coupon_input").click(function () {
             }
         })
     });
-    
+
 $("#order_input").click(function () {
 
         if(document.getElementById('autorenew').checked)
@@ -226,7 +209,7 @@ $("#order_input").click(function () {
         {
             var autorenew=0;
         }
-            
+
         $.ajax({
             type: "POST",
             url: "buy",
@@ -240,7 +223,7 @@ $("#order_input").click(function () {
                 if (data.ret) {
                     $("#result").modal();
                     $("#msg").html(data.msg);
-                    window.setTimeout("location.href='/user/shop'", {$config['jump_delay']});
+                    window.setTimeout("location.href='/user/shop'", <?= $_ENV['jump_delay']; ?>);
                 } else {
                     $("#result").modal();
                     $("#msg").html(data.msg);

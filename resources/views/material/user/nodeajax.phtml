@@ -1,0 +1,373 @@
+<?php $load=$point_node->getNodeLoad(); ?>
+
+    <div id="load<?= $id; ?>_chart" style="height: 300px; width: 100%;"></div>
+    <div id="up<?= $id; ?>_chart" style="height: 300px; width: 100%;"></div>
+    <div id="alive<?= $id; ?>_chart" style="height: 300px; width: 100%;"></div>
+    <div id="speedtest<?= $id; ?>_chart" style="height: 300px; width: 100%;"></div>
+    <div id="speedtest<?= $id; ?>_ping_chart" style="height: 300px; width: 100%;"></div>
+
+
+    <script type="text/javascript">
+        $().ready(function(){
+            chart<?= $id; ?> = new CanvasJS.Chart("load<?= $id; ?>_chart",
+            {
+                title:{
+                    text: "节点负载"
+                },
+                data: [
+                {
+                    type: "line",
+                    dataPoints: [
+<?php
+    $i = 0;
+    foreach ($load as $single_load) {
+        if ($i == 0) {
+            $i = 1;
+?>
+                                {
+                                    x: new Date(<?= $single_load->log_time*1000 ?>), y:<?= $single_load->getNodeLoad(); ?>
+                                }
+<?php   } else { ?>
+                                ,{
+                                    x: new Date(<?= $single_load->log_time*1000; ?>), y:<?= $single_load->getNodeLoad(); ?>
+                                }
+<?php
+        }
+}
+?>
+                    ]
+                }
+                ]
+            });
+
+
+
+            up_chart<?= $id; ?> = new CanvasJS.Chart("up<?= $id; ?>_chart",
+            {
+                title:{
+                    text: "最近一天节点在线率 - 已保持开机 <?= $point_node->getNodeUptime(); ?>"
+                },
+                data: [
+                    {
+                        //startAngle: 45,
+                        indexLabelFontSize: 20,
+                        indexLabelFontFamily: "Garamond",
+                        indexLabelFontColor: "darkgrey",
+                        indexLabelLineColor: "darkgrey",
+                        indexLabelPlacement: "outside",
+                        type: "doughnut",
+                        showInLegend: true,
+                        dataPoints: [
+                            {
+                                y: <?= $point_node->getNodeUpRate()*100; ?>, legendText:"在线率 <?= number_format($point_node->getNodeUpRate()*100,2); ?>%", indexLabel: "在线率 <?= number_format($point_node->getNodeUpRate()*100,2); ?>%"
+                            },
+                            {
+                                y: <?= (1-$point_node->getNodeUpRate())*100;?>, legendText:"离线率 <?= number_format((1-$point_node->getNodeUpRate())*100,2); ?>%", indexLabel: "离线率 <?= number_format((1-$point_node->getNodeUpRate())*100,2); ?>%"
+                            }
+                        ]
+                    }
+                    ]
+            });
+
+<?php $load=$point_node->getNodeAlive(); ?>
+            alive_chart<?= $id; ?> = new CanvasJS.Chart("alive<?= $id; ?>_chart",
+            {
+                title:{
+                    text: "近期节点在线人数"
+                },
+                data: [
+                {
+                    type: "line",
+                    dataPoints: [
+<?php
+    $i = 0;
+    foreach ($load as $single_load) {
+        if ($i == 0) {
+            $i = 1;
+?>
+                                {
+                                    x: new Date(<?= $single_load->log_time*1000; ?>), y:<?= $single_load->online_user; ?>
+                                }
+<?php   } else { ?>
+                                ,{
+                                    x: new Date(<?= $single_load->log_time*1000; ?>), y:<?= $single_load->online_user; ?>
+                                }
+<?php
+        }
+    }
+?>
+                    ]
+                }
+                ]
+            });
+
+
+
+<?php $speedtests = $point_node->getSpeedtestResult(); ?>
+            speedtest_chart<?= $id; ?> = new CanvasJS.Chart("speedtest<?= $id; ?>_chart",
+            {
+                title:{
+                    text: "近期节点延迟"
+                },
+                axisY: {
+                    suffix: " ms"
+                },
+                data: [
+                {
+                    type: "line",
+                    showInLegend: true,
+                    legendText: "电信延时",
+                    dataPoints: [
+<?php
+    $i = 0;
+    foreach ($speedtests as $single_speedtest) {
+        if ($i == 0) {
+            $i = 1;
+?>
+                                {
+                                    x: new Date(<?= $single_speedtest->datetime*1000; ?>), y:<?= $single_speedtest->getTelecomPing(); ?>
+                                }
+<?php   } else { ?>
+                                ,{
+                                    x: new Date(<?= $single_speedtest->datetime*1000; ?>), y:<?= $single_speedtest->getTelecomPing(); ?>
+                                }
+<?php
+        }
+    }
+?>
+                    ]
+                },
+                {
+                    type: "line",
+                    showInLegend: true,
+                    legendText: "联通延迟",
+                    dataPoints: [
+<?php
+    $i = 0;
+    foreach ($speedtests as $single_speedtest) {
+        if ($i == 0) {
+            $i = 1;
+?>
+                                {
+                                    x: new Date(<?= $single_speedtest->datetime*1000; ?>), y:<?= $single_speedtest->getUnicomPing(); ?>
+                                }
+<?php   } else { ?>
+                                ,{
+                                    x: new Date(<?= $single_speedtest->datetime*1000; ?>), y:<?= $single_speedtest->getUnicomPing(); ?>
+                                }
+<?php
+        }
+    }
+?>
+                    ]
+                },
+                {
+                    type: "line",
+                    showInLegend: true,
+                    legendText:"移动延迟",
+                    dataPoints: [
+<?php
+    $i = 0;
+    foreach ($speedtests as $single_speedtest) {
+        if ($i == 0) {
+            $i = 1;
+?>
+                                {
+                                    x: new Date(<?= $single_speedtest->datetime*1000; ?>), y:<?= $single_speedtest->getCmccPing(); ?>
+                                }
+<?php        } else { ?>
+                                ,{
+                                    x: new Date(<?= $single_speedtest->datetime*1000; ?>), y:<?= $single_speedtest->getCmccPing(); ?>
+                                }
+<?php
+        }
+    }
+?>
+
+                    ]
+                }
+                ]
+            });
+
+            speedtest_ping_chart<?= $id; ?> = new CanvasJS.Chart("speedtest<?= $id; ?>_ping_chart",
+            {
+                title:{
+                    text: "近期节点速度"
+                },
+                axisY: {
+                    suffix: " Mbps"
+                },
+                data: [
+                {
+                    type: "line",
+                    showInLegend: true,
+                    legendText: "电信下载速度",
+                    dataPoints: [
+<?php
+    $i = 0;
+    foreach ($speedtests as $single_speedtest) {
+        if ($i == 0) {
+            $i = 1;
+?>
+                                {
+                                    x: new Date(<?= $single_speedtest->datetime*1000; ?>), y:<?= $single_speedtest->getTelecomUpload(); ?>
+                                }
+<?php        } else { ?>
+                                ,{
+                                    x: new Date(<?= $single_speedtest->datetime*1000; ?>), y:<?= $single_speedtest->getTelecomUpload(); ?>
+                                }
+<?php
+        }
+    }
+?>
+
+                    ]
+                },
+                {
+                    type: "line",
+                    showInLegend: true,
+                    legendText: "电信上传速度",
+                    dataPoints: [
+<?php
+    $i = 0;
+    foreach ($speedtests as $single_speedtest) {
+        if ($i == 0) {
+            $i = 1;
+?>
+                                {
+                                    x: new Date(<?= $single_speedtest->datetime*1000; ?>), y:<?= $single_speedtest->getTelecomDownload(); ?>
+                                }
+<?php   } else { ?>
+                                ,{
+                                    x: new Date(<?= $single_speedtest->datetime*1000; ?>), y:<?= $single_speedtest->getTelecomDownload(); ?>
+                                }
+<?php
+        }
+    }
+?>
+                    ]
+                },
+                {
+                    type: "line",
+                    showInLegend: true,
+                    legendText: "联通下载速度",
+                    dataPoints: [
+<?php
+    $i = 0;
+    foreach ($speedtests as $single_speedtest) {
+        if ($i == 0) {
+            $i = 1;
+?>
+                                {
+                                    x: new Date(<?= $single_speedtest->datetime*1000; ?>), y:<?= $single_speedtest->getUnicomUpload(); ?>
+                                }
+<?php   } else { ?>
+                                ,{
+                                    x: new Date(<?= $single_speedtest->datetime*1000; ?>), y:<?= $single_speedtest->getUnicomUpload(); ?>
+                                }
+<?php
+        }
+    }
+?>
+
+                    ]
+                },
+                {
+                    type: "line",
+                    showInLegend: true,
+                    legendText: "联通上传速度",
+                    dataPoints: [
+<?php
+    $i = 0;
+    foreach ($speedtests as $single_speedtest) {
+        if ($i == 0) {
+            $i = 1;
+?>
+                                {
+                                    x: new Date(<?= $single_speedtest->datetime*1000; ?>), y:<?= $single_speedtest->getUnicomDownload(); ?>
+                                }
+<?php   } else { ?>
+                                ,{
+                                    x: new Date(<?= $single_speedtest->datetime*1000; ?>), y:<?= $single_speedtest->getUnicomDownload(); ?>
+                                }
+<?php
+        }
+    }
+?>
+
+                    ]
+                },
+                {
+                    type: "line",
+                    showInLegend: true,
+                    legendText:"移动上传速度",
+                    dataPoints: [
+<?php
+    $i = 0;
+    foreach ($speedtests as $single_speedtest) {
+        if ($i == 0) {
+            $i = 1;
+?>
+                                {
+                                    x: new Date(<?= $single_speedtest->datetime*1000; ?>), y:<?= $single_speedtest->getCmccDownload(); ?>
+                                }
+<?php   } else { ?>
+                                ,{
+                                    x: new Date(<?= $single_speedtest->datetime*1000; ?>), y:<?= $single_speedtest->getCmccDownload(); ?>
+                                }
+<?php
+        }
+    }
+?>
+
+                    ]
+                },
+                {
+                    type: "line",
+                    showInLegend: true,
+                    legendText:"移动下载速度",
+                    dataPoints: [
+<?php
+    $i = 0;
+    foreach ($speedtests as $single_speedtest) {
+        if ($i == 0) {
+            $i = 1;
+?>
+                                {
+                                    x: new Date(<?= $single_speedtest->datetime*1000; ?>), y:<?= $single_speedtest->getCmccUpload(); ?>
+                                }
+<?php   } else { ?>
+                                ,{
+                                    x: new Date(<?= $single_speedtest->datetime*1000; ?>), y:<?= $single_speedtest->getCmccUpload(); ?>
+                                }
+<?php
+        }
+    }
+?>
+
+                    ]
+                }
+                ]
+            });
+
+
+
+
+
+
+
+
+            chart<?= $id; ?>.render();
+            up_chart<?= $id; ?>.render();
+            alive_chart<?= $id; ?>.render();
+            speedtest_chart<?= $id; ?>.render();
+            speedtest_ping_chart<?= $id; ?>.render();
+
+
+        });
+
+
+
+
+
+    </script>
