@@ -1,24 +1,17 @@
-
-
-
-{include file='admin/main.tpl'}
-
-
-
-
-
-
+<?php include(TEMPLATE_PATH . 'admin/main.phtml'); ?>
 
     <main class="content">
+
         <div class="content-header ui-content-header">
             <div class="container">
-                <h1 class="content-heading">添加公告</h1>
+                <h1 class="content-heading">编辑公告 #<?= $ann->id; ?></h1>
             </div>
         </div>
+
         <div class="container">
             <div class="col-lg-12 col-md-12">
                 <section class="content-inner margin-top-no">
-                    
+
                     <div class="card">
                         <div class="card-main">
                             <div class="card-inner">
@@ -26,61 +19,44 @@
                                     <label class="floating-label" for="content">内容</label>
                                     <link rel="stylesheet" href="/theme/material/editor/css/editormd.min.css" />
                                     <div id="editormd">
-                                        <textarea style="display:none;" id="content"></textarea>
+                                        <textarea style="display:none;" id="content"><?= $ann->markdown; ?></textarea>
                                     </div>
                                 </div>
-                                
-                                
-                                
-                                
                             </div>
                         </div>
                     </div>
-                    
-                    
-                    
+
                     <div class="card">
                         <div class="card-main">
                             <div class="card-inner">
-                                
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-md-10 col-md-push-1">
-                                            <button id="submit" type="submit" class="btn btn-block btn-brand waves-attach waves-light">添加</button>
+                                            <button id="submit" type="submit" class="btn btn-block btn-brand waves-attach waves-light">修改</button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    
-                    {include file='dialog.tpl'}
+
+<?php include(TEMPLATE_PATH . 'dialog.phtml'); ?>
+
+                </section>
             </div>
-            
-            
-            
         </div>
+
     </main>
 
-    
-    
-    
-    
-
-
-
-
-
-
-{include file='admin/footer.tpl'}
+<?php include(TEMPLATE_PATH . 'admin/footer.phtml'); ?>
 
 <script src="/theme/material/editor/editormd.min.js"></script>
 <script>
     $(document).ready(function () {
         function submit() {
             $.ajax({
-                type: "POST",
-                url: "/admin/announcement",
+                type: "PUT",
+                url: "/admin/announcement/<?= $ann->id; ?>",
                 dataType: "json",
                 data: {
                     content: editor.getHTML(),
@@ -90,7 +66,7 @@
                     if (data.ret) {
                         $("#result").modal();
                         $("#msg").html(data.msg);
-                        window.setTimeout("location.href=top.document.referrer", {$config['jump_delay']});
+                        window.setTimeout("location.href=top.document.referrer", <?= $_ENV['jump_delay']; ?>);
                     } else {
                         $("#result").modal();
                         $("#msg").html(data.msg);
@@ -103,12 +79,13 @@
                 }
             });
         }
-        
+
         $("#submit").click(function () {
             submit();
         });
+
     });
-    
+
     $(function() {
         editor = editormd("editormd", {
             path : "/theme/material/editor/lib/", // Autoload modules mode, codemirror, marked... dependents libs path

@@ -7,12 +7,12 @@ use App\Models\Node;
 use App\Models\User;
 use App\Utils\Tools;
 use App\Services\Auth;
-use App\Controllers\AdminController;
+use App\Controllers\BaseController;
 
 use Ozdemir\Datatables\Datatables;
 use App\Utils\DatatablesHelper;
 
-class RelayController extends AdminController
+class RelayController extends BaseController
 {
     public function index($request, $response, $args)
     {
@@ -24,12 +24,14 @@ class RelayController extends AdminController
             array_push($table_config['default_show_column'], $column);
         }
         $table_config['ajax_url'] = 'relay/ajax';
-        return $this->view()->assign('table_config', $table_config)->display('admin/relay/index.tpl');
+        $this->renderer->render($response, 'admin/relay/index.phtml', [
+            'user' => $this->user,
+            'table_config' => $table_config,
+        ]);
     }
 
     public function create($request, $response, $args)
     {
-        $user = Auth::getUser();
         $source_nodes = Node::where('sort', 10)->orderBy('name')->get();
 
         $dist_nodes = Node::where(
@@ -39,8 +41,11 @@ class RelayController extends AdminController
             }
         )->orderBy('name')->get();
 
-
-        return $this->view()->assign('source_nodes', $source_nodes)->assign('dist_nodes', $dist_nodes)->display('admin/relay/add.tpl');
+        $this->renderer->render($response, 'admin/relay/create.phtml', [
+            'user' => $this->user,
+            'source_nodes' => $source_nodes,
+            'dist_nodes' => $dist_nodes,
+        ]);
     }
 
     public function add($request, $response, $args)
@@ -122,7 +127,12 @@ class RelayController extends AdminController
             }
         )->orderBy('name')->get();
 
-        return $this->view()->assign('rule', $rule)->assign('source_nodes', $source_nodes)->assign('dist_nodes', $dist_nodes)->display('admin/relay/edit.tpl');
+        $this->renderer->render($response, 'admin/relay/edit.phtml', [
+            'user' => $this->user,
+            'rule' => $rule,
+            'source_nodes' => $source_nodes,
+            'dist_nodes' => $dist_nodes,
+        ]);
     }
 
     public function update($request, $response, $args)

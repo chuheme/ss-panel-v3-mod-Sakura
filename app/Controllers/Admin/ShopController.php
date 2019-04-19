@@ -4,12 +4,12 @@ namespace App\Controllers\Admin;
 
 use App\Models\Shop;
 use App\Models\Bought;
-use App\Controllers\AdminController;
+use App\Controllers\BaseController;
 
 use Ozdemir\Datatables\Datatables;
 use App\Utils\DatatablesHelper;
 
-class ShopController extends AdminController
+class ShopController extends BaseController
 {
     public function index($request, $response, $args)
     {
@@ -18,16 +18,21 @@ class ShopController extends AdminController
                         "auto_renew" => "自动续费", "auto_reset_bandwidth" => "续费时是否重置流量",
                         "status" => "状态");
         $table_config['default_show_column'] = array();
-        foreach ($table_config['total_column'] as $column => $value) {
+        foreach ($table_config['total_column'] as $column) {
             array_push($table_config['default_show_column'], $column);
         }
         $table_config['ajax_url'] = 'shop/ajax';
-        return $this->view()->assign('table_config', $table_config)->display('admin/shop/index.tpl');
+        $this->renderer->render($response, 'admin/shop/index.phtml', [
+            'user' => $this->user,
+            'table_config' => $table_config,
+        ]);
     }
 
     public function create($request, $response, $args)
     {
-        return $this->view()->display('admin/shop/create.tpl');
+        $this->renderer->render($response, 'admin/shop/create.phtml', [
+            'user' => $this->user,
+        ]);
     }
 
     public function add($request, $response, $args)
@@ -86,7 +91,10 @@ class ShopController extends AdminController
         $shop = Shop::find($id);
         if ($shop == null) {
         }
-        return $this->view()->assign('shop', $shop)->display('admin/shop/edit.tpl');
+        $this->renderer->render($response, 'admin/shop/edit.phtml', [
+            'user' => $this->user,
+            'shop' => $shop,
+        ]);
     }
 
     public function update($request, $response, $args)
@@ -187,7 +195,10 @@ class ShopController extends AdminController
             array_push($table_config['default_show_column'], $column);
         }
         $table_config['ajax_url'] = 'bought/ajax';
-        return $this->view()->assign('table_config', $table_config)->display('admin/shop/bought.tpl');
+        $this->renderer->render($response, 'admin/shop/bought.phtml', [
+            'user' => $this->user,
+            'table_config' => $table_config,
+        ]);
     }
 
     public function deleteBoughtGet($request, $response, $args)

@@ -3,12 +3,12 @@
 namespace App\Controllers\Admin;
 
 use App\Models\Auto;
-use App\Controllers\AdminController;
+use App\Controllers\BaseController;
 
 use Ozdemir\Datatables\Datatables;
 use App\Utils\DatatablesHelper;
 
-class autoController extends AdminController
+class autoController extends BaseController
 {
     public function index($request, $response, $args)
     {
@@ -17,12 +17,17 @@ class autoController extends AdminController
         $table_config['default_show_column'] = array("op", "id",
                                   "datetime", "type", "value");
         $table_config['ajax_url'] = 'auto/ajax';
-        return $this->view()->assign('table_config', $table_config)->display('admin/auto/index.tpl');
+        $this->renderer->render($response, 'admin/auto/index.phtml', [
+            'user' => $this->user,
+            'table_config' => $table_config,
+        ]);
     }
 
     public function create($request, $response, $args)
     {
-        return $this->view()->display('admin/auto/add.tpl');
+        $this->renderer->render($response, 'admin/auto/create.phtml', [
+            'user' => $this->user,
+        ]);
     }
 
     public function add($request, $response, $args)

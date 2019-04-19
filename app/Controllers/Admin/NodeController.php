@@ -6,12 +6,12 @@ use App\Models\Node;
 use App\Utils\Radius;
 use App\Utils\Telegram;
 use App\Utils\Tools;
-use App\Controllers\AdminController;
+use App\Controllers\BaseController;
 
 use Ozdemir\Datatables\Datatables;
 use App\Utils\DatatablesHelper;
 
-class NodeController extends AdminController
+class NodeController extends BaseController
 {
     public function index($request, $response, $args)
     {
@@ -28,12 +28,17 @@ class NodeController extends AdminController
         $table_config['default_show_column'] = Array("op", "id", "name", "sort");
         $table_config['ajax_url'] = 'node/ajax';
 
-        return $this->view()->assign('table_config', $table_config)->display('admin/node/index.tpl');
+        $this->renderer->render($response, 'admin/node/index.phtml', [
+            'user' => $this->user,
+            'table_config' => $table_config,
+        ]);
     }
 
     public function create($request, $response, $args)
     {
-        return $this->view()->display('admin/node/create.tpl');
+        $this->renderer->render($response, 'admin/node/create.phtml', [
+            'user' => $this->user,
+        ]);
     }
 
     public function add($request, $response, $args)
@@ -88,9 +93,10 @@ class NodeController extends AdminController
     {
         $id = $args['id'];
         $node = Node::find($id);
-        if ($node == null) {
-        }
-        return $this->view()->assign('node', $node)->display('admin/node/edit.tpl');
+        $this->renderer->render($response, 'admin/node/edit.phtml', [
+            'user' => $this->user,
+            'node' => $node,
+        ]);
     }
 
     public function update($request, $response, $args)

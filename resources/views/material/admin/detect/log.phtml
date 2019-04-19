@@ -1,0 +1,44 @@
+<?php include(TEMPLATE_PATH . 'admin/main.phtml'); ?>
+
+<main class="content">
+
+    <div class="content-header ui-content-header">
+        <div class="container">
+            <h1 class="content-heading">审计记录查看</h1>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="col-lg-12 col-md-12">
+            <section class="content-inner margin-top-no">
+
+                <div class="card">
+                    <div class="card-main">
+                        <div class="card-inner">
+                            <p>系统中所有审计记录。</p>
+                            <p>
+                                显示表项: <?php include(TEMPLATE_PATH . 'table/checkbox.phtml'); ?>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <?php include(TEMPLATE_PATH . 'table/table.phtml'); ?>
+                </div>
+
+            </section>
+        </div>
+    </div>
+
+</main>
+
+<?php include(TEMPLATE_PATH . 'admin/footer.phtml'); ?>
+
+<script>
+<?php include(TEMPLATE_PATH . 'table/js_1.phtml'); ?>
+
+$(document).ready(function(){
+    <?php include(TEMPLATE_PATH . 'table/js_2.phtml'); ?>
+});
+</script>

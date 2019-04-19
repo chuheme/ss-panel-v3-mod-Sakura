@@ -1,10 +1,4 @@
-{include file='admin/main.tpl'}
-
-
-
-
-
-
+<?php include(TEMPLATE_PATH . 'admin/main.phtml'); ?>
 
 <main class="content">
     <div class="content-header ui-content-header">
@@ -21,14 +15,14 @@
                         <div class="card-inner">
                             <p>系统中所有用户的列表。</p>
                             <p>显示表项:
-                {include file='table/checkbox.tpl'}
-              </p>
+                                <?php include(TEMPLATE_PATH . 'table/checkbox.phtml'); ?>
+                            </p>
                         </div>
                     </div>
                 </div>
 
                 <div class="table-responsive">
-                    {include file='table/table.tpl'}
+<?php include(TEMPLATE_PATH . 'table/table.phtml'); ?>
                 </div>
 
                 <div aria-hidden="true" class="modal modal-va-middle fade" id="delete_modal" role="dialog" tabindex="-1">
@@ -48,22 +42,14 @@
                     </div>
                 </div>
 
-                {include file='dialog.tpl'}
-
+<?php include(TEMPLATE_PATH . 'dialog.phtml'); ?>
 
         </div>
-
-
 
     </div>
 </main>
 
-
-
-
-
-
-{include file='admin/footer.tpl'}
+<?php include(TEMPLATE_PATH . 'admin/footer.phtml'); ?>
 
 <script>
 function delete_modal_show(id) {
@@ -71,37 +57,37 @@ function delete_modal_show(id) {
     $("#delete_modal").modal();
 }
 
-{include file='table/js_1.tpl'}
+<?php include(TEMPLATE_PATH . 'table/js_1.phtml'); ?>
 
 $(document).ready(function(){
      table_1 = $('#table_1').DataTable({
             "stateSave": true,
             "columnDefs": [
                 {
-                        targets: [ '_all' ],
-                        className: 'mdl-data-table__cell--non-numeric'
+                    targets: [ '_all' ],
+                    className: 'mdl-data-table__cell--non-numeric'
                 }
             ],
-            {include file='table/lang_chinese.tpl'}
+            <?php include(TEMPLATE_PATH . 'table/lang_chinese.phtml'); ?>
   });
 
     var has_init = JSON.parse(localStorage.getItem(window.location.href + '-hasinit'));
     if (has_init != true) {
         localStorage.setItem(window.location.href + '-hasinit', true);
     } else {
-        {foreach $table_config['total_column'] as $key => $value}
-            var checked = JSON.parse(localStorage.getItem(window.location.href + '-haschecked-checkbox_{$key}'));
+<?php foreach ($table_config['total_column'] as $key => $value) { ?>
+            var checked = JSON.parse(localStorage.getItem(window.location.href + '-haschecked-checkbox_<?= $key; ?>'));
             if (checked == true) {
-                document.getElementById('checkbox_{$key}').checked = true;
+                document.getElementById('checkbox_<?= $key; ?>').checked = true;
             } else {
-                document.getElementById('checkbox_{$key}').checked = false;
+                document.getElementById('checkbox_<?= $key; ?>').checked = false;
             }
-        {/foreach}
+<?php } ?>
     }
 
-    {foreach $table_config['total_column'] as $key => $value}
-      modify_table_visible('checkbox_{$key}', '{$key}');
-    {/foreach}
+<?php foreach ($table_config['total_column'] as $key => $value) { ?>
+      modify_table_visible('checkbox_<?= $key; ?>', '<?= $key; ?>');
+<?php } ?>
 
     function delete_id(){
         $.ajax({
@@ -115,7 +101,7 @@ $(document).ready(function(){
                 if(data.ret){
                     $("#result").modal();
                     $("#msg").html(data.msg);
-                    {include file='table/js_delete.tpl'}
+                    <?php include(TEMPLATE_PATH . 'table/js_delete.phtml'); ?>
                 }else{
                     $("#result").modal();
                     $("#msg").html(data.msg);

@@ -1,13 +1,4 @@
-
-
-
-{include file='admin/main.tpl'}
-
-
-
-
-
-
+<?php include(TEMPLATE_PATH . 'admin/main.phtml'); ?>
 
     <main class="content">
         <div class="content-header ui-content-header">
@@ -24,8 +15,8 @@
                             <div class="card-inner">
                                 <p>系统中所有的中转规则。</p>
                                 <p>显示表项:
-                    {include file='table/checkbox.tpl'}
-                  </p>
+                                    <?php include(TEMPLATE_PATH . 'table/checkbox.phtml'); ?>
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -47,13 +38,12 @@
                     </div>
 
                     <div class="table-responsive">
-                        {include file='table/table.tpl'}
+                        <?php include(TEMPLATE_PATH . 'table/table.phtml'); ?>
                     </div>
 
                     <div class="fbtn-container">
                         <div class="fbtn-inner">
                             <a class="fbtn fbtn-lg fbtn-brand-accent waves-attach waves-circle waves-light" href="/admin/relay/create">+</a>
-
                         </div>
                     </div>
 
@@ -74,25 +64,14 @@
                         </div>
                     </div>
 
-                    {include file='dialog.tpl'}
+<?php include(TEMPLATE_PATH . 'dialog.phtml'); ?>
 
-
+                </section>
             </div>
-
-
-
         </div>
     </main>
 
-
-
-
-
-
-{include file='admin/footer.tpl'}
-
-
-
+<?php include(TEMPLATE_PATH . 'admin/footer.phtml'); ?>
 
 <script>
 function delete_modal_show(id) {
@@ -100,11 +79,11 @@ function delete_modal_show(id) {
     $("#delete_modal").modal();
 }
 
-{include file='table/js_1.tpl'}
+<?php include(TEMPLATE_PATH . 'table/js_1.phtml'); ?>
 
 $(document).ready(function(){
 
-    {include file='table/js_2.tpl'}
+<?php include(TEMPLATE_PATH . 'table/js_2.phtml'); ?>
 
     function delete_id(){
         $.ajax({
@@ -118,7 +97,7 @@ $(document).ready(function(){
                 if(data.ret){
                     $("#result").modal();
                     $("#msg").html(data.msg);
-                    {include file='table/js_delete.tpl'}
+                    <?php include(TEMPLATE_PATH . 'table/js_delete.phtml'); ?>
                 }else{
                     $("#result").modal();
                     $("#msg").html(data.msg);

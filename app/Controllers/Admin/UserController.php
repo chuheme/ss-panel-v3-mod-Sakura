@@ -4,15 +4,14 @@ namespace App\Controllers\Admin;
 
 use App\Models\User;
 use App\Models\Ip;
-use App\Models\RadiusBan;
 use App\Models\Relay;
-use App\Controllers\AdminController;
+use App\Controllers\BaseController;
 use App\Utils\Hash;
 use App\Utils\Radius;
 use App\Utils\QQWry;
 use App\Utils\Tools;
 
-class UserController extends AdminController
+class UserController extends BaseController
 {
     public function index($request, $response, $args)
     {
@@ -31,7 +30,11 @@ class UserController extends AdminController
                             "auto_reset_bandwidth" => "自动重置流量/GB", "ref_by" => "邀请人ID", "ref_by_user_name" => "邀请人用户名");
         $table_config['default_show_column'] = array("op", "id", "user_name", "remark", "email");
         $table_config['ajax_url'] = 'user/ajax';
-        return $this->view()->assign('table_config', $table_config)->display('admin/user/index.tpl');
+
+        $this->renderer->render($response, 'admin/user/index.phtml', [
+            'user' => $this->user,
+            'table_config' => $table_config,
+        ]);
     }
 
     public function search($request, $response, $args)
@@ -134,7 +137,10 @@ class UserController extends AdminController
         $user = User::find($id);
         if ($user == null) {
         }
-        return $this->view()->assign('edit_user', $user)->display('admin/user/edit.tpl');
+        $this->renderer->render($response, 'admin/user/edit.phtml', [
+            'user' => $this->user,
+            'edit_user' => $user,
+        ]);
     }
 
     public function update($request, $response, $args)

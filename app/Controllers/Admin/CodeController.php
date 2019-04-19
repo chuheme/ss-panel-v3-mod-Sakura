@@ -24,17 +24,24 @@ class CodeController extends AdminController
             array_push($table_config['default_show_column'], $column);
         }
         $table_config['ajax_url'] = 'code/ajax';
-        return $this->view()->assign('table_config', $table_config)->display('admin/code/index.tpl');
+        $this->renderer->render($response, 'admin/code/index.phtml', [
+            'user' => $this->user,
+            'table_config' => $table_config,
+        ]);
     }
 
     public function create($request, $response, $args)
     {
-        return $this->view()->display('admin/code/add.tpl');
+        $this->renderer->render($response, 'admin/code/add.phtml', [
+            'user' => $this->user,
+        ]);
     }
 
     public function donate_create($request, $response, $args)
     {
-        return $this->view()->display('admin/code/add_donate.tpl');
+        $this->renderer->render($response, 'admin/code/add_donate.phtml', [
+            'user' => $this->user,
+        ]);
     }
 
     public function add($request, $response, $args)

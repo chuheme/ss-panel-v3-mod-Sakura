@@ -2,12 +2,10 @@
 
 namespace App\Controllers\Admin;
 
-use App\Models\Ip;
-use App\Models\LoginIp;
 use App\Models\BlockIp;
 use App\Models\UnblockIp;
 use App\Models\Node;
-use App\Controllers\AdminController;
+use App\Controllers\BaseController;
 use App\Utils\QQWry;
 use App\Utils\Tools;
 use App\Services\Auth;
@@ -15,7 +13,7 @@ use App\Services\Auth;
 use Ozdemir\Datatables\Datatables;
 use App\Utils\DatatablesHelper;
 
-class IpController extends AdminController
+class IpController extends BaseController
 {
     public function index($request, $response, $args)
     {
@@ -23,11 +21,14 @@ class IpController extends AdminController
                           "user_name" => "用户名", "ip" => "IP",
                           "location" => "归属地", "datetime" => "时间", "type" => "类型");
         $table_config['default_show_column'] = array();
-        foreach ($table_config['total_column'] as $column => $value) {
+        foreach ($table_config['total_column'] as $column) {
             array_push($table_config['default_show_column'], $column);
         }
         $table_config['ajax_url'] = 'login/ajax';
-        return $this->view()->assign('table_config', $table_config)->display('admin/ip/login.tpl');
+        $this->renderer->render($response, 'admin/ip/login.phtml', [
+            'user' => $this->user,
+            'table_config' => $table_config,
+        ]);
     }
 
     public function alive($request, $response, $args)
@@ -41,7 +42,10 @@ class IpController extends AdminController
             array_push($table_config['default_show_column'], $column);
         }
         $table_config['ajax_url'] = 'alive/ajax';
-        return $this->view()->assign('table_config', $table_config)->display('admin/ip/alive.tpl');
+        $this->renderer->render($response, 'admin/ip/alive.phtml', [
+            'user' => $this->user,
+            'table_config' => $table_config,
+        ]);
     }
 
     public function block($request, $response, $args)
@@ -54,7 +58,10 @@ class IpController extends AdminController
             array_push($table_config['default_show_column'], $column);
         }
         $table_config['ajax_url'] = 'block/ajax';
-        return $this->view()->assign('table_config', $table_config)->display('admin/ip/block.tpl');
+        $this->renderer->render($response, 'admin/ip/block.phtml', [
+            'user' => $this->user,
+            'table_config' => $table_config,
+        ]);
     }
 
     public function unblock($request, $response, $args)
@@ -67,7 +74,10 @@ class IpController extends AdminController
             array_push($table_config['default_show_column'], $column);
         }
         $table_config['ajax_url'] = 'unblock/ajax';
-        return $this->view()->assign('table_config', $table_config)->display('admin/ip/unblock.tpl');
+        $this->renderer->render($response, 'admin/ip/unblock.phtml', [
+            'user' => $this->user,
+            'table_config' => $table_config,
+        ]);
     }
 
     public function doUnblock($request, $response, $args)

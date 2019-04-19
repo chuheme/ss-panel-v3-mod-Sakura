@@ -1,17 +1,13 @@
- {include file='admin/main.tpl'}
-
-
-
-
-
-
+<?php include(TEMPLATE_PATH . 'admin/main.phtml'); ?>
 
 <main class="content">
+
     <div class="content-header ui-content-header">
         <div class="container">
-            <h1 class="content-heading">工单</h1>
+            <h1 class="content-heading">最近登录记录</h1>
         </div>
     </div>
+
     <div class="container">
         <div class="col-lg-12 col-sm-12">
             <section class="content-inner margin-top-no">
@@ -19,45 +15,29 @@
                 <div class="card">
                     <div class="card-main">
                         <div class="card-inner">
-                            <p>系统中的工单</p>
-              <p>显示表项:
-                {include file='table/checkbox.tpl'}
-              </p>
+                            <p>这里是最近的登录记录。</p>
+                            <p>显示表项: <?php include(TEMPLATE_PATH . 'table/checkbox.phtml'); ?>
+                            </p>
                         </div>
                     </div>
                 </div>
 
                 <div class="table-responsive">
-                    {include file='table/table.tpl'}
+                    <?php include(TEMPLATE_PATH . 'table/table.phtml'); ?>
                 </div>
 
-
-
+            </section>
         </div>
-
-
-
     </div>
+
 </main>
 
-
-
-
-
-
-{include file='admin/footer.tpl'}
-
+<?php include(TEMPLATE_PATH . 'admin/footer.phtml'); ?>
 
 <script>
-{include file='table/js_1.tpl'}
-$(document).ready(function(){
-  table = $('#table_tickets').DataTable({
-        ajax: 'ticket/ajax',
-        processing: true,
-        serverSide: true,
-        order: [[ 1, 'desc' ]]
-    })
+<?php include(TEMPLATE_PATH . 'table/js_1.phtml'); ?>
 
-    {include file='table/js_2.tpl'}
+$(document).ready(function(){
+     <?php include(TEMPLATE_PATH . 'table/js_2.phtml'); ?>
 });
 </script>

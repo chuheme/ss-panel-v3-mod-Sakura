@@ -18,12 +18,17 @@ class AnnController extends AdminController
         $table_config['default_show_column'] = array("op", "id",
                                                     "date", "content");
         $table_config['ajax_url'] = 'announcement/ajax';
-        return $this->view()->assign('table_config', $table_config)->display('admin/announcement/index.tpl');
+        $this->renderer->render($response, 'admin/announcement/index.phtml', [
+            'user' => $this->user,
+            'table_config' => $table_config,
+        ]);
     }
 
     public function create($request, $response, $args)
     {
-        return $this->view()->display('admin/announcement/create.tpl');
+        $this->renderer->render($response, 'admin/announcement/create.phtml', [
+            'user' => $this->user,
+        ]);
     }
 
     public function add($request, $response, $args)
@@ -52,7 +57,10 @@ class AnnController extends AdminController
         $ann = Ann::find($id);
         if ($ann == null) {
         }
-        return $this->view()->assign('ann', $ann)->display('admin/announcement/edit.tpl');
+        $this->renderer->render($response, 'admin/announcement/edit.phtml', [
+            'user' => $this->user,
+            'ann' => $ann,
+        ]);
     }
 
     public function update($request, $response, $args)

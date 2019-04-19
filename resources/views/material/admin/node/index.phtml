@@ -1,15 +1,9 @@
- {include file='admin/main.tpl'}
-
-
-
-
-
-
+<?php include(TEMPLATE_PATH . 'admin/main.phtml'); ?>
 
 <main class="content">
     <div class="content-header ui-content-header">
         <div class="container">
-            <h1 class="content-heading">商品列表</h1>
+            <h1 class="content-heading">节点列表</h1>
         </div>
     </div>
     <div class="container">
@@ -19,22 +13,21 @@
                 <div class="card">
                     <div class="card-main">
                         <div class="card-inner">
-                            <p>系统中所有商品的列表。</p>
+                            <p>系统中所有节点的列表。</p>
                             <p>显示表项:
-                                {include file='table/checkbox.tpl'}
+                              <?php include(TEMPLATE_PATH . 'table/checkbox.phtml'); ?>
                             </p>
                         </div>
                     </div>
                 </div>
 
                 <div class="table-responsive">
-                    {include file='table/table.tpl'}
+                    <?php include(TEMPLATE_PATH . 'table/table.phtml'); ?>
                 </div>
 
                 <div class="fbtn-container">
                     <div class="fbtn-inner">
-                        <a class="fbtn fbtn-lg fbtn-brand-accent waves-attach waves-circle waves-light" href="/admin/shop/create">+</a>
-
+                        <a class="fbtn fbtn-lg fbtn-brand-accent waves-attach waves-circle waves-light" href="/admin/node/create">+</a>
                     </div>
                 </div>
 
@@ -43,33 +36,30 @@
                         <div class="modal-content">
                             <div class="modal-heading">
                                 <a class="modal-close" data-dismiss="modal">×</a>
-                                <h2 class="modal-title">确认要下架？</h2>
+                                <h2 class="modal-title">确认要删除？</h2>
                             </div>
                             <div class="modal-inner">
                                 <p>请您确认。</p>
                             </div>
                             <div class="modal-footer">
-                                <p class="text-right"><button class="btn btn-flat btn-brand-accent waves-attach waves-effect" data-dismiss="modal" type="button">取消</button><button class="btn btn-flat btn-brand-accent waves-attach" data-dismiss="modal" id="delete_input" type="button">确定</button></p>
+                                <p class="text-right">
+                                    <button class="btn btn-flat btn-brand-accent waves-attach waves-effect" data-dismiss="modal" type="button">取消</button>
+                                    <button class="btn btn-flat btn-brand-accent waves-attach" data-dismiss="modal" id="delete_input" type="button">确定</button>
+                                </p>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                {include file='dialog.tpl'}
+<?php include(TEMPLATE_PATH . 'dialog.phtml'); ?>
 
+            </section>
         </div>
-
-
-
     </div>
+
 </main>
 
-
-
-
-
-
-{include file='admin/footer.tpl'}
+<?php include(TEMPLATE_PATH . 'admin/footer.phtml'); ?>
 
 <script>
 function delete_modal_show(id) {
@@ -77,15 +67,16 @@ function delete_modal_show(id) {
     $("#delete_modal").modal();
 }
 
-{include file='table/js_1.tpl'}
+<?php include(TEMPLATE_PATH . 'table/js_1.phtml'); ?>
 
 $(document).ready(function(){
-    {include file='table/js_2.tpl'}
+    <?php include(TEMPLATE_PATH . 'table/js_2.phtml'); ?>
+
 
     function delete_id(){
         $.ajax({
             type:"DELETE",
-            url:"/admin/shop",
+            url:"/admin/node",
             dataType:"json",
             data:{
                 id: deleteid
@@ -94,7 +85,7 @@ $(document).ready(function(){
                 if(data.ret){
                     $("#result").modal();
                     $("#msg").html(data.msg);
-                    $("#row_delete_"+deleteid).attr("disabled","true");
+                    <?php include(TEMPLATE_PATH . 'table/js_delete.phtml'); ?>
                 }else{
                     $("#result").modal();
                     $("#msg").html(data.msg);
@@ -106,9 +97,9 @@ $(document).ready(function(){
             }
         });
     }
+
     $("#delete_input").click(function(){
         delete_id();
     });
 })
-
 </script>

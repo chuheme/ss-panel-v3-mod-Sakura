@@ -2,15 +2,14 @@
 
 namespace App\Controllers\Admin;
 
-use App\Models\DetectLog;
 use App\Models\DetectRule;
 use App\Utils\Telegram;
-use App\Controllers\AdminController;
+use App\Controllers\BaseController;
 
 use Ozdemir\Datatables\Datatables;
 use App\Utils\DatatablesHelper;
 
-class DetectController extends AdminController
+class DetectController extends BaseController
 {
     public function index($request, $response, $args)
     {
@@ -18,11 +17,14 @@ class DetectController extends AdminController
                           "text" => "介绍", "regex" => "正则表达式",
                           "type" => "类型");
         $table_config['default_show_column'] = array();
-        foreach ($table_config['total_column'] as $column => $value) {
+        foreach ($table_config['total_column'] as $column) {
             array_push($table_config['default_show_column'], $column);
         }
         $table_config['ajax_url'] = 'detect/ajax';
-        return $this->view()->assign('table_config', $table_config)->display('admin/detect/index.tpl');
+        $this->renderer->render($response, 'admin/detect/index.phtml', [
+            'user' => $this->user,
+            'table_config' => $table_config,
+        ]);
     }
 
     public function log($request, $response, $args)
@@ -38,12 +40,17 @@ class DetectController extends AdminController
             array_push($table_config['default_show_column'], $column);
         }
         $table_config['ajax_url'] = 'log/ajax';
-        return $this->view()->assign('table_config', $table_config)->display('admin/detect/log.tpl');
+        $this->renderer->render($response, 'admin/detect/log.phtml', [
+            'user' => $this->user,
+            'table_config' => $table_config,
+        ]);
     }
 
     public function create($request, $response, $args)
     {
-        return $this->view()->display('admin/detect/add.tpl');
+        $this->renderer->render($response, 'admin/detect/create.phtml', [
+            'user' => $this->user,
+        ]);
     }
 
     public function add($request, $response, $args)
@@ -71,7 +78,10 @@ class DetectController extends AdminController
     {
         $id = $args['id'];
         $rule = DetectRule::find($id);
-        return $this->view()->assign('rule', $rule)->display('admin/detect/edit.tpl');
+        $this->renderer->render($response, 'admin/detect/edit.phtml', [
+            'user' => $this->user,
+            'rule' => $rule,
+        ]);
     }
 
     public function update($request, $response, $args)

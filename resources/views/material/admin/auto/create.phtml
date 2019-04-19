@@ -1,98 +1,79 @@
-
-
-
-
-{include file='admin/main.tpl'}
-
-
-
-
-
-
+<?php include(TEMPLATE_PATH . 'admin/main.phtml'); ?>
 
     <main class="content">
+
         <div class="content-header ui-content-header">
             <div class="container">
-                <h1 class="content-heading">编辑公告 #{$ann->id}</h1>
+                <h1 class="content-heading">添加下发命令</h1>
             </div>
         </div>
+
         <div class="container">
             <div class="col-lg-12 col-md-12">
                 <section class="content-inner margin-top-no">
-                    
+
                     <div class="card">
                         <div class="card-main">
                             <div class="card-inner">
                                 <div class="form-group form-group-label">
-                                    <label class="floating-label" for="content">内容</label>
-                                    <link rel="stylesheet" href="/theme/material/editor/css/editormd.min.css" />
-                                    <div id="editormd">
-                                        <textarea style="display:none;" id="content">{$ann->markdown}</textarea>
-                                    </div>
+                                    <label class="floating-label" for="content">命令</label>
+                                    <textarea class="form-control" id="content" rows="15"></textarea>
                                 </div>
-                                
-                                
-                                
-                                
                             </div>
                         </div>
                     </div>
-                    
-                    
-                    
+
                     <div class="card">
                         <div class="card-main">
                             <div class="card-inner">
-                                
+                                <div class="form-group form-group-label">
+                                    <label class="floating-label" for="sign">GPG签名</label>
+                                    <textarea class="form-control" id="sign" rows="15"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-main">
+                            <div class="card-inner">
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-md-10 col-md-push-1">
-                                            <button id="submit" type="submit" class="btn btn-block btn-brand waves-attach waves-light">修改</button>
+                                            <button id="submit" type="submit" class="btn btn-block btn-brand waves-attach waves-light">添加</button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    
-                    {include file='dialog.tpl'}
 
+<?php include(TEMPLATE_PATH . 'dialog.phtml'); ?>
+
+                </section>
             </div>
-            
-            
-            
         </div>
+
     </main>
 
-    
-    
-    
-    
+<?php include(TEMPLATE_PATH . 'admin/footer.phtml'); ?>
 
-
-
-
-
-
-{include file='admin/footer.tpl'}
-
-<script src="/theme/material/editor/editormd.min.js"></script>
 <script>
     $(document).ready(function () {
         function submit() {
             $.ajax({
-                type: "PUT",
-                url: "/admin/announcement/{$ann->id}",
+                type: "POST",
+                url: "/admin/auto",
                 dataType: "json",
                 data: {
-                    content: editor.getHTML(),
-                    markdown: editor.getMarkdown()
+                    content: $("#content").val(),
+                    sign: $("#sign").val()
                 },
                 success: function (data) {
                     if (data.ret) {
                         $("#result").modal();
                         $("#msg").html(data.msg);
-                        window.setTimeout("location.href=top.document.referrer", {$config['jump_delay']});
+                        window.setTimeout("location.href=top.document.referrer", <?= $_ENV['jump_delay']; ?>);
                     } else {
                         $("#result").modal();
                         $("#msg").html(data.msg);
@@ -105,26 +86,8 @@
                 }
             });
         }
-
         $("#submit").click(function () {
             submit();
         });
-
-    });
-    
-    $(function() {
-        editor = editormd("editormd", {
-            path : "/theme/material/editor/lib/", // Autoload modules mode, codemirror, marked... dependents libs path
-            height: 720,
-            saveHTMLToTextarea : true
-        });
-
-        /*
-        // or
-        var editor = editormd({
-            id   : "editormd",
-            path : "../lib/"
-        });
-        */
     });
 </script>

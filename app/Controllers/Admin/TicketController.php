@@ -14,9 +14,9 @@ use App\Services\Config;
 use Ozdemir\Datatables\Datatables;
 use App\Utils\DatatablesHelper;
 
-use App\Controllers\AdminController;
+use App\Controllers\BaseController;
 
-class TicketController extends AdminController
+class TicketController extends BaseController
 {
     public function index($request, $response, $args)
     {
@@ -26,7 +26,10 @@ class TicketController extends AdminController
         $table_config['default_show_column'] = array("op", "id",
                                   "datetime", "title", "userid", "user_name", "status");
         $table_config['ajax_url'] = 'ticket/ajax';
-        return $this->view()->assign('table_config', $table_config)->display('admin/ticket/index.tpl');
+        $this->renderer->render($response, 'admin/ticket/index.phtml', [
+            'user' => $this->user,
+            'table_config' => $table_config,
+        ]);
     }
 
 
@@ -102,7 +105,11 @@ class TicketController extends AdminController
         $ticketset=Ticket::where("id", $id)->orWhere("rootid", "=", $id)->orderBy("datetime", "desc")->paginate(5, ['*'], 'page', $pageNum);
         $ticketset->setPath('/admin/ticket/'.$id."/view");
 
-        return $this->view()->assign('ticketset', $ticketset)->assign("id", $id)->display('admin/ticket/view.tpl');
+        $this->renderer->render($response, 'admin/ticket/view.phtml',[
+            'user' => $this->user,
+            'ticketset' => $ticketset,
+            'id' => $id,
+        ]);
     }
 
     public function ajax($request, $response, $args)

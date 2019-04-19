@@ -1,11 +1,4 @@
-
-{include file='admin/main.tpl'}
-
-
-
-
-
-
+<?php include(TEMPLATE_PATH . 'admin/main.phtml'); ?>
 
     <main class="content">
         <div class="content-header ui-content-header">
@@ -13,10 +6,13 @@
                 <h1 class="content-heading">添加节点</h1>
             </div>
         </div>
+
         <div class="container">
             <div class="col-lg-12 col-sm-12">
                 <section class="content-inner margin-top-no">
+
                     <form id="main_form">
+
                         <div class="card">
                             <div class="card-main">
                                 <div class="card-inner">
@@ -60,7 +56,7 @@
 
                                     <div class="form-group form-group-label">
                                         <label class="floating-label" for="dns_value">DNS 记录</label>
-                                        <input class="form-control" id="dns_value" name="dns_value" type="text" value="{$node->dns_value}">
+                                        <input class="form-control" id="dns_value" name="dns_value" type="text">
                                     </div>
 
                                     <div class="form-group form-group-label" hidden="hidden">
@@ -90,7 +86,6 @@
                                         </label>
                                     </div>
 
-
                                 </div>
                             </div>
                         </div>
@@ -98,6 +93,7 @@
                         <div class="card">
                             <div class="card-main">
                                 <div class="card-inner">
+
                                     <div class="form-group form-group-label">
                                         <div class="checkbox switch">
                                             <label for="type">
@@ -114,22 +110,22 @@
 
                                     <div class="form-group form-group-label">
                                         <div class="form-group form-group-label">
-                                                <label class="floating-label" for="sort">节点类型</label>
-                                                <select id="sort" class="form-control" name="sort">
-                                                    <option value="0">Shadowsocks</option>
-                                                    <option value="1">VPN/Radius基础</option>
-                                                    <option value="2">SSH</option>
-                                                    <option value="3">PAC</option>
-                                                    <option value="4">APN文件外链</option>
-                                                    <option value="5">Anyconnect</option>
-                                                    <option value="6">APN</option>
-                                                    <option value="7">PAC PLUS(Socks 代理生成 PAC文件)</option>
-                                                    <option value="8">PAC PLUS PLUS(HTTPS 代理生成 PAC文件)</option>
-                                                    <option value="9">Shadowsocks 公共端口</option>
-                                                    <option value="10">Shadowsocks 中转</option>
-                                                    <option value="11">Trojan(Beta)</option>
-                                                </select>
-                                            </div>
+                                            <label class="floating-label" for="sort">节点类型</label>
+                                            <select id="sort" class="form-control" name="sort">
+                                                <option value="0">Shadowsocks</option>
+                                                <option value="1">VPN/Radius基础</option>
+                                                <option value="2">SSH</option>
+                                                <option value="3">PAC</option>
+                                                <option value="4">APN文件外链</option>
+                                                <option value="5">Anyconnect</option>
+                                                <option value="6">APN</option>
+                                                <option value="7">PAC PLUS(Socks 代理生成 PAC文件)</option>
+                                                <option value="8">PAC PLUS PLUS(HTTPS 代理生成 PAC文件)</option>
+                                                <option value="9">Shadowsocks 公共端口</option>
+                                                <option value="10">Shadowsocks 中转</option>
+                                                <option value="11">Trojan(Beta)</option>
+                                            </select>
+                                        </div>
                                     </div>
 
                                     <div class="form-group form-group-label">
@@ -163,16 +159,14 @@
                                         <label class="floating-label" for="node_speedlimit">节点限速(对于每个用户端口)（Mbps）</label>
                                         <input class="form-control" id="node_speedlimit" type="text" value="0" name="node_speedlimit">
                                     </div>
+
                                 </div>
                             </div>
                         </div>
 
-
-
                         <div class="card">
                             <div class="card-main">
                                 <div class="card-inner">
-
                                     <div class="form-group">
                                         <div class="row">
                                             <div class="col-md-10 col-md-push-1">
@@ -185,34 +179,18 @@
                         </div>
 
                     </form>
-                    {include file='dialog.tpl'}
 
+<?php include(TEMPLATE_PATH . 'dialog.phtml'); ?>
 
-
-
+                </section>
             </div>
-
-
-
         </div>
+
     </main>
 
+<?php include(TEMPLATE_PATH . 'admin/footer.phtml'); ?>
 
-
-
-
-
-
-
-
-
-
-{include file='admin/footer.tpl'}
-
-
-{literal}
 <script>
-
     $('#main_form').validate({
         rules: {
             name: {required: true},
@@ -227,7 +205,6 @@
             node_bandwidth_limit: {required: true},
             bandwidthlimit_resetday: {required: true}
         },
-
         submitHandler: function() {
             if(document.getElementById('custom_method').checked)
             {
@@ -246,7 +223,6 @@
             {
                 var type=0;
             }
-            {/literal}
             if(document.getElementById('custom_rss').checked)
             {
                 var custom_rss=1;
@@ -255,8 +231,6 @@
             {
                 var custom_rss=0;
             }
-
-
             $.ajax({
                 type: "POST",
                 url: "/admin/node",
@@ -286,7 +260,7 @@
                     if (data.ret) {
                         $("#result").modal();
                         $("#msg").html(data.msg);
-                        window.setTimeout("location.href=top.document.referrer", {$config['jump_delay']});
+                        window.setTimeout("location.href=top.document.referrer", <?= $_ENV['jump_delay']; ?>);
                     } else {
                         $("#result").modal();
                         $("#msg").html(data.msg);
@@ -299,5 +273,4 @@
             });
         }
     });
-
 </script>

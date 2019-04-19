@@ -1,10 +1,4 @@
- {include file='admin/main.tpl'}
-
-
-
-
-
-
+<?php include(TEMPLATE_PATH . 'admin/main.phtml'); ?>
 
 <main class="content">
     <div class="content-header ui-content-header">
@@ -21,14 +15,14 @@
                         <div class="card-inner">
                             <p>系统中所有购买记录。</p>
                             <p>显示表项:
-                                {include file='table/checkbox.tpl'}
+                                <?= include(TEMPLATE_PATH . 'table/checkbox.phtml'); ?>
                             </p>
                         </div>
                     </div>
                 </div>
 
                 <div class="table-responsive">
-                    {include file='table/table.tpl'}
+                    <?php include(TEMPLATE_PATH . 'table/table.phtml'); ?>
                 </div>
 
 
@@ -49,22 +43,14 @@
                     </div>
                 </div>
 
-                {include file='dialog.tpl'}
-
+<?php include(TEMPLATE_PATH . 'dialog.phtml'); ?>
 
         </div>
-
-
 
     </div>
 </main>
 
-
-
-
-
-
-{include file='admin/footer.tpl'}
+<?php include(TEMPLATE_PATH . 'admin/footer.phtml'); ?>
 
 <script>
 function delete_modal_show(id) {
@@ -72,10 +58,10 @@ function delete_modal_show(id) {
     $("#delete_modal").modal();
 }
 
-{include file='table/js_1.tpl'}
+<?php include(TEMPLATE_PATH . 'table/js_1.phtml'); ?>
 
 $(document).ready(function(){
-    {include file='table/js_2.tpl'}
+<?php include(TEMPLATE_PATH . 'table/js_2.phtml'); ?>
 
     function delete_id(){
         $.ajax({
