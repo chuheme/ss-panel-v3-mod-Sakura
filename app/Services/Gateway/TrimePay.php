@@ -157,7 +157,7 @@ class TrimePay extends AbstractPayment
 
     public function getPurchaseHTML()
     {
-        return View::getSmarty()->fetch("user/trimepay.tpl");
+        return View::renderer()->fetch('user/trimepay.phtml');
     }
 
     public function getReturnHTML($request, $response, $args)
@@ -170,7 +170,11 @@ class TrimePay extends AbstractPayment
         } else {
             $success = 0;
         }
-        return View::getSmarty()->assign('money', $money)->assign('success', $success)->fetch('user/pay_success.tpl');
+
+        View::renderer()->render($response, 'user/pay_success.phtml', [
+            'money' => $money,
+            'success' => $success,
+        ]);
     }
 
     public function getStatus($request, $response, $args)
