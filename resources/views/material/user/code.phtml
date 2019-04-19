@@ -73,7 +73,7 @@ foreach ($codes as $code) {
                                                             <tr>
                                                                 <td>#<?= $code->id; ?></td>
                                                                 <td><?= $code->code; ?></td>
-<?php   switch ($node->type) { case -1: ?>
+<?php   switch ($code->type) { case -1: ?>
                                                                 <td>金额充值</td>
 <?php       break; case 10001: ?>
                                                                 <td>流量充值</td>
