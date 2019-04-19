@@ -28,7 +28,9 @@ class AdminController extends BaseController
     public function node($request, $response, $args)
     {
         $nodes = Node::all();
-        return $this->view()->assign('nodes', $nodes)->display('admin/node.tpl');
+        $this->renderer->render($response, 'admin/node.phtml', [
+            'nodes' => $nodes,
+        ]);
     }
 
     public function invite($request, $response, $args)

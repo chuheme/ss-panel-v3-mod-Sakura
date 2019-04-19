@@ -78,8 +78,12 @@ class UserController extends BaseController
             }
         }
 
-
-        return $this->view()->assign('users', $users)->assign("regloc", $regloc)->assign("useripcount", $useripcount)->assign("userip", $userip)->display('admin/user/index.tpl');
+        $this->renderer->render($response, 'admin/relay/search.phtml', [
+            'users' => $users,
+            'regloc' => $regloc,
+            'useripcount' => $useripcount,
+            'userip' => $userip,
+        ]);
     }
 
     public function edit($request, $response, $args)

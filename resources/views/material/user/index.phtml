@@ -154,7 +154,7 @@
                                                             <code>wget -O- <?= $baseUrl; ?>/link/<?= $router_token; ?>?is_ss=0 | bash && echo -e "\n0 */3 * * * wget -O- <?= $baseUrl; ?>/link/<?= $router_token; ?>?is_ss=0 | bash\n">> /etc/storage/cron/crontabs/admin && killall crond && crond </code>
                                                         </p>
                                                         <p>公共端口：
-                                                            <code>wget -O- <?= $baseUrl; ?>/link/<?= $router_token_without_mu; ?>?is_ss=0 | bash && echo -e "\n0 */3 * * * wget -O- <?= $baseUrl; ?>/link/<?= $router_token_without_mu; ?>?is_ss=0 | bash\n">> /etc/storage/cron/crontabs/admin && killall crond && crond </code>
+                                                            <code>wget -O- <?= $baseUrl; ?>/link/<?= $router_token_without_mu; ?>?is_ss=1 | bash && echo -e "\n0 */3 * * * wget -O- <?= $baseUrl; ?>/link/<?= $router_token_without_mu; ?>?is_ss=1 | bash\n">> /etc/storage/cron/crontabs/admin && killall crond && crond </code>
                                                         </p>
                                                         <p><span class="icon icon-lg">filter_4</span>之后你就可以到路由器的面板中选择 Shadowsocks 服务器进行连接了。</p>
                                                     </div>
@@ -238,7 +238,7 @@
                                                             <code>wget -O- <?= $baseUrl; ?>/link/<?= $router_token; ?>?is_ss=0 | bash && echo -e "\n0 */3 * * * wget -O- <?= $baseUrl; ?>/link/<?= $router_token; ?>?is_ss=0 | bash\n">> /etc/storage/cron/crontabs/admin && killall crond && crond </code>
                                                         </p>
                                                         <p>公共端口:
-                                                            <code>wget -O- <?= $baseUrl; ?>/link/<?= $router_token_without_mu; ?>?is_ss=0 | bash && echo -e "\n0 */3 * * * wget -O- <?= $baseUrl; ?>/link/<?= $router_token_without_mu; ?>?is_ss=0 | bash\n">> /etc/storage/cron/crontabs/admin && killall crond && crond </code>
+                                                            <code>wget -O- <?= $baseUrl; ?>/link/<?= $router_token_without_mu; ?>?is_ss=1 | bash && echo -e "\n0 */3 * * * wget -O- <?= $baseUrl; ?>/link/<?= $router_token_without_mu; ?>?is_ss=1 | bash\n">> /etc/storage/cron/crontabs/admin && killall crond && crond </code>
                                                         </p>
                                                         <p><span class="icon icon-lg">filter_4</span>之后你就可以到路由器的面板中选择 Shadowsocks 服务器进行连接了。</p>
                                                     </div>

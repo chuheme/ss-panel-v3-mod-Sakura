@@ -227,7 +227,9 @@ class RelayController extends BaseController
 
         if ($user == null) {
             $pathset = new \ArrayObject();
-            return $this->view()->assign('pathset', $pathset)->display('admin/relay/search.tpl');
+            $this->renderer->render($response, 'admin/relay/search.phtml', [
+                'pathset' => $pathset,
+            ]);
         }
 
         $nodes = Node::where(
@@ -312,7 +314,9 @@ class RelayController extends BaseController
             }
         }
 
-        return $this->view()->assign('pathset', $pathset)->display('admin/relay/search.tpl');
+        $this->renderer->render($response, 'admin/relay/search.phtml', [
+            'pathset' => $pathset,
+        ]);
     }
 
     public function ajax_relay($request, $response, $args)

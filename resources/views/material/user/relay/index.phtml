@@ -1,13 +1,4 @@
-
-
-
-{include file='user/main.tpl'}
-
-
-
-
-
-
+<?php include(TEMPLATE_PATH . 'user/main.phtml'); ?>
 
     <main class="content">
         <div class="content-header ui-content-header">
@@ -32,7 +23,7 @@
                     <div class="card">
                         <div class="card-main">
                             <div class="card-inner">
-                                {if $is_relay_able}
+<?php if ($is_relay_able) { ?>
                                 <nav class="tab-nav margin-top-no">
                                     <ul class="nav nav-justified">
                                         <li class="active">
@@ -43,11 +34,11 @@
                                         </li>
                                     </ul>
                                 </nav>
+
                                 <div class="card-inner">
                                     <div class="tab-content">
                                         <div class="tab-pane fade active in" id="rule_table">
                                             <div class="table-responsive">
-                                                {$rules->render()}
                                                 <table class="table">
                                                 <tr>
                                                     <th>操作</th>
@@ -56,59 +47,59 @@
                                                     <th>目标节点</th>
                                                     <th>端口</th>
                                                     <th>优先级</th>
-
+                                                </tr>
+<?php   foreach ($rules as $rule) { ?>
+                                                <tr>
+                                                    <td>
+                                                        <a class="btn btn-brand" <?php if ($rule->user_id == 0) { ?>disabled<?php } else { ?>href="/user/relay/<?= $rule->id; ?>/edit"<?php } ?>>编辑</a>
+                                                        <a class="btn btn-brand-accent" id="delete" value="<?= $rule->id; ?>" <?php if ($rule->user_id == 0) { ?>disabled<?php } else { ?>href="javascript:void(0);" onClick="delete_modal_show('<?= $rule->id; ?>')"<?php } ?>>删除</a>
+                                                    </td>
+                                                        <td>#<?= $rule->id; ?></td>
+<?php       if ($rule->source_node_id == 0) { ?>
+                                                        <td>所有节点</td>
+<?php       } else { ?>
+                                                        <td><?= $rule->Source_Node()->name; ?></td>
+<?php
+            }
+            if ($rule->Dist_Node() == null) {
+?>
+                                                        <td>不进行中转</td>
+<?php       } else { ?>
+                                                        <td><?= $rule->Dist_Node()->name; ?></td>
+<?php       } ?>
+                                                        <td><?php if ($rule->port == 0) { ?>所有端口<?php } else { ?><?= $rule->port; }?></td>
+                                                        <td><?= $rule->priority; ?></td>
                                                     </tr>
-                                                    {foreach $rules as $rule}
-                                                        <tr>
-                                                        <td>
-                                                            <a class="btn btn-brand" {if $rule->user_id == 0}disabled{else}href="/user/relay/{$rule->id}/edit"{/if}>编辑</a>
-                                                            <a class="btn btn-brand-accent" id="delete" value="{$rule->id}" {if $rule->user_id == 0}disabled{else}href="javascript:void(0);" onClick="delete_modal_show('{$rule->id}')"{/if}>删除</a>
-                                                        </td>
-                                                        <td>#{$rule->id}</td>
-                                                        {if $rule->source_node_id == 0}
-                                                            <td>所有节点</td>
-                                                        {else}
-                                                            <td>{$rule->Source_Node()->name}</td>
-                                                        {/if}
-                                                        {if $rule->Dist_Node() == null}
-                                                            <td>不进行中转</td>
-                                                        {else}
-                                                            <td>{$rule->Dist_Node()->name}</td>
-                                                        {/if}
-                                                        <td>{if $rule->port == 0}所有端口{else}{$rule->port}{/if}</td>
-                                                        <td>{$rule->priority}</td>
-                                                        </tr>
-                                                    {/foreach}
+<?php  } ?>
                                                 </table>
-                                                {$rules->render()}
                                             </div>
                                         </div>
                                         <div class="tab-pane fade" id="link_table">
                                             <div class="table-responsive">
                                                 <table class="table">
-                                                <tr>
-                                                    <th>端口</th>
-                                                    <th>始发节点</th>
-                                                    <th>终点节点</th>
-                                                    <th>途径节点</th>
-                                                    <th>状态</th>
+                                                    <tr>
+                                                        <th>端口</th>
+                                                        <th>始发节点</th>
+                                                        <th>终点节点</th>
+                                                        <th>途径节点</th>
+                                                        <th>状态</th>
                                                     </tr>
 
-                                                    {foreach $pathset as $path}
+<?php   foreach ($pathset as $path) { ?>
                                                     <tr>
-                                                    <td>{$path->port}</td>
-                                                    <td>{$path->begin_node->name}</td>
-                                                    <td>{$path->end_node->name}</td>
-                                                    <td>{$path->path}</td>
-                                                    <td>{$path->status}</td>
-                                            </tr>
-                                                {/foreach}
+                                                        <td><?= $path->port; ?></td>
+                                                        <td><?= $path->begin_node->name; ?></td>
+                                                        <td><?= $path->end_node->name; ?></td>
+                                                        <td><?= $path->path; ?></td>
+                                                        <td><?= $path->status; ?></td>
+                                                    </tr>
+<?php   } ?>
                                                 </table>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                {/if}
+<?php } ?>
                             </div>
                         </div>
                     </div>
@@ -137,25 +128,15 @@
                         </div>
                     </div>
 
-                    {include file='dialog.tpl'}
+<?php include(TEMPLATE_PATH . 'dialog.phtml'); ?>
 
-
+                </section>
             </div>
-
-
-
         </div>
+
     </main>
 
-
-
-
-
-
-{include file='user/footer.tpl'}
-
-
-
+<?php include(TEMPLATE_PATH . 'user/footer.phtml'); ?>
 
 <script>
 function delete_modal_show(id) {
@@ -166,10 +147,10 @@ function delete_modal_show(id) {
 
 $(document).ready(function(){
 
-    {if !$is_relay_able}
+<?php if (!$is_relay_able) { ?>
     $("#result").modal();
-    $("#msg").html("为了中转的稳定，您需要在<a href='/user/edit'>资料编辑</a>处设置协议为以下协议之一： <br>{foreach $relay_able_protocol_list as $single_text}{$single_text}<br>{/foreach}后方可设置中转规则！");
-    {/if}
+    $("#msg").html("为了中转的稳定，您需要在<a href='/user/edit'>资料编辑</a>处设置协议为以下协议之一： <br><?php foreach ($relay_able_protocol_list as $single_text) { ?><?= $single_text; ?><br><?php } ?>后方可设置中转规则！");
+<?php } ?>
 
     function delete_id(){
         $.ajax({
@@ -183,7 +164,7 @@ $(document).ready(function(){
                 if(data.ret){
                     $("#result").modal();
                     $("#msg").html(data.msg);
-                    window.setTimeout("location.href=window.location.href", {$config['jump_delay']});
+                    window.setTimeout("location.href=window.location.href", <?= $_ENV['jump_delay']; ?>);
                 }else{
                     $("#result").modal();
                     $("#msg").html(data.msg);

@@ -154,7 +154,7 @@ if ($recaptcha_sitekey != null) { ?>
                                                 </div>
                                             </div>
                                             <div class="card-inner">
-                                                <p>添加机器人账号 <a href="https://t.me/<?= $telegram_bot; ?>">@<?= $telegram_bot; ?></a>，发送下面的二维码发给它。</p>
+                                                <p>添加机器人账号 <a href="https://t.me/<?= $_ENV['telegram_bot']; ?>">@<?= $_ENV['telegram_bot']; ?></a>，发送下面的二维码发给它。</p>
                                                 <div class="form-group form-group-label">
                                                     <div class="text-center">
                                                         <div id="telegram-qr"></div>

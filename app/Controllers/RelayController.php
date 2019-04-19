@@ -108,7 +108,12 @@ class RelayController extends UserController
             }
         }
 
-        return $this->view()->assign('rules', $logs)->assign('relay_able_protocol_list', Config::getSupportParam('relay_able_protocol'))->assign('is_relay_able', $is_relay_able)->assign('pathset', $pathset)->display('user/relay/index.tpl');
+        $this->renderer->render($response, 'user/relay/index.phtml', [
+            'rules' => $logs,
+            'relay_able_protocol_list' => Config::getSupportParam('relay_able_protocol'),
+            'is_relay_able' => $is_relay_able,
+            'pathset' => $pathset,
+        ]);
     }
 
     public function create($request, $response, $args)
@@ -150,7 +155,11 @@ class RelayController extends UserController
 
         array_push($ports, $user->port);
 
-        return $this->view()->assign('source_nodes', $source_nodes)->assign('dist_nodes', $dist_nodes)->assign('ports', $ports)->display('user/relay/add.tpl');
+        $this->renderer->render($response, 'user/relay/create.phtml', [
+            'source_nodes' => $source_nodes,
+            'dist_nodes' => $dist_nodes,
+            'ports' => $ports,
+        ]);
     }
 
     public function add($request, $response, $args)
@@ -298,7 +307,12 @@ class RelayController extends UserController
 
         array_push($ports, $user->port);
 
-        return $this->view()->assign('rule', $rule)->assign('source_nodes', $source_nodes)->assign('dist_nodes', $dist_nodes)->assign('ports', $ports)->display('user/relay/edit.tpl');
+        $this->renderer->render($response, 'user/relay/edit.phtml', [
+            'rule' => $rule,
+            'source_nodes' => $source_nodes,
+            'dist_nodes' => $dist_nodes,
+            'ports' => $ports,
+        ]);
     }
 
     public function update($request, $response, $args)
