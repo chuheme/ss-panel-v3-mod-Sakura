@@ -15,9 +15,11 @@ use App\Utils\Hash;
 
 class PasswordController extends BaseController
 {
-    public function reset()
+    public function reset($request, $response, $args)
     {
-        return $this->view()->display('password/reset.tpl');
+        $this->renderer->render($response, 'password/reset.phtml', [
+            'user' => $this->user,
+        ]);
     }
 
     public function handleReset($request, $response, $args)
@@ -41,7 +43,10 @@ class PasswordController extends BaseController
     public function token($request, $response, $args)
     {
         $token = $args['token'];
-        return $this->view()->assign('token', $token)->display('password/token.tpl');
+        $this->renderer->render($response, 'password/token.phtml', [
+            'user' => $this->user,
+            'token' => $token,
+        ]);
     }
 
     public function handleToken($request, $response, $args)
