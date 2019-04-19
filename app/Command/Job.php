@@ -597,7 +597,7 @@ class Job
             // Process node offline end
 
             // Process node recover begin
-            if ($node->isNodeOnline() == false && time() - $node->node_heartbeat < 60) {
+            if ($node->isNodeOnline() === false && time() - $node->node_heartbeat < 60) {
                 $node->online_status = 1;
                 $node->save();
                 if (Config::get('node_offline_warn')){
