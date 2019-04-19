@@ -1224,6 +1224,7 @@ class UserController extends BaseController
         $this->renderer->render($response, 'user/ticket/view.phtml', [
             'user' => $this->user,
             'ticketset' => $ticketset,
+            'id' => $id, 
         ]);
     }
 

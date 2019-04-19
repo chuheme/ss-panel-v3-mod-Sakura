@@ -68,7 +68,7 @@
             $("#msg").html("正在提交。");
             $.ajax({
                 type: "PUT",
-                url: "/user/ticket/{$id}",
+                url: "/user/ticket/<?= $id; ?>",
                 dataType: "json",
                 data: {
                     content: editor.getHTML(),
