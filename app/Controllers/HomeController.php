@@ -14,32 +14,25 @@ class HomeController extends BaseController
 {
     public function index($request, $response, $args)
     {
-        $this->renderer->render($response, 'index.phtml', [
-            'user' => $this->user,
-        ]);
+        $this->renderer->render($response, 'index.phtml');
     }
 
     public function code($request, $response, $args)
     {
         $codes = InviteCode::where('user_id', '=', '0')->take(10)->get();
         $this->renderer->render($response, 'code.phtml', [
-            'user' => $this->user,
             'codes' => $codes,
         ]);
     }
 
     public function tos($request, $response, $args)
     {
-        $this->renderer->render($response, 'tos.phtml', [
-            'user' => $this->user,
-        ]);
+        $this->renderer->render($response, 'tos.phtml');
     }
 
     public function staff($request, $response, $args)
     {
-        $this->renderer->render($response, 'staff.phtml', [
-            'user' => $this->user,
-        ]);
+        $this->renderer->render($response, 'staff.phtml');
     }
 
     public function telegram($request, $response, $args)
@@ -69,7 +62,6 @@ class HomeController extends BaseController
         $pic = '/theme/material/images/error/404/'.$pic;
         $response = $response->withStatus(404);
         $this->renderer->render($response, '404.phtml', [
-            'user' => $this->user,
             'pic' => $pic,
         ]);
         return $response;
@@ -88,7 +80,6 @@ class HomeController extends BaseController
         $pic = '/theme/material/images/error/405/'.$pic;
         $response = $response->withStatus(405);
         $this->renderer->render($response, '405.phtml', [
-            'user' => $this->user,
             'pic' => $pic,
         ]);
         return $response;
@@ -107,7 +98,6 @@ class HomeController extends BaseController
         $pic = '/theme/material/images/error/500/'.$pic;
         $response = $response->withStatus(500);
         $this->renderer->render($response, '500.phtml', [
-            'user' => $this->user,
             'pic' => $pic,
         ]);
         return $response;

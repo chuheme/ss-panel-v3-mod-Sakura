@@ -17,9 +17,7 @@ class PasswordController extends BaseController
 {
     public function reset($request, $response, $args)
     {
-        $this->renderer->render($response, 'password/reset.phtml', [
-            'user' => $this->user,
-        ]);
+        $this->renderer->render($response, 'password/reset.phtml');
     }
 
     public function handleReset($request, $response, $args)
@@ -44,7 +42,6 @@ class PasswordController extends BaseController
     {
         $token = $args['token'];
         $this->renderer->render($response, 'password/token.phtml', [
-            'user' => $this->user,
             'token' => $token,
         ]);
     }

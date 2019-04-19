@@ -86,7 +86,6 @@ class UserController extends BaseController
                                                         </p>';
 
         $this->renderer->render($response, 'user/index.phtml', [
-            'user' => $this->user,
             'router_token' => $router_token,
             'router_token_without_mu' => $router_token_without_mu,
             'acl_token' => $acl_token,
@@ -109,7 +108,6 @@ class UserController extends BaseController
         $speedtest = Speedtest::where("datetime", ">", time() - $duration*3600)->orderBy('datetime', 'desc')->get();
 
         $this->renderer->render($response, 'user/lookingglass.phtml', [
-            'user' => $this->user,
             'speedtest' => $speedtest,
             'hour' => $duration,
         ]);
@@ -126,7 +124,6 @@ class UserController extends BaseController
         $codes->setPath('/user/code');
 
         $this->renderer->render($response, 'user/code.phtml', [
-            'user' => $this->user,
             'codes' => $codes,
             'payment_html' => Pay::getHTML($this->user, $this->renderer),
         ]);
@@ -325,7 +322,6 @@ class UserController extends BaseController
         $id = $args['id'];
         $point_node = Node::find($id);
         $this->renderer->render($response, 'user/nodeajax.phtml', [
-            'user' => $this->user,
             'point_node' => $point_node,
             'id' => $id,
         ]);
@@ -448,7 +444,6 @@ class UserController extends BaseController
         $trojanPass = $user->id . ':' . $user->passwd;
 
         $this->renderer->render($response, 'user/node.phtml', [
-            'user' => $this->user,
             'relay_rules' => $relay_rules,
             'tools' => $tools,
             'node_method' => $node_method,
@@ -482,7 +477,6 @@ class UserController extends BaseController
             case 0:
                 if ((($user->class>=$node->node_class&&($user->node_group==$node->node_group||$node->node_group==0))||$user->is_admin)&&($node->node_bandwidth_limit==0||$node->node_bandwidth<$node->node_bandwidth_limit)) {
                     $this->renderer->render($response, 'user/nodeinfo.phtml', [
-                        'user' => $this->user,
                         'node' => $node,
                         'mu' => $mu,
                         'relay_rule_id' => $relay_rule_id,
@@ -605,7 +599,6 @@ class UserController extends BaseController
             case 10:
                 if ((($user->class>=$node->node_class&&($user->node_group==$node->node_group||$node->node_group==0))||$user->is_admin)&&($node->node_bandwidth_limit==0||$node->node_bandwidth<$node->node_bandwidth_limit)) {
                     $this->renderer->render($response, 'user/nodeinfo.phtml', [
-                        'user' => $this->user,
                         'node' => $node,
                         'mu' => $mu,
                         'relay_rule_id' => $relay_rule_id,
@@ -708,7 +701,6 @@ class UserController extends BaseController
         }
 
         $this->renderer->render($response, 'user/profile.phtml', [
-            'user' => $this->user,
             'userip' => $userip,
             'userloginip' => $userloginip,
             'paybacks' => $paybacks,
@@ -722,7 +714,6 @@ class UserController extends BaseController
         $anns = Ann::orderBy('date', 'desc')->get();
 
         $this->renderer->render($response, 'user/announcement.phtml', [
-            'user' => $this->user,
             'anns' => $anns,
         ]);
     }
@@ -748,7 +739,6 @@ class UserController extends BaseController
         $config_service = new Config();
 
         $this->renderer->render($response, 'user/edit.phtml', [
-            'user' => $this->user,
             'themes' => $themes,
             'isBlock' => $isBlock,
             'Block' => $Block,
@@ -769,7 +759,6 @@ class UserController extends BaseController
         $codes->setPath('/user/invite');
 
         $this->renderer->render($response, 'user/invite.phtml', [
-            'user' => $this->user,
             'codes' => $codes,
         ]);
     }
@@ -798,9 +787,7 @@ class UserController extends BaseController
 
     public function sys($request, $response, $args)
     {
-        $this->renderer->render($response, 'user/invite.phtml', [
-            'user' => $this->user,
-        ]);
+        $this->renderer->render($response, 'user/invite.phtml');
     }
 
     public function updatePassword($request, $response, $args)
@@ -878,7 +865,6 @@ class UserController extends BaseController
         $shops->setPath('/user/shop');
 
         $this->renderer->render($response, 'user/shop.phtml', [
-            'user' => $this->user,
             'shops' => $shops
         ]);
 
@@ -1021,7 +1007,6 @@ class UserController extends BaseController
         $shops->setPath('/user/bought');
 
         $this->renderer->render($response, 'user/bought.phtml', [
-            'user' => $this->user,
             'shops' => $shops,
         ]);
     }
@@ -1062,7 +1047,6 @@ class UserController extends BaseController
         $tickets->setPath('/user/ticket');
 
         $this->renderer->render($response, 'user/ticket/index.phtml', [
-            'user' => $this->user,
             'tickets' => $tickets,
         ]);
 
@@ -1070,9 +1054,7 @@ class UserController extends BaseController
 
     public function ticket_create($request, $response, $args)
     {
-        $this->renderer->render($response, 'user/ticket/create.phtml', [
-            'user' => $this->user,
-        ]);
+        $this->renderer->render($response, 'user/ticket/create.phtml');
     }
 
     public function ticket_add($request, $response, $args)
@@ -1222,7 +1204,6 @@ class UserController extends BaseController
         $ticketset->setPath('/user/ticket/'.$id."/view");
 
         $this->renderer->render($response, 'user/ticket/view.phtml', [
-            'user' => $this->user,
             'ticketset' => $ticketset,
             'id' => $id, 
         ]);
@@ -1615,9 +1596,7 @@ class UserController extends BaseController
 
     public function kill($request, $response, $args)
     {
-        $this->renderer->render($response, 'user/kill.phtml', [
-            'user' => $this->user,
-        ]);
+        $this->renderer->render($response, 'user/kill.phtml');
     }
 
     public function handleKill($request, $response, $args)
@@ -1646,7 +1625,6 @@ class UserController extends BaseController
     {
         $traffic = TrafficLog::where('user_id', $this->user->id)->where("log_time", ">", (time()-3*86400))->orderBy('id', 'desc')->get();
         $this->renderer->render($response, 'user/trafficlog.phtml', [
-            'user' => $this->user,
             'logs' => $traffic,
         ]);
     }
@@ -1662,7 +1640,6 @@ class UserController extends BaseController
         $rules->setPath('/user/detect');
 
         $this->renderer->render($response, 'user/detect_index.phtml', [
-            'user' => $this->user,
             'rules' => $rules,
         ]);
     }
@@ -1677,16 +1654,13 @@ class UserController extends BaseController
         $logs->setPath('/user/detect/log');
 
         $this->renderer->render($response, 'user/detect_log.phtml', [
-            'user' => $this->user,
             'logs' => $logs,
         ]);
     }
 
     public function disable($request, $response, $args)
     {
-        $this->renderer->render($response, 'user/edit.phtml', [
-            'user' => $this->user,
-        ]);
+        $this->renderer->render($response, 'user/edit.phtml');
     }
 
     public function telegram_reset($request, $response, $args)

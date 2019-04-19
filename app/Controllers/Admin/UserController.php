@@ -32,7 +32,6 @@ class UserController extends BaseController
         $table_config['ajax_url'] = 'user/ajax';
 
         $this->renderer->render($response, 'admin/user/index.phtml', [
-            'user' => $this->user,
             'table_config' => $table_config,
         ]);
     }
@@ -138,7 +137,6 @@ class UserController extends BaseController
         if ($user == null) {
         }
         $this->renderer->render($response, 'admin/user/edit.phtml', [
-            'user' => $this->user,
             'edit_user' => $user,
         ]);
     }

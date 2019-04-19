@@ -21,7 +21,6 @@ class AdminController extends BaseController
     {
         $sts = new Analytics();
         $this->renderer->render($response, 'admin/index.phtml', [
-            'user' => $this->user,
             'sts' => $sts,
         ]);
     }
@@ -46,7 +45,6 @@ class AdminController extends BaseController
         $table_config['ajax_url'] = 'payback/ajax';
 
         $this->renderer->render($response, 'admin/invite.phtml', [
-            'user' => $this->user,
             'table_config' => $table_config,
         ]);
     }
@@ -102,7 +100,6 @@ class AdminController extends BaseController
         $table_config['ajax_url'] = 'coupon/ajax';
 
         $this->renderer->render($response, 'admin/coupon.phtml', [
-            'user' => $this->user,
             'table_config' => $table_config,
         ]);
     }
@@ -138,7 +135,6 @@ class AdminController extends BaseController
         $table_config['ajax_url'] = 'trafficlog/ajax';
 
         $this->renderer->render($response, 'admin/trafficlog.phtml', [
-            'user' => $this->user,
             'table_config' => $table_config,
         ]);
     }

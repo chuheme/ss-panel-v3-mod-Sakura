@@ -27,7 +27,9 @@ class BaseController
         } else {
             define('TEMPLATE_PATH', BASE_PATH . '/resources/views/' . $_ENV['theme'] . '/');
         }
+        
         $this->renderer->setTemplatePath(TEMPLATE_PATH);
+        $this->renderer->addAttribute('user', $this->user);
     }
 
     /**

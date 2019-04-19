@@ -25,23 +25,18 @@ class CodeController extends AdminController
         }
         $table_config['ajax_url'] = 'code/ajax';
         $this->renderer->render($response, 'admin/code/index.phtml', [
-            'user' => $this->user,
             'table_config' => $table_config,
         ]);
     }
 
     public function create($request, $response, $args)
     {
-        $this->renderer->render($response, 'admin/code/add.phtml', [
-            'user' => $this->user,
-        ]);
+        $this->renderer->render($response, 'admin/code/add.phtml');
     }
 
     public function donate_create($request, $response, $args)
     {
-        $this->renderer->render($response, 'admin/code/add_donate.phtml', [
-            'user' => $this->user,
-        ]);
+        $this->renderer->render($response, 'admin/code/add_donate.phtml');
     }
 
     public function add($request, $response, $args)

@@ -26,7 +26,6 @@ class IpController extends BaseController
         }
         $table_config['ajax_url'] = 'login/ajax';
         $this->renderer->render($response, 'admin/ip/login.phtml', [
-            'user' => $this->user,
             'table_config' => $table_config,
         ]);
     }
@@ -43,7 +42,6 @@ class IpController extends BaseController
         }
         $table_config['ajax_url'] = 'alive/ajax';
         $this->renderer->render($response, 'admin/ip/alive.phtml', [
-            'user' => $this->user,
             'table_config' => $table_config,
         ]);
     }
@@ -59,7 +57,6 @@ class IpController extends BaseController
         }
         $table_config['ajax_url'] = 'block/ajax';
         $this->renderer->render($response, 'admin/ip/block.phtml', [
-            'user' => $this->user,
             'table_config' => $table_config,
         ]);
     }
@@ -75,7 +72,6 @@ class IpController extends BaseController
         }
         $table_config['ajax_url'] = 'unblock/ajax';
         $this->renderer->render($response, 'admin/ip/unblock.phtml', [
-            'user' => $this->user,
             'table_config' => $table_config,
         ]);
     }

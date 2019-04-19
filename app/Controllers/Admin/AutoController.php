@@ -18,16 +18,13 @@ class autoController extends BaseController
                                   "datetime", "type", "value");
         $table_config['ajax_url'] = 'auto/ajax';
         $this->renderer->render($response, 'admin/auto/index.phtml', [
-            'user' => $this->user,
             'table_config' => $table_config,
         ]);
     }
 
     public function create($request, $response, $args)
     {
-        $this->renderer->render($response, 'admin/auto/create.phtml', [
-            'user' => $this->user,
-        ]);
+        $this->renderer->render($response, 'admin/auto/create.phtml');
     }
 
     public function add($request, $response, $args)

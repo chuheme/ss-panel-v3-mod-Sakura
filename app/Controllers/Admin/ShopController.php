@@ -23,16 +23,13 @@ class ShopController extends BaseController
         }
         $table_config['ajax_url'] = 'shop/ajax';
         $this->renderer->render($response, 'admin/shop/index.phtml', [
-            'user' => $this->user,
             'table_config' => $table_config,
         ]);
     }
 
     public function create($request, $response, $args)
     {
-        $this->renderer->render($response, 'admin/shop/create.phtml', [
-            'user' => $this->user,
-        ]);
+        $this->renderer->render($response, 'admin/shop/create.phtml');
     }
 
     public function add($request, $response, $args)
@@ -92,7 +89,6 @@ class ShopController extends BaseController
         if ($shop == null) {
         }
         $this->renderer->render($response, 'admin/shop/edit.phtml', [
-            'user' => $this->user,
             'shop' => $shop,
         ]);
     }
@@ -196,7 +192,6 @@ class ShopController extends BaseController
         }
         $table_config['ajax_url'] = 'bought/ajax';
         $this->renderer->render($response, 'admin/shop/bought.phtml', [
-            'user' => $this->user,
             'table_config' => $table_config,
         ]);
     }

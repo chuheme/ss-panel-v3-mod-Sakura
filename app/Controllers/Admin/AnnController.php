@@ -19,16 +19,13 @@ class AnnController extends AdminController
                                                     "date", "content");
         $table_config['ajax_url'] = 'announcement/ajax';
         $this->renderer->render($response, 'admin/announcement/index.phtml', [
-            'user' => $this->user,
             'table_config' => $table_config,
         ]);
     }
 
     public function create($request, $response, $args)
     {
-        $this->renderer->render($response, 'admin/announcement/create.phtml', [
-            'user' => $this->user,
-        ]);
+        $this->renderer->render($response, 'admin/announcement/create.phtml');
     }
 
     public function add($request, $response, $args)
@@ -58,7 +55,6 @@ class AnnController extends AdminController
         if ($ann == null) {
         }
         $this->renderer->render($response, 'admin/announcement/edit.phtml', [
-            'user' => $this->user,
             'ann' => $ann,
         ]);
     }

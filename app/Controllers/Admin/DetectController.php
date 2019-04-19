@@ -22,7 +22,6 @@ class DetectController extends BaseController
         }
         $table_config['ajax_url'] = 'detect/ajax';
         $this->renderer->render($response, 'admin/detect/index.phtml', [
-            'user' => $this->user,
             'table_config' => $table_config,
         ]);
     }
@@ -41,16 +40,13 @@ class DetectController extends BaseController
         }
         $table_config['ajax_url'] = 'log/ajax';
         $this->renderer->render($response, 'admin/detect/log.phtml', [
-            'user' => $this->user,
             'table_config' => $table_config,
         ]);
     }
 
     public function create($request, $response, $args)
     {
-        $this->renderer->render($response, 'admin/detect/create.phtml', [
-            'user' => $this->user,
-        ]);
+        $this->renderer->render($response, 'admin/detect/create.phtml');
     }
 
     public function add($request, $response, $args)
@@ -79,7 +75,6 @@ class DetectController extends BaseController
         $id = $args['id'];
         $rule = DetectRule::find($id);
         $this->renderer->render($response, 'admin/detect/edit.phtml', [
-            'user' => $this->user,
             'rule' => $rule,
         ]);
     }

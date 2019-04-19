@@ -25,7 +25,6 @@ class RelayController extends BaseController
         }
         $table_config['ajax_url'] = 'relay/ajax';
         $this->renderer->render($response, 'admin/relay/index.phtml', [
-            'user' => $this->user,
             'table_config' => $table_config,
         ]);
     }
@@ -42,7 +41,6 @@ class RelayController extends BaseController
         )->orderBy('name')->get();
 
         $this->renderer->render($response, 'admin/relay/create.phtml', [
-            'user' => $this->user,
             'source_nodes' => $source_nodes,
             'dist_nodes' => $dist_nodes,
         ]);
@@ -128,7 +126,6 @@ class RelayController extends BaseController
         )->orderBy('name')->get();
 
         $this->renderer->render($response, 'admin/relay/edit.phtml', [
-            'user' => $this->user,
             'rule' => $rule,
             'source_nodes' => $source_nodes,
             'dist_nodes' => $dist_nodes,

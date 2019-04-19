@@ -27,7 +27,6 @@ class TicketController extends BaseController
                                   "datetime", "title", "userid", "user_name", "status");
         $table_config['ajax_url'] = 'ticket/ajax';
         $this->renderer->render($response, 'admin/ticket/index.phtml', [
-            'user' => $this->user,
             'table_config' => $table_config,
         ]);
     }
@@ -106,7 +105,6 @@ class TicketController extends BaseController
         $ticketset->setPath('/admin/ticket/'.$id."/view");
 
         $this->renderer->render($response, 'admin/ticket/view.phtml',[
-            'user' => $this->user,
             'ticketset' => $ticketset,
             'id' => $id,
         ]);

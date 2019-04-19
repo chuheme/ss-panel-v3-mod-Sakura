@@ -29,16 +29,13 @@ class NodeController extends BaseController
         $table_config['ajax_url'] = 'node/ajax';
 
         $this->renderer->render($response, 'admin/node/index.phtml', [
-            'user' => $this->user,
             'table_config' => $table_config,
         ]);
     }
 
     public function create($request, $response, $args)
     {
-        $this->renderer->render($response, 'admin/node/create.phtml', [
-            'user' => $this->user,
-        ]);
+        $this->renderer->render($response, 'admin/node/create.phtml');
     }
 
     public function add($request, $response, $args)
@@ -94,7 +91,6 @@ class NodeController extends BaseController
         $id = $args['id'];
         $node = Node::find($id);
         $this->renderer->render($response, 'admin/node/edit.phtml', [
-            'user' => $this->user,
             'node' => $node,
         ]);
     }
