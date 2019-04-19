@@ -5,3 +5,4 @@ storage/*
 .config.php
 resources/views/material/analytics.tpl
 composer.phar
+public/theme/material/editor
