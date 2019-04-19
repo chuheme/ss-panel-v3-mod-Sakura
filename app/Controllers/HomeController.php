@@ -68,10 +68,10 @@ class HomeController extends BaseController
 
         $pic = '/theme/material/images/error/404/'.$pic;
         $response = $response->withStatus(404);
-        $response->getBody()->write($this->renderer->fetch('404.phtml', [
+        $this->renderer->render($response, '404.phtml', [
             'user' => $this->user,
             'pic' => $pic,
-        ]));
+        ]);
         return $response;
     }
 
@@ -87,10 +87,10 @@ class HomeController extends BaseController
 
         $pic = '/theme/material/images/error/405/'.$pic;
         $response = $response->withStatus(405);
-        $response->getBody()->write($this->renderer->fetch('405.phtml', [
+        $this->renderer->render($response, '405.phtml', [
             'user' => $this->user,
             'pic' => $pic,
-        ]));
+        ]);
         return $response;
     }
 
@@ -106,10 +106,10 @@ class HomeController extends BaseController
 
         $pic = '/theme/material/images/error/500/'.$pic;
         $response = $response->withStatus(500);
-        $response->getBody()->write($this->renderer->fetch('500.phtml', [
+        $this->renderer->render($response, '500.phtml', [
             'user' => $this->user,
             'pic' => $pic,
-        ]));
+        ]);
         return $response;
     }
 
