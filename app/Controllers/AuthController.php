@@ -258,7 +258,7 @@ class AuthController extends BaseController
             $subject = Config::get('appName')."- 验证邮件";
 
             try {
-                Mail::send($email, $subject, 'auth/verify.tpl', [
+                Mail::send($email, $subject, 'auth/verify.phtml', [
                     "code" => $code,"expire" => date("Y-m-d H:i:s", time() + Config::get('email_verify_ttl'))
                 ], [
                     //BASE_PATH.'/public/assets/email/styles.css'

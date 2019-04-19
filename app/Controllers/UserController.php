@@ -1111,7 +1111,7 @@ class UserController extends BaseController
             $to = $user->email;
             $text = "管理员您好，有人开启了新的工单，请您及时处理。。" ;
             try {
-                Mail::send($to, $subject, 'news/warn.tpl', [
+                Mail::send($to, $subject, 'news/warn.phtml', [
                     "user" => $user,"text" => $text
                 ], [
                 ]);
@@ -1157,7 +1157,7 @@ class UserController extends BaseController
                 $to = $user->email;
                 $text = "管理员您好，有人重新开启了<a href=\"".Config::get('baseUrl')."/admin/ticket/".$ticket_main->id."/view\">工单</a>，请您及时处理。" ;
                 try {
-                    Mail::send($to, $subject, 'news/warn.tpl', [
+                    Mail::send($to, $subject, 'news/warn.phtml', [
                         "user" => $user,"text" => $text
                     ], [
                     ]);
@@ -1172,7 +1172,7 @@ class UserController extends BaseController
                 $to = $user->email;
                 $text = "管理员您好，有人回复了<a href=\"".Config::get('baseUrl')."/admin/ticket/".$ticket_main->id."/view\">工单</a>，请您及时处理。" ;
                 try {
-                    Mail::send($to, $subject, 'news/warn.tpl', [
+                    Mail::send($to, $subject, 'news/warn.phtml', [
                         "user" => $user,"text" => $text
                     ], [
                     ]);
@@ -1451,7 +1451,7 @@ class UserController extends BaseController
         $subject = Config::get('appName')."- 验证邮件";
 
         try {
-            Mail::send($email, $subject, 'auth/verify.tpl', [
+            Mail::send($email, $subject, 'auth/verify.phtml', [
                 "code" => $code,"expire" => date("Y-m-d H:i:s", time() + Config::get('email_verify_ttl'))
             ], [
                 //BASE_PATH.'/public/assets/email/styles.css'

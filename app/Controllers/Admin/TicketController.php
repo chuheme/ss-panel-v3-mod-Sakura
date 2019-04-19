@@ -64,7 +64,7 @@ class TicketController extends BaseController
                 $to = $user->email;
                 $text = "您好，有人回复了<a href=\"".Config::get('baseUrl')."/user/ticket/".$ticket_main->id."/view\">工单</a>，请您查看。" ;
                 try {
-                    Mail::send($to, $subject, 'news/warn.tpl', [
+                    Mail::send($to, $subject, 'news/warn.phtml', [
                         "user" => $user,"text" => $text
                     ], [
                     ]);

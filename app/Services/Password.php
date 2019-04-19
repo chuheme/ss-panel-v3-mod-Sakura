@@ -29,7 +29,7 @@ class Password
         $subject = Config::get('appName') . "重置密码";
         $resetUrl = Config::get('baseUrl') . "/password/token/" . $pwdRst->token;
         try {
-            Mail::send($email, $subject, 'password/reset.tpl', [
+            Mail::send($email, $subject, 'password/reset.phtml', [
                 "resetUrl" => $resetUrl
             ], [
                 //BASE_PATH.'/public/assets/email/styles.css'

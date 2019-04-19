@@ -11,7 +11,6 @@ use App\Services\Mail\Ses;
 use App\Services\Mail\Smtp;
 use App\Services\Mail\SendGrid;
 use App\Services\Mail\NullMail;
-use Smarty;
 
 class Mail
 {
@@ -41,18 +40,10 @@ class Mail
      * @param $ary
      * @return mixed
      */
-    public static function genHtml($template, $ary)
+    public static function genHtml(string $template, array $ary = [])
     {
-        $smarty = new smarty();
-        $smarty->settemplatedir(BASE_PATH . '/resources/email/');
-        $smarty->setcompiledir(BASE_PATH . '/storage/framework/smarty/compile/');
-        $smarty->setcachedir(BASE_PATH . '/storage/framework/smarty/cache/');
-        // add config
-        $smarty->assign('config', Config::getPublicConfig());
-        foreach ($ary as $key => $value) {
-            $smarty->assign($key, $value);
-        }
-        return $smarty->fetch($template);
+        $render = new \Slim\Views\PhpRenderer(BASE_PATH . '/resources/email/');
+        return $render->fetch($template, $ary);
     }
 
     /**

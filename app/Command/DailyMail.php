@@ -39,7 +39,7 @@ class DailyMail
                 
                 
                 try {
-                    Mail::send($to, $subject, 'news/daily-traffic-report.tpl', [
+                    Mail::send($to, $subject, 'news/daily-traffic-report.phtml', [
                         "user" => $user,"text" => $text,"lastday"=>$lastday
                     ], [
                     ]);
