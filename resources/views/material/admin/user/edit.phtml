@@ -269,7 +269,7 @@
 
             $.ajax({
                 type: "PUT",
-                url: "/admin/user/{$edit_user->id}",
+                url: "/admin/user/<?= $edit_user->id; ?>",
                 dataType: "json",
                 data: {
                     user_name: $("#user_name").val(),
@@ -305,7 +305,7 @@
                     if (data.ret) {
                         $("#result").modal();
                         $("#msg").html(data.msg);
-                        window.setTimeout("location.href=top.document.referrer", {$config['jump_delay']});
+                        window.setTimeout("location.href=top.document.referrer", <?= $_ENV['jump_delay']; ?>);
                     } else {
                         $("#result").modal();
                         $("#msg").html(data.msg);
